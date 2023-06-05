@@ -1,19 +1,14 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { DATABASE_URL } from './constants';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => ({
-        uri: config.get<string>('DATABASE_URL') ?? "mongodb://root:password@mongo-db:27017/carbon?authSource=admin&directConnection=true",
-      }),
-      inject: [ConfigService],
-    }),
+    MongooseModule.forRoot(DATABASE_URL),
   ],
   controllers: [AppController],
   providers: [AppService],
