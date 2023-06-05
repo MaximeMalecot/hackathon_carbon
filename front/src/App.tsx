@@ -1,6 +1,6 @@
-import { Suspense, useState, lazy } from "react";
+import { Suspense, lazy } from "react";
+import { Route, Routes } from "react-router-dom";
 import AppLayout from "./components/layout/app-layout";
-import { Routes, Route } from "react-router-dom";
 
 const Home = lazy(() => import("./pages/home"));
 const NotFound = lazy(() => import("./pages/404"));
