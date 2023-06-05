@@ -6,7 +6,6 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=password
-      - MONGO_INITDB_DATABASE=carbon
     ports:
       - "27017:27017"
     volumes:
@@ -22,6 +21,7 @@ services:
       - /home/node/node_modules
     environment: 
       - DATABASE_URL=mongodb://root:password@mongo-db:27017/carbon?authSource=admin&directConnection=true
+      - JWT_SECRET=secret
     depends_on:
       - mongo-db
     ports:
