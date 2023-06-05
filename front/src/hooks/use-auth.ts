@@ -25,14 +25,14 @@ const decodeToken = (token: string): TokenInterface | null => {
 const useAuth = () => {
     const [token, setToken] = useState<string | null>(null);
     const [userData, setUserData] = useState<UserData | null>(null);
-    const isConnected = useMemo(() => !!token, [token]);
+    const isConnected = useMemo(() => !!token && !!userData, [token, userData]);
 
     const register = useCallback(async (mail: string, password: string) => {
         return await authService.register(mail, password);
     }, []);
 
     const login = useCallback(async (mail: string, password: string) => {
-        const res = await authService.login(mail, password);
+        const res = await authService.mockLogin(mail, password);
         if (res && res.access_token) {
             setToken(res.access_token);
             localStorage.setItem(TOKEN_STORAGE_KEY, res.access_token);
