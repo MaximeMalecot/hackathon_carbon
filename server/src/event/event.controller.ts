@@ -6,7 +6,6 @@ import {
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { randomUUID } from "crypto";
-import { Public } from "src/auth/decorators/public.decator";
 import { EventService } from "./event.service";
 
 @ApiTags("events")
@@ -15,31 +14,18 @@ export class EventController {
     private users = []
     constructor(private readonly eventService: EventService) {}
 
-    convertMessage = ({ type, ...data }) => {
-        console.log(`event: ${type}\n` + `data: ${JSON.stringify(data)}\n\n`);
-        return `event: ${type}\n` + `data: ${JSON.stringify(data)}\n\n`;
-    };
-
-    broadcastUnknown = (message, client_id) => {
-        if (this.users[client_id]) {
-            this.users[client_id].write(this.convertMessage(message));
-        }
-    };
-    
-    @Public()
     @Get()
     async getEvents(@Req() req, @Res() res, next) {
         try {
-            let { client_id, token } = req.query;
-            let user = null;
+            let { client_id } = req.query;
             if (!client_id) {
                 client_id = randomUUID();
             }
-            this.users[client_id] = res;
+            this.eventService.addUser(client_id, res);
 
             res.on("close", () => {
                 console.log("close", client_id);
-                delete this.users[client_id];
+                this.eventService.deleteUser(client_id);
             });
 
             const headers = {
@@ -50,7 +36,7 @@ export class EventController {
             res.writeHead(200, headers);
 
             setInterval(() => {
-                this.broadcastUnknown(
+                this.eventService.broadcastUnknown(
                     { type: "connect", client_id },
                     client_id
                 );

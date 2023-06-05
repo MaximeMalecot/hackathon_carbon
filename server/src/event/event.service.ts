@@ -6,6 +6,27 @@ import { Model } from "mongoose";
 import { Event } from "./schema/event.schema";
 
 @Injectable()
-export class EventService {
+export class EventService 
+{
+    private users = [];
     constructor(@InjectModel(Event.name) private eventModel: Model<Event>) {}
+   
+    convertMessage = ({ type, ...data }) => {
+        console.log(`event: ${type}\n` + `data: ${JSON.stringify(data)}\n\n`);
+        return `event: ${type}\n` + `data: ${JSON.stringify(data)}\n\n`;
+    };
+
+    broadcastUnknown = (message, client_id) => {
+        if (this.users[client_id]) {
+            this.users[client_id].write(this.convertMessage(message));
+        }
+    };
+
+    addUser = (client_id, res) => {
+        this.users[client_id] = res;
+    }
+
+    deleteUser = (client_id) => {
+        delete this.users[client_id];
+    }
 }
