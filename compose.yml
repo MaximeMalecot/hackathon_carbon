@@ -1,42 +1,42 @@
 version: "3.8"
 
 services:
-    mongo-db:
-        image: "mongo:latest"
-        environment:
-            - MONGO_INITDB_ROOT_USERNAME=root
-            - MONGO_INITDB_ROOT_PASSWORD=password
-        ports:
-            - "27017:27017"
-        volumes:
-            - "mongo-db:/data/db"
+  mongo-db:
+    image: "mongo:latest"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    ports:
+      - "27017:27017"
+    volumes:
+      - "mongo-db:/data/db"
 
-    server:
-        build:
-            context: ./server
-            target: dev
-        command: npm run start:dev
-        volumes:
-            - ./server:/home/node
-            - /home/node/node_modules
-        environment:
-            - DATABASE_URL=mongodb://root:password@mongo-db:27017/carbon?authSource=admin&directConnection=true
-            - JWT_SECRET=secret
-        depends_on:
-            - mongo-db
-        ports:
-            - "3000:3000"
+  server:
+    build:
+      context: ./server
+      target: dev
+    command: npm run start:dev
+    volumes:
+      - ./server:/home/node
+      - /home/node/node_modules
+    environment:
+      - DATABASE_URL=mongodb://root:password@mongo-db:27017/carbon?authSource=admin&directConnection=true
+      - JWT_SECRET=secret
+    depends_on:
+      - mongo-db
+    ports:
+      - "3000:3000"
 
-    front:
-        build:
-            context: ./front
-            target: dev
-        command: npm run dev
-        volumes:
-            - ./front:/usr/src/app
-            - /usr/src/app/node_modules
-        ports:
-            - "8080:8080"
+  front:
+    build:
+      context: ./front
+      target: dev
+    command: npm run dev
+    volumes:
+      - ./front:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "8080:8080"
 
 volumes:
-    mongo-db:
+  mongo-db:
