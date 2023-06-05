@@ -7,7 +7,7 @@ const NotFound = lazy(() => import("./pages/404"));
 
 function App() {
     return (
-        <>
+        <div className="App">
             <Suspense>
                 <Routes>
                     <Route element={<AppLayout />}>
@@ -16,7 +16,7 @@ function App() {
                     </Route>
                 </Routes>
             </Suspense>
-        </>
+        </div>
     );
 }
 
