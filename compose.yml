@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  mongo-db:
+    image: "mongo:latest"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=carbon
+    ports:
+      - "27017:27017"
+    volumes:
+      - "mongo-db:/data/db"
+
+  server:
+    build:
+      context: ./server
+      target: dev
+    command: npm run start:dev
+    volumes:
+      - ./server:/home/node
+      - /home/node/node_modules
+    environment: 
+      - DATABASE_URL="mongodb://root:password@mongo-db:27017/carbon?authSource=admin&directConnection=true"
+    depends_on:
+      - mongo-db
+    ports:
+      - "3000:3000"
+
+
+volumes:
+  mongo-db:
