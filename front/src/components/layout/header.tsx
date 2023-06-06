@@ -5,7 +5,7 @@ export default function Header(props: any) {
     const { isConnected, data, logout } = useAuthContext();
 
     return (
-        <header className="h-20">
+        <header>
             <nav className="navbar bg-primary text-neutral-content">
                 <div className="flex-1">
                     <Link
