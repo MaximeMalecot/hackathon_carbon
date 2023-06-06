@@ -1,22 +1,28 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
-import { DATABASE_URL } from './constants';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { QuizModule } from './quiz/quiz.module';
+import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
+import { MongooseModule } from "@nestjs/mongoose";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { AuthModule } from "./auth/auth.module";
+import { DATABASE_URL } from "./constants";
+import { ContractModule } from "./contract/contract.module";
+import { EntrepriseModule } from "./entreprise/entreprise.module";
+import { EventModule } from "./event/event.module";
+import { QuizModule } from "./quiz/quiz.module";
+import { UsersModule } from "./users/users.module";
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    MongooseModule.forRoot(DATABASE_URL),
-    AuthModule,
-    UsersModule,
-    QuizModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+    imports: [
+        ConfigModule.forRoot(),
+        MongooseModule.forRoot(DATABASE_URL),
+        AuthModule,
+        UsersModule,
+        QuizModule,
+        EventModule,
+        EntrepriseModule,
+        ContractModule,
+    ],
+    controllers: [AppController],
+    providers: [AppService],
 })
 export class AppModule {}
