@@ -5,6 +5,7 @@ import {
     Get,
     Param,
     Patch,
+    Post,
     Req,
     UseGuards,
 } from "@nestjs/common";
@@ -12,6 +13,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Roles } from "src/auth/decorators/roles.decorator";
 import { ParseObjectIdPipe } from "src/pipes/objectid.pipe";
 import { Role } from "src/users/schemas/user.schema";
+import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { OwnUserGuards } from "./guards/users.guard";
 import { UsersService } from "./users.service";
@@ -25,6 +27,12 @@ export class UsersController {
     @Get()
     findAll() {
         return this.usersService.findAll();
+    }
+
+    @Roles(Role.ACCOUNT_EDITOR, Role.ACCOUNT_CREATOR)
+    @Post()
+    create(@Body() createUserDto: CreateUserDto) {
+        return this.usersService.create(createUserDto);
     }
 
     @Get("self")
