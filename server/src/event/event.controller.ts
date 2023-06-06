@@ -1,31 +1,22 @@
-import {
-    Controller,
-    Get,
-    Req,
-    Res,
-} from "@nestjs/common";
+import { Controller, Get, Req, Res } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { randomUUID } from "crypto";
 import { EventService } from "./event.service";
 
 @ApiTags("events")
 @Controller("events")
 export class EventController {
-    private users = []
+    private users = [];
     constructor(private readonly eventService: EventService) {}
 
     @Get()
     async getEvents(@Req() req, @Res() res, next) {
         try {
-            let { client_id } = req.query;
-            if (!client_id) {
-                client_id = randomUUID();
-            }
-            this.eventService.addUser(client_id, res);
+            const userId = req.user.id;
+            this.eventService.addUser(req.user.id, res);
 
             res.on("close", () => {
-                console.log("close", client_id);
-                this.eventService.deleteUser(client_id);
+                console.log("close", userId);
+                this.eventService.deleteUser(userId);
             });
 
             const headers = {
@@ -37,8 +28,8 @@ export class EventController {
 
             setInterval(() => {
                 this.eventService.broadcastUnknown(
-                    { type: "connect", client_id },
-                    client_id
+                    { type: "connect", userId },
+                    userId
                 );
             }, 5000);
         } catch (err) {
@@ -46,5 +37,4 @@ export class EventController {
             next();
         }
     }
-
 }

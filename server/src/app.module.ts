@@ -7,6 +7,8 @@ import { DATABASE_URL } from './constants';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { EventModule } from './event/event.module';
+import { EntrepriseModule } from './entreprise/entreprise.module';
+import { ContractModule } from './contract/contract.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { EventModule } from './event/event.module';
     AuthModule,
     UsersModule,
     EventModule,
+    EntrepriseModule,
+    ContractModule,
   ],
   controllers: [AppController],
   providers: [AppService],
