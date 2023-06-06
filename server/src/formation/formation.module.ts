@@ -1,13 +1,13 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
+import { FormationController } from "./formation.controller";
 import {
     FormationProgression,
     FormationProgressionSchema,
-} from "./entities/formation-progression.schema";
-import { Formation, FormationSchema } from "./entities/formation.schema";
-import { FormationProgressionService } from "./formation-progression.service";
-import { FormationController } from "./formation.controller";
-import { FormationService } from "./formation.service";
+} from "./schemas/formation-progression.schema";
+import { Formation, FormationSchema } from "./schemas/formation.schema";
+import { FormationService } from "./services/formation.service";
+import { FormationProgressionService } from "./services/progression.service";
 
 @Module({
     imports: [

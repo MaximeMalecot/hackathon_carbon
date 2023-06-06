@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { CreateFormationDto } from "./dto/create-formation.dto";
-import { UpdateFormationDto } from "./dto/update-formation.dto";
-import { Formation } from "./entities/formation.schema";
-import { FormationProgressionService } from "./formation-progression.service";
+import { CreateFormationDto } from "../dto/create-formation.dto";
+import { UpdateFormationDto } from "../dto/update-formation.dto";
+import { Formation } from "../schemas/formation.schema";
+import { FormationProgressionService } from "./progression.service";
 
 @Injectable()
 export class FormationService {
@@ -38,6 +38,8 @@ export class FormationService {
             _id: id,
         });
     }
+
+    // Progression
 
     async getProgressionOfUser(userId: string, formationId: string) {
         return await this.formationModel.find();

@@ -10,7 +10,7 @@ import {
 import { Public } from "src/auth/decorators/public.decator";
 import { CreateFormationDto } from "./dto/create-formation.dto";
 import { UpdateFormationDto } from "./dto/update-formation.dto";
-import { FormationService } from "./formation.service";
+import { FormationService } from "./services/formation.service";
 
 @Controller("formations")
 export class FormationController {

@@ -25,6 +25,12 @@ export class FormationProgression {
         required: false,
     })
     finished: Date | null;
+
+    @Prop({
+        type: Array<String>,
+        required: true,
+    })
+    chaptersDone: string[];
 }
 
 export const FormationProgressionSchema =

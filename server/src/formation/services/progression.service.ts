@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { FormationProgression } from "./entities/formation-progression.schema";
+import { FormationProgression } from "../schemas/formation-progression.schema";
 
 @Injectable()
 export class FormationProgressionService {
@@ -39,10 +39,16 @@ export class FormationProgressionService {
     }
 
     async getProgression(userId: string, formationId: string) {
-        return await this.progressionService.find({
+        const progression = await this.progressionService.find({
             formationId,
             userId,
         });
+
+        if (!progression) {
+            throw new NotFoundException("Progression not found");
+        }
+
+        return progression;
     }
 
     async getCurrentFormationsOfUser(formationsId: string, userId: string) {
