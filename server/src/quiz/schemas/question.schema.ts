@@ -4,6 +4,7 @@ import { HydratedDocument } from "mongoose";
 export type QuestionDocument = HydratedDocument<Question>;
 
 type Answer = {
+    id: string;
     label: string;
     isCorrect: boolean;
 };

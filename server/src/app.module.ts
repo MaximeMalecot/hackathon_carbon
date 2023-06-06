@@ -12,6 +12,7 @@ import { PostModule } from "./posts/posts.module";
 import { QuizModule } from "./quiz/quiz.module";
 import { SeederModule } from "./seeder/seeder.module";
 import { UsersModule } from "./users/users.module";
+import { FormationModule } from './formation/formation.module';
 
 @Module({
     imports: [
@@ -23,8 +24,9 @@ import { UsersModule } from "./users/users.module";
         PostModule,
         EntrepriseModule,
         ContractModule,
+        FormationModule,
         CommandModule,
-        SeederModule,
+        SeederModule
     ],
     controllers: [AppController],
     providers: [AppService],
