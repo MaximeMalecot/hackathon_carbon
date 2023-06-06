@@ -5,8 +5,6 @@ export type FormationDocument = HydratedDocument<Formation>;
 
 @Schema()
 export class Formation {
-    id: string;
-
     @Prop({
         type: String,
         required: true,

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { CreateFormationDto } from "../dto/create-formation.dto";
@@ -15,6 +15,13 @@ export class FormationService {
     ) {}
 
     async create(createFormationDto: CreateFormationDto) {
+        const existsWithName = await this.formationModel.findOne({
+            name: createFormationDto.name,
+        });
+        if (existsWithName) {
+            throw new BadRequestException("Formation name already taken");
+        }
+
         const newFormation = new this.formationModel(createFormationDto);
         return await newFormation.save();
     }
@@ -39,14 +46,23 @@ export class FormationService {
         });
     }
 
-    // Progression
-
-    async getProgressionOfUser(userId: string, formationId: string) {
-        return await this.formationModel.find();
+    async getUserProgressionOnFormation(formationId: string, userId: string) {
+        return await this.progressionService.getProgressionOfUser(
+            formationId,
+            userId
+        );
     }
 
-    async getCurrentFormationsOfUser(formationId: string, userId: string) {
-        return await this.progressionService.getCurrentFormationsOfUser(
+    async getCurrentFormationsOfUser(userId: string) {
+        const formations = await this.progressionService.getAllFormationOfUser(
+            userId
+        );
+
+        return formations;
+    }
+
+    async createProgressionOnFormation(formationId: string, userId: string) {
+        return await this.progressionService.createProgressionOnFormation(
             formationId,
             userId
         );
