@@ -11,6 +11,7 @@ import { AuthModule } from "./auth/auth.module";
 import { DATABASE_URL } from "./constants";
 import { ContractModule } from "./contract/contract.module";
 import { EntrepriseModule } from "./entreprise/entreprise.module";
+import { FormationModule } from "./formation/formation.module";
 import { PostModule } from "./posts/posts.module";
 import { QuizModule } from "./quiz/quiz.module";
 import { SeederModule } from "./seeder/seeder.module";
@@ -26,6 +27,7 @@ import { UsersModule } from "./users/users.module";
         PostModule,
         EntrepriseModule,
         ContractModule,
+        FormationModule,
         CommandModule,
         SeederModule,
         MulterModule.register({
@@ -38,6 +40,7 @@ import { UsersModule } from "./users/users.module";
                 index: false,
             },
         }),
+        SeederModule,
     ],
     controllers: [AppController],
     providers: [AppService],
