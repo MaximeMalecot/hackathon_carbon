@@ -1,1 +1,0 @@
-export const DATABASE_URL = process.env.DATABASE_URL ?? "mongodb://root:password@mongo-db:27017/carbon?authSource=admin&directConnection=true";
