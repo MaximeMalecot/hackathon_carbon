@@ -9,6 +9,8 @@ import {
     Req,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { Roles } from "src/auth/decorators/roles.decorator";
+import { Role } from "src/users/schemas/user.schema";
 import { CreateFormationDto } from "./dto/create-formation.dto";
 import { UpdateFormationDto } from "./dto/update-formation.dto";
 import { FormationService } from "./services/formation.service";
@@ -19,13 +21,12 @@ export class FormationController {
     constructor(private readonly formationService: FormationService) {}
 
     @Post()
-    //Check role
+    @Roles(Role.TEACHER)
     create(@Body() createFormationDto: CreateFormationDto, @Req() req: any) {
         return this.formationService.create(createFormationDto);
     }
 
     @Get()
-    //Check role
     findAll() {
         return this.formationService.findAll();
     }
@@ -36,6 +37,7 @@ export class FormationController {
     }
 
     @Patch(":id")
+    @Roles(Role.TEACHER)
     update(
         @Param("id") id: string,
         @Body() updateFormationDto: UpdateFormationDto
@@ -44,6 +46,7 @@ export class FormationController {
     }
 
     @Delete(":id")
+    @Roles(Role.ADMIN)
     remove(@Param("id") id: string) {
         return this.formationService.remove(id);
     }
@@ -59,6 +62,7 @@ export class FormationController {
         );
     }
 
+    @Roles(Role.VIEWER)
     @Get(":formationId/progression/:userId")
     getProgressionOfUserOnFormation(
         @Param("formationId") formationId: string,
@@ -75,11 +79,13 @@ export class FormationController {
         return this.formationService.getCurrentFormationsOfUser(req.user._id);
     }
 
+    @Roles(Role.VIEWER)
     @Get("current/:userId")
     getCurrentFormationsOfUser(@Param("userId") userId: string) {
         return this.formationService.getCurrentFormationsOfUser(userId);
     }
 
+    // DEV ONLY
     @Post(":formationId/progression")
     createProgressionOnFormation(
         @Param("formationId") formationId: string,
