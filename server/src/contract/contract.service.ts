@@ -8,4 +8,11 @@ export class ContractService {
     constructor(
         @InjectModel(Contract.name) private contractModel: Model<Contract>
     ) {}
+
+    async findForUser(id: string) {
+        return await this.contractModel.find({
+            userId: id,
+            isActive: true,
+        });
+    }
 }

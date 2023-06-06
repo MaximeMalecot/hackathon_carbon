@@ -1,15 +1,15 @@
 import { Controller, Get, Req, Res } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { EventService } from "./event.service";
+import { PostService } from "./posts.service";
 
-@ApiTags("events")
-@Controller("events")
-export class EventController {
+@ApiTags("posts")
+@Controller("posts")
+export class PostController {
     private users = [];
-    constructor(private readonly eventService: EventService) {}
+    constructor(private readonly eventService: PostService) {}
 
     @Get()
-    async getEvents(@Req() req, @Res() res, next) {
+    async getPosts(@Req() req, @Res() res, next) {
         try {
             const userId = req.user.id;
             this.eventService.addUser(req.user.id, res);
@@ -27,7 +27,7 @@ export class EventController {
             res.writeHead(200, headers);
 
             setInterval(() => {
-                this.eventService.broadcastUnknown(
+                this.eventService.broadcastSpecific(
                     { type: "connect", userId },
                     userId
                 );

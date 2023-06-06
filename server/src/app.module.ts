@@ -7,7 +7,7 @@ import { AuthModule } from "./auth/auth.module";
 import { DATABASE_URL } from "./constants";
 import { ContractModule } from "./contract/contract.module";
 import { EntrepriseModule } from "./entreprise/entreprise.module";
-import { EventModule } from "./event/event.module";
+import { PostModule } from "./posts/posts.module";
 import { QuizModule } from "./quiz/quiz.module";
 import { UsersModule } from "./users/users.module";
 
@@ -18,7 +18,7 @@ import { UsersModule } from "./users/users.module";
         AuthModule,
         UsersModule,
         QuizModule,
-        EventModule,
+        PostModule,
         EntrepriseModule,
         ContractModule,
     ],
