@@ -1,7 +1,7 @@
-export default function CreationQuiz() {
+export default function FormationCours() {
     return (
         <div className="flex flex-col items-center justify-center h-screen">
-            <h1>CreationQuiz</h1>
+            <h1>FormationCours</h1>
         </div>
     );
 }

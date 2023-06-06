@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { FORMATION_TYPE, FormationChapters } from "../../interfaces";
 
 export default function FormationPage() {
@@ -66,9 +67,9 @@ export default function FormationPage() {
 
     const getIcon = useCallback((val: FORMATION_TYPE): string => {
         if (val === FORMATION_TYPE.COURS) {
-            return "★";
+            return "📚";
         }
-        return "?";
+        return "❓";
     }, []);
 
     useEffect(() => {
@@ -85,13 +86,33 @@ export default function FormationPage() {
                         data-content={getIcon(chapter.type)}
                         className="step w-full"
                     >
-                        <div className="card w-full bg-base-100 shadow-md">
-                            <div className="card-body">
-                                <h2 className="card-title">
-                                    Chapter {index + 1} : {chapter.name}
-                                </h2>
-                            </div>
-                        </div>
+                        {chapter.type === FORMATION_TYPE.QUIZ ? (
+                            <Link
+                                to={`/formation/quiz/${chapter.id}`}
+                                className="w-full"
+                            >
+                                <div className="card w-full bg-base-100 shadow-md">
+                                    <div className="card-body">
+                                        <h2 className="card-title">
+                                            Chapter {index + 1} : {chapter.name}
+                                        </h2>
+                                    </div>
+                                </div>
+                            </Link>
+                        ) : (
+                            <Link
+                                to={`/formation/cours/${chapter.id}`}
+                                className="w-full"
+                            >
+                                <div className="card w-full bg-base-100 shadow-md">
+                                    <div className="card-body">
+                                        <h2 className="card-title">
+                                            Chapter {index + 1} : {chapter.name}
+                                        </h2>
+                                    </div>
+                                </div>
+                            </Link>
+                        )}
                     </li>
                 ))}
             </ul>

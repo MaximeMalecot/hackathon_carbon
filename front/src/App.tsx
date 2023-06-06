@@ -7,6 +7,7 @@ const Login = lazy(() => import("./pages/login"));
 const NotFound = lazy(() => import("./pages/404"));
 const FormationsListe = lazy(() => import("./pages/formation/list-formation"));
 const Formation = lazy(() => import("./pages/formation/formation"));
+const Quiz = lazy(() => import("./pages/formation/quiz"));
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                                 path={"liste"}
                                 element={<FormationsListe />}
                             />
+                            <Route path={"quiz/:id"} element={<Quiz />} />
                             <Route path={":id"} element={<Formation />} />
                         </Route>
                         <Route path={"/login"} element={<Login />} />
