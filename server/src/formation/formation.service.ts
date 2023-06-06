@@ -4,12 +4,14 @@ import { Model } from "mongoose";
 import { CreateFormationDto } from "./dto/create-formation.dto";
 import { UpdateFormationDto } from "./dto/update-formation.dto";
 import { Formation } from "./entities/formation.schema";
+import { FormationProgressionService } from "./formation-progression.service";
 
 @Injectable()
 export class FormationService {
     constructor(
         @InjectModel(Formation.name)
-        private readonly formationModel: Model<Formation>
+        private readonly formationModel: Model<Formation>,
+        private readonly progressionService: FormationProgressionService
     ) {}
 
     async create(createFormationDto: CreateFormationDto) {
@@ -35,5 +37,16 @@ export class FormationService {
         return await this.formationModel.findByIdAndDelete({
             _id: id,
         });
+    }
+
+    async getProgressionOfUser(userId: string, formationId: string) {
+        return await this.formationModel.find();
+    }
+
+    async getCurrentFormationsOfUser(formationId: string, userId: string) {
+        return await this.progressionService.getCurrentFormationsOfUser(
+            formationId,
+            userId
+        );
     }
 }

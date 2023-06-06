@@ -19,7 +19,6 @@ export class FormationController {
     @Public()
     @Post()
     create(@Body() createFormationDto: CreateFormationDto) {
-        console.log(createFormationDto);
         return this.formationService.create(createFormationDto);
     }
 
@@ -45,5 +44,17 @@ export class FormationController {
     @Delete(":id")
     remove(@Param("id") id: string) {
         return this.formationService.remove(id);
+    }
+
+    @Public()
+    @Get(":formationId/progression/:userId")
+    getUserProgress(
+        @Param("formationId") formationId: string,
+        @Param("userId") userId: string
+    ) {
+        return this.formationService.getCurrentFormationsOfUser(
+            formationId,
+            userId
+        );
     }
 }
