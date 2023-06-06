@@ -6,8 +6,6 @@ export type FormationProgressionDocument =
 
 @Schema()
 export class FormationProgression {
-    id: string;
-
     @Prop({
         type: Types.ObjectId,
         ref: "formation",
@@ -29,6 +27,7 @@ export class FormationProgression {
     @Prop({
         type: Array<String>,
         required: true,
+        default: [],
     })
     chaptersDone: string[];
 }
