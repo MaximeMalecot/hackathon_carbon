@@ -23,7 +23,7 @@ export class FormationController {
     @Post()
     @Roles(Role.TEACHER)
     create(@Body() createFormationDto: CreateFormationDto, @Req() req: any) {
-        return this.formationService.create(createFormationDto);
+        return this.formationService.create(createFormationDto, req.user.id);
     }
 
     @Get()

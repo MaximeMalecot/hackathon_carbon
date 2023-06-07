@@ -14,7 +14,7 @@ export class FormationService {
         private readonly progressionService: FormationProgressionService
     ) {}
 
-    async create(createFormationDto: CreateFormationDto) {
+    async create(createFormationDto: CreateFormationDto, userId: string) {
         const existsWithName = await this.formationModel.findOne({
             name: createFormationDto.name,
         });
@@ -22,7 +22,10 @@ export class FormationService {
             throw new BadRequestException("Formation name already taken");
         }
 
-        const newFormation = new this.formationModel(createFormationDto);
+        const newFormation = new this.formationModel({
+            ...createFormationDto,
+            referent: userId,
+        });
         return await newFormation.save();
     }
 
