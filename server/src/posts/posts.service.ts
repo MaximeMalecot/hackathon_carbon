@@ -1,8 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { ContractService } from "src/contract/contract.service";
 import { StatusEnum } from "src/contract/schemas/contract.schema";
+import { PostContentService } from "src/posts-content/posts-content.service";
 import { Role, User } from "src/users/schemas/user.schema";
 import { Post, PostTypes } from "./schemas/post.schema";
 
@@ -10,7 +11,9 @@ import { Post, PostTypes } from "./schemas/post.schema";
 export class PostService {
     constructor(
         @InjectModel(Post.name) private postModel: Model<Post>,
-        private contractService: ContractService
+        private contractService: ContractService,
+        @Inject(forwardRef(() => PostContentService))
+        private postContentService: PostContentService
     ) {}
 
     async findAll(user: User, type?: PostTypes) {
@@ -53,5 +56,11 @@ export class PostService {
 
         const createdPost = new this.postModel(data);
         return await createdPost.save();
+    }
+
+    async delete(id: Types.ObjectId) {
+        console.log("onéla");
+        await this.postContentService.deleteContents(id);
+        return await this.postModel.deleteOne(id);
     }
 }

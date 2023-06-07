@@ -59,7 +59,6 @@ export class ContractController {
 
     @Get("self")
     getSelfContracts(@Req() req: any) {
-        if (!req.user) throw new Error("User not found");
         return this.contractService.findForUser(req.user.id);
     }
 
