@@ -1,6 +1,7 @@
 import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import AppLayout from "./components/layout/app-layout";
+import CreationEntreprise from "./pages/entreprise/create-entreprise";
 
 const Home = lazy(() => import("./pages/home"));
 const Login = lazy(() => import("./pages/login"));
@@ -22,6 +23,12 @@ function App() {
                             />
                             <Route path={"quiz/:id"} element={<Quiz />} />
                             <Route path={":id"} element={<Formation />} />
+                        </Route>
+                        <Route path={"/entreprise"}>
+                            <Route
+                                path={"create"}
+                                element={<CreationEntreprise />}
+                            />
                         </Route>
                         <Route path={"/login"} element={<Login />} />
                         <Route path={"/"} element={<Home />} />
