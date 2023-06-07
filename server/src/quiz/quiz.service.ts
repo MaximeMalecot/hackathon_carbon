@@ -28,6 +28,7 @@ export class QuizService {
 
     async getQuestionsAndFullAnswers(quizId: string) {
         const quiz = await this.quizModel.findById(quizId).exec();
+        if (!quiz) throw new NotFoundException("No quiz found");
         const questions = await this.questionModel.find({ quizId }).exec();
         return { ...quiz.toObject(), questions };
     }
@@ -93,11 +94,24 @@ export class QuizService {
     async completeQuiz(userId, completeQuizDto: CompleteQuizDto) {
         const { quizId, answers } = completeQuizDto;
 
-        const quiz = await this.findOne(quizId);
-        if (!quiz) throw new NotFoundException("No quiz found");
-
-        const mark = 10;
+        const quizAndAnswers = await this.getQuestionsAndFullAnswers(quizId);
+        if (!quizAndAnswers) throw new NotFoundException("No quiz found");
+        const questions = quizAndAnswers.questions;
+        const mark = this.compareAnswers(answers, questions);
         await this.quizResultService.createResult(quizId, userId, mark);
         return { mark };
+    }
+
+    private compareAnswers(userAnswers, questions: Question[]): number {
+        let correctAnswersCount = 0;
+        const answersPerQuestion = questions
+            .map((question) => {
+                const answers = question.answers
+                    .filter((a) => a.isCorrect)
+                    .map((a) => a.id);
+                return { [question.id]: answers };
+            })
+            .reduce((acc, curr) => ({ ...acc, ...curr }), {});
+        return 10;
     }
 }

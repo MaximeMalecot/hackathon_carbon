@@ -1,14 +1,25 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { IsBoolean, IsString } from "class-validator";
 import { HydratedDocument, Types } from "mongoose";
 
 export type QuestionDocument = HydratedDocument<Question>;
 
 class AnswerDto {
-    @IsString()
+    @Prop({
+        type: String,
+        required: true,
+    })
+    id: string;
+
+    @Prop({
+        type: String,
+        required: true,
+    })
     label: string;
 
-    @IsBoolean()
+    @Prop({
+        type: Boolean,
+        required: true,
+    })
     isCorrect: boolean;
 }
 
@@ -23,7 +34,7 @@ export class Question {
     label: string;
 
     @Prop({
-        type: Array<AnswerDto>(),
+        type: Array<AnswerDto>,
         required: true,
     })
     answers: AnswerDto[];
