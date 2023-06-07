@@ -18,5 +18,5 @@ export class CreateFormationChapterDto {
     chapter: ChapterDto;
 
     @IsObject()
-    data: CreateQuizDto;
+    data: CreateQuizDto | CreateResourceDto;
 }

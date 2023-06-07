@@ -10,7 +10,11 @@ import { Model } from "mongoose";
 import { FormationService } from "src/formation/services/formation.service";
 import { CreateQuizDto } from "src/quiz/dto/create-quiz.dto";
 import { QuizService } from "src/quiz/quiz.service";
-import { CreateFormationChapterDto } from "./dto/create-formation_chapter.dto";
+import { ResourceService } from "src/resource/resource.service";
+import {
+    CreateFormationChapterDto,
+    CreateResourceDto,
+} from "./dto/create-formation_chapter.dto";
 import {
     ChapterTypes,
     FormationChapter,
@@ -22,7 +26,8 @@ export class FormationChapterService {
         @InjectModel(FormationChapter.name)
         private readonly formationChapterModel: Model<FormationChapter>,
         private readonly formationService: FormationService,
-        private readonly quizService: QuizService
+        private readonly quizService: QuizService,
+        private readonly resourceService: ResourceService
     ) {}
 
     async createChapterAndQuiz(
@@ -55,7 +60,36 @@ export class FormationChapterService {
         }
     }
 
-    async createResourceAndQuiz() {}
+    async createResourceAndQuiz(
+        formationId: string,
+        createFormationChapterDto: CreateFormationChapterDto
+    ) {
+        try {
+            const { chapter } = createFormationChapterDto;
+            const resource =
+                createFormationChapterDto.data as CreateResourceDto;
+
+            const newChapter = await this.formationChapterModel.create({
+                formationId,
+                ...chapter,
+            });
+            const savedChapter = await newChapter.save();
+
+            const newResource = await this.resourceService.create({
+                ...resource,
+                chapterId: savedChapter.id,
+            });
+
+            return {
+                ...savedChapter.toObject(),
+                resource: newResource.toObject(),
+            };
+        } catch (err) {
+            console.log(err);
+            if (err instanceof HttpException) throw err;
+            throw new InternalServerErrorException(err.message);
+        }
+    }
 
     async create(
         formationId: string,
@@ -74,7 +108,10 @@ export class FormationChapterService {
                 );
 
             case ChapterTypes.RESOURCE:
-                return new InternalServerErrorException("Not implemented yet");
+                return await this.createResourceAndQuiz(
+                    formationId,
+                    createFormationChapterDto
+                );
 
             default:
                 throw new BadRequestException("Invalid chapter type");
