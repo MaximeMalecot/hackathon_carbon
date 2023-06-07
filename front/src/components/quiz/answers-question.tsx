@@ -75,12 +75,9 @@ export const AnswersQuestion = ({
                 <button
                     className="btn btn-accent text-neutral"
                     onClick={() => nextQuestion()}
-                    disabled={
-                        currentAnswer.length === 0 ||
-                        currentQuestion === nbQuestions
-                    }
+                    disabled={currentAnswer.length === 0}
                 >
-                    Next
+                    {currentQuestion === nbQuestions ? "Finish" : "Next"}
                 </button>
             </div>
         </>

@@ -45,16 +45,18 @@ export default function Quiz() {
     }, [currentQuestion]);
 
     const currentAnswers = useMemo(() => {
-        console.log(selectedAnswers, "selectedAnswers");
         return (
             selectedAnswers.find((ele) => ele.questionId === currentQuestionId)
                 ?.answers ?? null
         );
     }, [selectedAnswers, currentQuestionId]);
 
+    const validateQuiz = useCallback(() => {
+        console.log(selectedAnswers);
+    }, [selectedAnswers]);
+
     const setNextQuestion = useCallback(
         (answers: number[]) => {
-            console.log(answers, "answers");
             if (currentAnswers) {
                 setSelectedAnswer(
                     selectedAnswers.map((ele) =>
@@ -75,14 +77,17 @@ export default function Quiz() {
 
             if (currentQuestion !== questions.length) {
                 setCurrentQuestion(currentQuestion + 1);
+            } else {
+                return validateQuiz();
             }
         },
         [
             currentAnswers,
-            selectedAnswers,
-            currentQuestionId,
             currentQuestion,
             questions.length,
+            selectedAnswers,
+            currentQuestionId,
+            validateQuiz,
         ]
     );
 
