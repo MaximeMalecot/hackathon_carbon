@@ -44,7 +44,6 @@ export class ContractService {
 
     async findForUser(id: string, status?: StatusEnum) {
         if (status) {
-            console.log("status", status);
             return await this.contractModel.find({
                 userId: id,
                 status: status,
@@ -73,7 +72,6 @@ export class ContractService {
                 query.endDate = {
                     $gte: filters.endDate,
                 };
-            console.log(query, filters);
         }
         return await this.contractModel.find(query);
     }

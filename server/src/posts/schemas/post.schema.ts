@@ -3,8 +3,10 @@ import { HydratedDocument, Types } from "mongoose";
 
 export type PostDocument = HydratedDocument<Post>;
 
-type ContentType = {
-    type: "text" | "file";
+export type ContentType = "text" | "file";
+
+export type Content = {
+    type: ContentType;
     data: string;
     order: number;
 };
@@ -23,10 +25,10 @@ export class Post {
     title: string;
 
     @Prop({
-        type: Array<ContentType>(),
+        type: Array<Content>(),
         required: true,
     })
-    content: Array<ContentType>;
+    content: Array<Content>;
 
     @Prop({
         type: [String],
@@ -38,13 +40,13 @@ export class Post {
         type: Types.ObjectId,
         ref: "user",
     })
-    writer: string;
+    writerId: string;
 
     @Prop({
         type: Types.ObjectId,
         ref: "entreprise",
     })
-    entreprise: string;
+    entrepriseId: string;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
