@@ -1,0 +1,20 @@
+@font-face {
+  font-family: "Calibri";
+  src: local("Calibri"),
+    url("../../public/font/calibri-font-sv/Calibri\ Bold.TTF") format("TTF");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "Calibri";
+  src: local("Calibri"),
+    url("../../public/font/calibri-font-sv/Calibri\ Regular.ttf") format("TTF");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Calibri";
+  src: local("Calibri"),
+    url("../../public/font/calibri-font-sv/Calibri\ Light.ttf") format("TTF");
+  font-weight: light;
+}

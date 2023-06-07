@@ -1,6 +1,6 @@
 export default function Sidebar(props: any) {
     return (
-        <ul className="menu bg-base-200 md:w-56 w-full rounded-box md:ml-2 ml-0 h-5/6 md:flex justify-between">
+        <ul className="menu bg-base-200 md:w-56 w-full rounded-box md:ml-2 ml-0 md:h-5/6 h-full md:flex justify-between">
             <div>
                 <li>
                     <a>Item 1</a>
