@@ -23,5 +23,6 @@ import { FormationProgressionService } from "./services/progression.service";
     ],
     controllers: [FormationController],
     providers: [FormationService, FormationProgressionService],
+    exports: [FormationService, FormationProgressionService],
 })
 export class FormationModule {}

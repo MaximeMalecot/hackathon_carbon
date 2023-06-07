@@ -16,6 +16,7 @@ import { PostModule } from "./posts/posts.module";
 import { QuizModule } from "./quiz/quiz.module";
 import { SeederModule } from "./seeder/seeder.module";
 import { UsersModule } from "./users/users.module";
+import { FormationChapterModule } from './formation_chapter/formation_chapter.module';
 
 @Module({
     imports: [
@@ -41,6 +42,7 @@ import { UsersModule } from "./users/users.module";
             },
         }),
         SeederModule,
+        FormationChapterModule,
     ],
     controllers: [AppController],
     providers: [AppService],
