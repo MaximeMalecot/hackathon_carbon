@@ -1,7 +1,69 @@
-import { Controller } from '@nestjs/common';
-import { ContractService } from './contract.service';
+import {
+    Body,
+    Controller,
+    Get,
+    Param,
+    Patch,
+    Post,
+    Query,
+    Req,
+} from "@nestjs/common";
+import { Types } from "mongoose";
+import { Roles } from "src/auth/decorators/roles.decorator";
+import { ParseObjectIdPipe } from "src/pipes/objectid.pipe";
+import { Role } from "src/users/schemas/user.schema";
+import { ContractService } from "./contract.service";
+import { CreateContractDto } from "./dto/create-contract.dto";
+import { FilterDto } from "./dto/filter.dto";
+import { StatusPipe } from "./pipes/status.pipe";
+import { StatusEnum } from "./schemas/contract.schema";
 
-@Controller('contract')
+@Controller("contracts")
 export class ContractController {
-  constructor(private readonly contractService: ContractService) {}
+    constructor(private readonly contractService: ContractService) {}
+
+    @Roles(Role.ASSIGNMENT_EDITOR)
+    @Post()
+    async create(@Body() createContractDto: CreateContractDto) {
+        return await this.contractService.create(createContractDto);
+    }
+
+    @Roles(Role.ASSIGNMENT_EDITOR)
+    @Patch("cancel/:id")
+    cancel(@Param("id", ParseObjectIdPipe) id: string) {
+        return this.contractService.updateStatus(id, StatusEnum.CANCELED);
+    }
+
+    @Roles(Role.ASSIGNMENT_EDITOR)
+    @Patch("finish/:id")
+    finish(@Param("id", ParseObjectIdPipe) id: string) {
+        return this.contractService.updateStatus(id, StatusEnum.FINISHED);
+    }
+
+    @Roles(Role.ASSIGNMENT_EDITOR)
+    @Get()
+    getAll(@Query() filters?: FilterDto) {
+        return this.contractService.findAll(filters);
+    }
+
+    @Roles(Role.ASSIGNMENT_EDITOR)
+    @Get("user/:id")
+    getUserContracts(
+        @Param("id", ParseObjectIdPipe) id: Types.ObjectId,
+        @Query("status", StatusPipe) status?: StatusEnum
+    ) {
+        return this.contractService.findForUser(id.toString(), status);
+    }
+
+    @Get("self")
+    getSelfContracts(@Req() req: any) {
+        if (!req.user) throw new Error("User not found");
+        return this.contractService.findForUser(req.user.id);
+    }
+
+    @Roles(Role.ASSIGNMENT_EDITOR)
+    @Get(":id")
+    getOne(@Param("id", ParseObjectIdPipe) id: Types.ObjectId) {
+        return this.contractService.findOne(id.toString());
+    }
 }

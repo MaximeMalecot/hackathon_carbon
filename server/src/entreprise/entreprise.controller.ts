@@ -22,7 +22,7 @@ import { CreateEntrepriseDto } from "./dto/create-entreprise.dto";
 import { UpdateEntrepriseDto } from "./dto/update-entreprise.dto";
 import { EntrepriseService } from "./entreprise.service";
 
-@Controller("entreprise")
+@Controller("entreprises")
 export class EntrepriseController {
     constructor(private readonly entrepriseService: EntrepriseService) {}
 
