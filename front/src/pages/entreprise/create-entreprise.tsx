@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import entrepriseService from "../../services/entreprise.service";
 
@@ -20,7 +20,9 @@ export default function CreationEntreprise() {
                     throw new Error("Missing field(s)");
                 await entrepriseService.create(name, address, file);
             } catch (e: any) {
-                console.error(e.message);
+                toast.error("Erreur: " + e.message, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
             }
         },
         [formData]
@@ -99,7 +101,6 @@ export default function CreationEntreprise() {
                     </div>
                 </div>
             </form>
-            <ToastContainer />
         </div>
     );
 }

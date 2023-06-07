@@ -1,5 +1,6 @@
 import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import AppLayout from "./components/layout/app-layout";
 import CreationEntreprise from "./pages/entreprise/create-entreprise";
 
@@ -14,6 +15,7 @@ function App() {
     return (
         <div className="App relative">
             <Suspense>
+                <ToastContainer />
                 <Routes>
                     <Route element={<AppLayout />}>
                         <Route path={"/formation"}>
