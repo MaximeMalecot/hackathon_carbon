@@ -4,6 +4,7 @@ import {
     Delete,
     Get,
     Param,
+    Patch,
     Post,
     Query,
     Req,
@@ -14,9 +15,8 @@ import { Roles } from "src/auth/decorators/roles.decorator";
 import { ParseObjectIdPipe } from "src/pipes/objectid.pipe";
 import { Role } from "src/users/schemas/user.schema";
 import { CreatePostDto } from "./dto/create-post.dto";
-import { PostTypePipe } from "./pipes/post-type.pipe";
+import { FindPostDto } from "./dto/find-post.dto";
 import { PostService } from "./posts.service";
-import { PostTypes } from "./schemas/post.schema";
 
 @ApiTags("posts")
 @Controller("posts")
@@ -24,11 +24,8 @@ export class PostController {
     constructor(private readonly postService: PostService) {}
 
     @Get()
-    async getPosts(
-        @Req() req: any,
-        @Query("type", PostTypePipe) type?: PostTypes
-    ) {
-        return await this.postService.findAll(req.user, type);
+    async getPosts(@Req() req: any, @Query() filters?: FindPostDto) {
+        return await this.postService.findAll(req.user, filters);
     }
 
     @Roles(Role.NEWS_EDITOR)
@@ -41,5 +38,11 @@ export class PostController {
     @Delete(":id")
     async deletePost(@Param("id", ParseObjectIdPipe) id: Types.ObjectId) {
         return await this.postService.delete(id);
+    }
+
+    @Roles(Role.NEWS_EDITOR)
+    @Patch("publish/:id")
+    async publishPost(@Param("id", ParseObjectIdPipe) id: Types.ObjectId) {
+        return await this.postService.publish(id);
     }
 }
