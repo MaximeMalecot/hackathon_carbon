@@ -17,6 +17,7 @@ import { QuizModule } from "./quiz/quiz.module";
 import { SeederModule } from "./seeder/seeder.module";
 import { SseModule } from "./sse/sse.module";
 import { UsersModule } from "./users/users.module";
+import { FormationChapterModule } from './formation_chapter/formation_chapter.module';
 import { PostsContentModule } from './posts-content/posts-content.module';
 
 @Module({
@@ -43,6 +44,7 @@ import { PostsContentModule } from './posts-content/posts-content.module';
             },
         }),
         SeederModule,
+        FormationChapterModule,
         SseModule,
         PostsContentModule,
     ],
