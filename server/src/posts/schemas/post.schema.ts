@@ -8,6 +8,11 @@ export enum PostTypes {
     "INFRA" = "INFRA",
 }
 
+export enum PostStatus {
+    "DRAFT" = "DRAFT",
+    "PUBLISHED" = "PUBLISHED",
+}
+
 @Schema()
 export class Post {
     @Prop({
@@ -33,6 +38,13 @@ export class Post {
         ref: "entreprise",
     })
     entrepriseId: string;
+
+    @Prop({
+        type: String,
+        enum: PostStatus,
+        default: PostStatus.DRAFT,
+    })
+    status: PostStatus;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

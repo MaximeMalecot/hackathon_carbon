@@ -35,7 +35,6 @@ export class UsersController {
 
     @Get("self")
     findSelf(@Req() req: any) {
-        if (!req.user) throw new Error("User not found");
         return this.usersService.findOne(req.user.id);
     }
 

@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     FileTypeValidator,
     Get,
     MaxFileSizeValidator,
@@ -17,8 +18,10 @@ import { ApiTags } from "@nestjs/swagger";
 import { Types } from "mongoose";
 import { diskStorage } from "multer";
 import { extname } from "path";
+import { Roles } from "src/auth/decorators/roles.decorator";
 import { ParseObjectIdPipe } from "src/pipes/objectid.pipe";
 import { CreatePostContentDto } from "src/posts-content/dto/post-content.dto";
+import { Role } from "src/users/schemas/user.schema";
 import { UpdateTextDto } from "./dto/update-text.dto";
 import { PostContentService } from "./posts-content.service";
 import { ContentType } from "./schema/post-content.schema";
@@ -35,6 +38,7 @@ export class PostContentController {
         return await this.postContentService.findContents(postId);
     }
 
+    @Roles(Role.NEWS_EDITOR)
     @Post(":postId/text")
     async createText(
         @Param("postId") postId: string,
@@ -46,6 +50,8 @@ export class PostContentController {
             body
         );
     }
+
+    @Roles(Role.NEWS_EDITOR)
     @UseInterceptors(
         FileInterceptor("file", {
             storage: diskStorage({
@@ -86,6 +92,7 @@ export class PostContentController {
         );
     }
 
+    @Roles(Role.NEWS_EDITOR)
     @UseInterceptors(
         FileInterceptor("file", {
             storage: diskStorage({
@@ -124,11 +131,18 @@ export class PostContentController {
         });
     }
 
+    @Roles(Role.NEWS_EDITOR)
     @Patch(":id/text")
     async updateTextContent(
         @Param("id") id: string,
         @Body() data: UpdateTextDto
     ) {
         return await this.postContentService.updateText(id, data);
+    }
+
+    @Roles(Role.NEWS_EDITOR)
+    @Delete(":id")
+    async deleteContent(@Param("id", ParseObjectIdPipe) id: Types.ObjectId) {
+        return await this.postContentService.deleteContent(id);
     }
 }
