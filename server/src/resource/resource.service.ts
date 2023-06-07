@@ -34,10 +34,10 @@ export class ResourceService {
         return resource;
     }
 
-    async updateResource(resourceId: string, file: string) {
+    async updateResource(resourceId: string, filePath: string) {
         const resource = this.resourceModel.findById(resourceId).exec();
         if (!resource) throw new NotFoundException("Resource not found");
-        return (await resource).updateOne({ file });
+        return (await resource).updateOne({ filePath });
     }
 
     async remove(id: string) {
