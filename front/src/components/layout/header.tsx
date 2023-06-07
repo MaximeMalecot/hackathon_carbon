@@ -12,8 +12,11 @@ export default function Header(props: any) {
                         to="/"
                         className="btn btn-ghost normal-case text-neutral text-xl"
                     >
-                        daisyUI
-                        {isConnected ? "y" : "n"}
+                        <img
+                            src="../../../public/images/logo/carbon.svg"
+                            alt="Carbon logo"
+                            className="w-32"
+                        />
                     </Link>
                 </div>
                 <div className="flex-none">
@@ -44,7 +47,7 @@ export default function Header(props: any) {
                             </li>
                         )}
                         <label
-                            onClick={()=> props.setMobileState(true)}
+                            onClick={() => props.setMobileState(true)}
                             className="md:hidden btn btn-circle swap swap-rotate"
                         >
                             {/* this hidden checkbox controls the state */}

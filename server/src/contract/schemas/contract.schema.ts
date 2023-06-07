@@ -3,7 +3,11 @@ import { HydratedDocument, Types } from "mongoose";
 
 export type ContractDocument = HydratedDocument<Contract>;
 
-export enum Status {}
+export enum StatusEnum {
+    ACTIVE = "ACTIVE",
+    CANCELED = "CANCELED",
+    FINISHED = "FINISHED",
+}
 
 @Schema()
 export class Contract {
@@ -26,11 +30,12 @@ export class Contract {
     entrepriseId: string;
 
     @Prop({
-        type: Boolean,
+        type: String,
+        enum: StatusEnum,
         required: true,
-        default: true,
+        default: StatusEnum.ACTIVE,
     })
-    isActive: boolean;
+    status: StatusEnum;
 
     @Prop({
         type: Date,
@@ -42,7 +47,12 @@ export class Contract {
     @Prop({
         type: Date,
     })
-    updatedAt: Date;
+    startDate: Date;
+
+    @Prop({
+        type: Date,
+    })
+    endDate: Date;
 }
 
 export const ContractSchema = SchemaFactory.createForClass(Contract);

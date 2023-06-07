@@ -16,8 +16,8 @@ export default function AppLayout() {
                 <Header setMobileState={setMobileState} />
             )}
             <main className="w-full pt-5 height-main-container">
-                <div className="flex w-full">
-                    <div className="md:block hidden">
+                <div className="flex w-full h-full">
+                    <div className="md:block hidden h-full">
                         <Sidebar setMobileState={setMobileState}/>
                     </div>
                     <section className="container px-5">

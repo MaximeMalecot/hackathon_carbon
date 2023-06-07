@@ -15,8 +15,10 @@ import { FormationModule } from "./formation/formation.module";
 import { PostModule } from "./posts/posts.module";
 import { QuizModule } from "./quiz/quiz.module";
 import { SeederModule } from "./seeder/seeder.module";
+import { SseModule } from "./sse/sse.module";
 import { UsersModule } from "./users/users.module";
 import { FormationChapterModule } from './formation_chapter/formation_chapter.module';
+import { PostsContentModule } from './posts-content/posts-content.module';
 
 @Module({
     imports: [
@@ -43,6 +45,8 @@ import { FormationChapterModule } from './formation_chapter/formation_chapter.mo
         }),
         SeederModule,
         FormationChapterModule,
+        SseModule,
+        PostsContentModule,
     ],
     controllers: [AppController],
     providers: [AppService],

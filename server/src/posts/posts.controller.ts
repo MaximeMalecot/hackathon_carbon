@@ -1,40 +1,48 @@
-import { Controller, Get, Req, Res } from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Patch,
+    Post,
+    Query,
+    Req,
+} from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { Types } from "mongoose";
+import { Roles } from "src/auth/decorators/roles.decorator";
+import { ParseObjectIdPipe } from "src/pipes/objectid.pipe";
+import { Role } from "src/users/schemas/user.schema";
+import { CreatePostDto } from "./dto/create-post.dto";
+import { FindPostDto } from "./dto/find-post.dto";
 import { PostService } from "./posts.service";
 
 @ApiTags("posts")
 @Controller("posts")
 export class PostController {
-    private users = [];
-    constructor(private readonly eventService: PostService) {}
+    constructor(private readonly postService: PostService) {}
 
     @Get()
-    async getPosts(@Req() req, @Res() res, next) {
-        try {
-            const userId = req.user.id;
-            this.eventService.addUser(req.user.id, res);
+    async getPosts(@Req() req: any, @Query() filters?: FindPostDto) {
+        return await this.postService.findAll(req.user, filters);
+    }
 
-            res.on("close", () => {
-                console.log("close", userId);
-                this.eventService.deleteUser(userId);
-            });
+    @Roles(Role.NEWS_EDITOR)
+    @Post()
+    async createPost(@Req() req: any, @Body() body: CreatePostDto) {
+        return await this.postService.create(req.user, body);
+    }
 
-            const headers = {
-                "Content-Type": "text/event-stream",
-                "Cache-Control": "no-cache",
-                Connection: "keep-alive",
-            };
-            res.writeHead(200, headers);
+    @Roles(Role.NEWS_EDITOR)
+    @Delete(":id")
+    async deletePost(@Param("id", ParseObjectIdPipe) id: Types.ObjectId) {
+        return await this.postService.delete(id);
+    }
 
-            setInterval(() => {
-                this.eventService.broadcastSpecific(
-                    { type: "connect", userId },
-                    userId
-                );
-            }, 5000);
-        } catch (err) {
-            console.error(err);
-            next();
-        }
+    @Roles(Role.NEWS_EDITOR)
+    @Patch("publish/:id")
+    async publishPost(@Param("id", ParseObjectIdPipe) id: Types.ObjectId) {
+        return await this.postService.publish(id);
     }
 }
