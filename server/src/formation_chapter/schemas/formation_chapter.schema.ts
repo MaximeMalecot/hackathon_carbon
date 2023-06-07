@@ -18,18 +18,10 @@ export class FormationChapter {
     order: BigInt;
 
     @Prop({
-        type: Types.ObjectId,
+        type: String,
         required: true,
-        ref: "resource",
     })
-    resourceId: string;
-
-    @Prop({
-        type: Types.ObjectId,
-        required: true,
-        ref: "quiz",
-    })
-    quizId: string;
+    name: string;
 
     @Prop({
         type: String,

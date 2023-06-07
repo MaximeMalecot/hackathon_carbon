@@ -1,17 +1,22 @@
-import { IsInt, IsOptional, IsString } from "class-validator";
+import { IsInt, IsObject, IsOptional, IsString } from "class-validator";
+import { CreateQuizDto } from "src/quiz/dto/create-quiz.dto";
 import { ChapterTypes } from "../schemas/formation_chapter.schema";
 
-export class CreateFormationChapterDto {
+export class ChapterDto {
     @IsInt()
     @IsOptional()
     order: number;
 
     @IsString()
-    resourceId: string;
-
-    @IsString()
-    quizId: string;
-
-    @IsString()
     type: ChapterTypes;
+}
+
+export class CreateResourceDto {}
+
+export class CreateFormationChapterDto {
+    @IsObject()
+    chapter: ChapterDto;
+
+    @IsObject()
+    data: CreateQuizDto;
 }

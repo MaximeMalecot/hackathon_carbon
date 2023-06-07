@@ -1,15 +1,6 @@
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    Patch,
-    Post,
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { CreateFormationChapterDto } from "./dto/create-formation_chapter.dto";
-import { UpdateFormationChapterDto } from "./dto/update-formation_chapter.dto";
 import { FormationChapterService } from "./formation_chapter.service";
 
 @ApiTags("formation-chapter")
@@ -19,9 +10,10 @@ export class FormationChapterController {
         private readonly formationChapterService: FormationChapterService
     ) {}
 
-    @Post("formation/:formationId")
+    @Post(":formationId")
     create(
-        @Body() createFormationChapterDto: CreateFormationChapterDto,
+        @Body()
+        createFormationChapterDto: CreateFormationChapterDto,
         @Param("formationId") formationId: string
     ) {
         return this.formationChapterService.create(
@@ -29,6 +21,9 @@ export class FormationChapterController {
             createFormationChapterDto
         );
     }
+
+    // @Post(":formationId")
+    // getChapterFromFormation(@Param("formationId") formationId: string) {}
 
     @Get("formation/:formationId")
     findAllForAFormation(@Param("formationId") formationId: string) {
@@ -38,17 +33,6 @@ export class FormationChapterController {
     @Get(":id")
     findOne(@Param("id") id: string) {
         return this.formationChapterService.findOne(id);
-    }
-
-    @Patch(":id")
-    update(
-        @Param("id") id: string,
-        @Body() updateFormationChapterDto: UpdateFormationChapterDto
-    ) {
-        return this.formationChapterService.update(
-            id,
-            updateFormationChapterDto
-        );
     }
 
     @Delete(":id")
