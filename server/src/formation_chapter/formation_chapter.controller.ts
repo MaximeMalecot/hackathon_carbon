@@ -1,6 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { CreateFormationChapterDto } from "./dto/create-formation_chapter.dto";
+import { Roles } from "src/auth/decorators/roles.decorator";
+import { Role } from "src/users/schemas/user.schema";
+import {
+    CreateQuizChapterDto,
+    CreateResourceChapterDto,
+} from "./dto/create-formation_chapter.dto";
 import { FormationChapterService } from "./formation_chapter.service";
 
 @ApiTags("formation-chapter")
@@ -10,20 +15,31 @@ export class FormationChapterController {
         private readonly formationChapterService: FormationChapterService
     ) {}
 
-    @Post(":formationId")
-    create(
+    @Post(":formationId/quiz")
+    @Roles(Role.TEACHER)
+    createQuiz(
         @Body()
-        createFormationChapterDto: CreateFormationChapterDto,
+        createFormationChapterDto: CreateQuizChapterDto,
         @Param("formationId") formationId: string
     ) {
-        return this.formationChapterService.create(
+        return this.formationChapterService.createChapterAndQuiz(
             formationId,
             createFormationChapterDto
         );
     }
 
-    // @Post(":formationId")
-    // getChapterFromFormation(@Param("formationId") formationId: string) {}
+    @Post(":formationId/resource")
+    @Roles(Role.TEACHER)
+    createResource(
+        @Body()
+        createFormationChapterDto: CreateResourceChapterDto,
+        @Param("formationId") formationId: string
+    ) {
+        return this.formationChapterService.createChapterAndResource(
+            formationId,
+            createFormationChapterDto
+        );
+    }
 
     @Get("formation/:formationId")
     findAllForAFormation(@Param("formationId") formationId: string) {
@@ -36,6 +52,7 @@ export class FormationChapterController {
     }
 
     @Delete(":id")
+    @Roles(Role.TEACHER)
     remove(@Param("id") id: string) {
         return this.formationChapterService.remove(id);
     }

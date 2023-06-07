@@ -8,9 +8,12 @@ import {
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { FormationService } from "src/formation/services/formation.service";
-import { CreateQuizDto } from "src/quiz/dto/create-quiz.dto";
 import { QuizService } from "src/quiz/quiz.service";
-import { CreateFormationChapterDto } from "./dto/create-formation_chapter.dto";
+import { ResourceService } from "src/resource/resource.service";
+import {
+    CreateQuizChapterDto,
+    CreateResourceChapterDto,
+} from "./dto/create-formation_chapter.dto";
 import {
     ChapterTypes,
     FormationChapter,
@@ -22,20 +25,26 @@ export class FormationChapterService {
         @InjectModel(FormationChapter.name)
         private readonly formationChapterModel: Model<FormationChapter>,
         private readonly formationService: FormationService,
-        private readonly quizService: QuizService
+        private readonly quizService: QuizService,
+        private readonly resourceService: ResourceService
     ) {}
 
     async createChapterAndQuiz(
         formationId: string,
-        createFormationChapterDto: CreateFormationChapterDto
+        createFormationChapterDto: CreateQuizChapterDto
     ) {
         try {
-            const { chapter } = createFormationChapterDto;
-            const quiz = createFormationChapterDto.data as CreateQuizDto;
+            const exists = this.formationService.findOne(formationId);
+            if (!exists) {
+                throw new BadRequestException("Formation does not exist");
+            }
+
+            const { chapter, quiz } = createFormationChapterDto;
 
             const newChapter = await this.formationChapterModel.create({
                 formationId,
                 ...chapter,
+                type: ChapterTypes.QUIZ,
             });
             const savedChapter = await newChapter.save();
 
@@ -55,34 +64,53 @@ export class FormationChapterService {
         }
     }
 
-    async createResourceAndQuiz() {}
-
-    async create(
+    async createChapterAndResource(
         formationId: string,
-        createFormationChapterDto: CreateFormationChapterDto
+        createFormationChapterDto: CreateResourceChapterDto
     ) {
-        const exists = this.formationService.findOne(formationId);
-        if (!exists) {
-            throw new BadRequestException("Formation does not exist");
-        }
+        try {
+            const exists = this.formationService.findOne(formationId);
+            if (!exists) {
+                throw new BadRequestException("Formation does not exist");
+            }
 
-        switch (createFormationChapterDto.chapter.type) {
-            case ChapterTypes.QUIZ:
-                return await this.createChapterAndQuiz(
-                    formationId,
-                    createFormationChapterDto
-                );
+            const { chapter, resource } = createFormationChapterDto;
 
-            case ChapterTypes.RESOURCE:
-                return new InternalServerErrorException("Not implemented yet");
+            const newChapter = await this.formationChapterModel.create({
+                formationId,
+                ...chapter,
+                type: ChapterTypes.RESOURCE,
+            });
+            const savedChapter = await newChapter.save();
 
-            default:
-                throw new BadRequestException("Invalid chapter type");
+            const newResource = await this.resourceService.create({
+                ...resource,
+                chapterId: savedChapter.id,
+            });
+
+            return {
+                ...savedChapter.toObject(),
+                resource: newResource.toObject(),
+            };
+        } catch (err) {
+            console.log(err);
+            if (err instanceof HttpException) throw err;
+            throw new InternalServerErrorException(err.message);
         }
     }
 
     async findAllForAFormation(formationId: string) {
-        return await this.formationChapterModel.find({ formationId });
+        try {
+            const formations = await this.formationChapterModel.find({
+                formationId,
+            });
+            if (!formations) throw new NotFoundException("No chapters found");
+            return formations;
+        } catch (err) {
+            console.log(err);
+            if (err instanceof HttpException) throw err;
+            throw new InternalServerErrorException(err.message);
+        }
     }
 
     async findOne(chapterId: string) {
@@ -97,6 +125,12 @@ export class FormationChapterService {
                 toReturn["quiz"] = data.toObject();
                 break;
             case ChapterTypes.RESOURCE:
+                data = await this.resourceService.findOneByChapterId(
+                    chapter.id
+                );
+                if (!data)
+                    throw new NotFoundException("Resource does not exist");
+                toReturn["resource"] = data.toObject();
                 break;
         }
 

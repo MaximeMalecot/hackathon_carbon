@@ -19,6 +19,7 @@ import { SseModule } from "./sse/sse.module";
 import { UsersModule } from "./users/users.module";
 import { FormationChapterModule } from './formation_chapter/formation_chapter.module';
 import { PostsContentModule } from './posts-content/posts-content.module';
+import { ResourceModule } from './resource/resource.module';
 
 @Module({
     imports: [
@@ -47,6 +48,7 @@ import { PostsContentModule } from './posts-content/posts-content.module';
         FormationChapterModule,
         SseModule,
         PostsContentModule,
+        ResourceModule,
     ],
     controllers: [AppController],
     providers: [AppService],
