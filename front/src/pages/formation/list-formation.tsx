@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Formation } from "../../interfaces";
 
 export default function ListFormation() {
     const [research, setResearch] = useState<string>("");
     // const [formations, setFormations] = useState([]);
-    const [formationsFiltered, setFormationsFiltered] = useState<Formation[]>([]);
+    const [formationsFiltered, setFormationsFiltered] = useState<Formation[]>(
+        []
+    );
     const handleChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             setResearch(e.target.value);
@@ -100,7 +103,10 @@ export default function ListFormation() {
             />
             <section className="grid xl:grid-cols-3 sm:grid-cols-2 gap-4">
                 {formationsFiltered.map((formation, index) => (
-                    <div key={index} className="card max-w-sm w-auto bg-base-100 shadow-xl">
+                    <div
+                        key={index}
+                        className="card max-w-sm w-auto bg-base-100 shadow-xl"
+                    >
                         <figure>
                             <img src={formation.image} alt="Formation image" />
                         </figure>
@@ -126,10 +132,12 @@ export default function ListFormation() {
                                         </svg>
                                     </div>
                                 </div>
-
-                                <button className="btn btn-info text-neutral">
+                                <Link
+                                    to={`/formation/${formation.id}`}
+                                    className="btn btn-info text-neutral"
+                                >
                                     Go
-                                </button>
+                                </Link>
                             </div>
                         </div>
                     </div>

@@ -19,3 +19,19 @@ export interface FormationChapters {
     resourceID: object;
     type: FORMATION_TYPE;
 }
+
+export interface QuestionQuiz {
+    id: number;
+    label: string;
+    answers: Answer[];
+}
+
+export interface Answer {
+    id: number;
+    label: string;
+}
+
+export interface SendAnswer {
+    questionId: number;
+    answers: number[];
+}
