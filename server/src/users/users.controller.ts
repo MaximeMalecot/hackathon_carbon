@@ -10,6 +10,7 @@ import {
     UseGuards,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { Public } from "src/auth/decorators/public.decator";
 import { Roles } from "src/auth/decorators/roles.decorator";
 import { ParseObjectIdPipe } from "src/pipes/objectid.pipe";
 import { Role } from "src/users/schemas/user.schema";
@@ -23,7 +24,8 @@ import { UsersService } from "./users.service";
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
-    @Roles(Role.ADMIN)
+    // @Roles(Role.ADMIN)
+    @Public()
     @Get()
     findAll() {
         return this.usersService.findAll();

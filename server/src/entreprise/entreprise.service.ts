@@ -59,4 +59,16 @@ export class EntrepriseService {
     async getEntreprises() {
         return await this.entrepriseModel.find().exec();
     }
+
+    async getEntreprise(id: string) {
+        return await this.entrepriseModel.findById(id);
+    }
+
+    async deleteEntreprise(id: string) {
+        const entreprise = await this.entrepriseModel.findById(id);
+        if (!entreprise)
+            throw new NotFoundException(`Entreprise with id ${id} not found`);
+        await this.entrepriseModel.findByIdAndDelete(id);
+        return;
+    }
 }

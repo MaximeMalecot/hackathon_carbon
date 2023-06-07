@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     FileTypeValidator,
     Get,
     MaxFileSizeValidator,
@@ -99,10 +100,21 @@ export class EntrepriseController {
             file && `${req.protocol}://${req.get("Host")}/${file.path}`
         );
     }
-
-    @Roles(Role.ENTREPRISE_EDITOR)
+    @Roles(Role.ENTREPRISE_EDITOR, Role.ASSIGNMENT_EDITOR, Role.VIEWER)
     @Get()
     async getEntreprises() {
         return await this.entrepriseService.getEntreprises();
+    }
+
+    @Roles(Role.ENTREPRISE_EDITOR, Role.ASSIGNMENT_EDITOR, Role.VIEWER)
+    @Get(":id")
+    async getEntreprise(@Param("id") id: string) {
+        return await this.entrepriseService.getEntreprise(id);
+    }
+
+    @Roles(Role.ADMIN)
+    @Delete(":id")
+    async deleteEntreprise(@Param("id") id: string) {
+        return await this.entrepriseService.deleteEntreprise(id);
     }
 }
