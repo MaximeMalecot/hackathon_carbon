@@ -20,7 +20,7 @@ export const AnswersQuestion = ({
     const [currentAnswer, setCurrentAnswer] = useState<number[]>([]);
     useEffect(() => {
         if (!initValue) return;
-        setCurrentAnswer(initValue);
+        setCurrentAnswer(initValue ?? []);
     }, [initValue]);
 
     const handleAnswer = useCallback(
@@ -38,7 +38,8 @@ export const AnswersQuestion = ({
 
     const nextQuestion = useCallback(() => {
         setNextQuestion(currentAnswer);
-    }, [currentAnswer]);
+        setCurrentAnswer([]);
+    }, [currentAnswer, setNextQuestion]);
 
     return (
         <>
@@ -65,15 +66,15 @@ export const AnswersQuestion = ({
             </div>
             <div className="card-actions mt-4 justify-between">
                 <button
-                    className="btn btn-primary text-neutral"
+                    className="btn btn-accent text-neutral"
                     onClick={() => setBackQuestion()}
-                    disabled={currentQuestion <= 1}
+                    disabled={currentQuestion === 1}
                 >
                     Back
                 </button>
                 <button
                     className="btn btn-accent text-neutral"
-                    onClick={() => setNextQuestion(currentAnswer)}
+                    onClick={() => nextQuestion()}
                     disabled={
                         currentAnswer.length === 0 ||
                         currentQuestion === nbQuestions

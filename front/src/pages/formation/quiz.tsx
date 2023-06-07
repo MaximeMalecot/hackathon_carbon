@@ -42,22 +42,48 @@ export default function Quiz() {
 
     const currentQuestionId = useMemo(() => {
         return questions[currentQuestion - 1].id;
-    }, [selectedAnswers]);
+    }, [currentQuestion]);
+
+    const currentAnswers = useMemo(() => {
+        console.log(selectedAnswers, "selectedAnswers");
+        return (
+            selectedAnswers.find((ele) => ele.questionId === currentQuestionId)
+                ?.answers ?? null
+        );
+    }, [selectedAnswers, currentQuestionId]);
 
     const setNextQuestion = useCallback(
         (answers: number[]) => {
-            setSelectedAnswer([
-                ...selectedAnswers,
-                {
-                    questionId: currentQuestionId,
-                    answers,
-                },
-            ]);
+            console.log(answers, "answers");
+            if (currentAnswers) {
+                setSelectedAnswer(
+                    selectedAnswers.map((ele) =>
+                        ele.questionId === currentQuestionId
+                            ? { ...ele, answers }
+                            : ele
+                    )
+                );
+            } else {
+                setSelectedAnswer([
+                    ...selectedAnswers,
+                    {
+                        questionId: currentQuestionId,
+                        answers,
+                    },
+                ]);
+            }
+
             if (currentQuestion !== questions.length) {
                 setCurrentQuestion(currentQuestion + 1);
             }
         },
-        [selectedAnswers, currentQuestion]
+        [
+            currentAnswers,
+            selectedAnswers,
+            currentQuestionId,
+            currentQuestion,
+            questions.length,
+        ]
     );
 
     const setBackQuestion = useCallback(() => {
@@ -87,10 +113,7 @@ export default function Quiz() {
                         labelQuestion={questions[currentQuestion - 1].label}
                     />
                     <AnswersQuestion
-                        initValue={
-                            selectedAnswers[currentQuestion - 1]?.answers ??
-                            null
-                        }
+                        initValue={currentAnswers}
                         nbQuestions={questions.length}
                         answers={questions[currentQuestion - 1].answers}
                         currentQuestion={currentQuestion}
