@@ -10,6 +10,7 @@ import { CompleteQuizDto } from "./dto/complete-quiz.dto";
 import { CreateQuestionDto } from "./dto/create-question.dto";
 import { CreateQuizDto } from "./dto/create-quiz.dto";
 import { UpdateQuestionDto } from "./dto/update-question.dto";
+import { QuizResultService } from "./quiz-result.service";
 import { Question } from "./schemas/question.schema";
 import { Quiz } from "./schemas/quiz.schema";
 
@@ -17,7 +18,8 @@ import { Quiz } from "./schemas/quiz.schema";
 export class QuizService {
     constructor(
         @InjectModel(Quiz.name) private quizModel: Model<Quiz>,
-        @InjectModel(Question.name) private questionModel: Model<Question>
+        @InjectModel(Question.name) private questionModel: Model<Question>,
+        private readonly quizResultService: QuizResultService
     ) {}
 
     async findOne(quizId: string) {
@@ -88,12 +90,14 @@ export class QuizService {
         return this.questionModel.findByIdAndUpdate(questionId, newQuestion);
     }
 
-    async completeQuiz(completeQuizDto: CompleteQuizDto) {
+    async completeQuiz(userId, completeQuizDto: CompleteQuizDto) {
         const { quizId, answers } = completeQuizDto;
 
         const quiz = await this.findOne(quizId);
         if (!quiz) throw new NotFoundException("No quiz found");
 
-        return { mark: "10/10" };
+        const mark = 10;
+        await this.quizResultService.createResult(quizId, userId, mark);
+        return { mark };
     }
 }

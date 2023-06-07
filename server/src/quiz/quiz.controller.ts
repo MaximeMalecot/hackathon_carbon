@@ -6,6 +6,7 @@ import {
     Param,
     Patch,
     Post,
+    Req,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { Roles } from "src/auth/decorators/roles.decorator";
@@ -58,7 +59,7 @@ export class QuizController {
     }
 
     @Post("/complete")
-    async completeQuiz(@Body() body: CompleteQuizDto) {
-        return this.quizService.completeQuiz(body);
+    async completeQuiz(@Body() body: CompleteQuizDto, @Req() req: any) {
+        return this.quizService.completeQuiz(req.user.id, body);
     }
 }
