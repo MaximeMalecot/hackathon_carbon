@@ -15,6 +15,7 @@ import { FormationModule } from "./formation/formation.module";
 import { PostModule } from "./posts/posts.module";
 import { QuizModule } from "./quiz/quiz.module";
 import { SeederModule } from "./seeder/seeder.module";
+import { SseModule } from "./sse/sse.module";
 import { UsersModule } from "./users/users.module";
 
 @Module({
@@ -41,6 +42,7 @@ import { UsersModule } from "./users/users.module";
             },
         }),
         SeederModule,
+        SseModule,
     ],
     controllers: [AppController],
     providers: [AppService],
