@@ -2,7 +2,10 @@ import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { Roles } from "src/auth/decorators/roles.decorator";
 import { Role } from "src/users/schemas/user.schema";
-import { CreateFormationChapterDto } from "./dto/create-formation_chapter.dto";
+import {
+    CreateQuizChapterDto,
+    CreateResourceChapterDto,
+} from "./dto/create-formation_chapter.dto";
 import { FormationChapterService } from "./formation_chapter.service";
 
 @ApiTags("formation-chapter")
@@ -12,14 +15,27 @@ export class FormationChapterController {
         private readonly formationChapterService: FormationChapterService
     ) {}
 
-    @Post(":formationId")
+    @Post(":formationId/quiz")
     @Roles(Role.TEACHER)
-    create(
+    createQuiz(
         @Body()
-        createFormationChapterDto: CreateFormationChapterDto,
+        createFormationChapterDto: CreateQuizChapterDto,
         @Param("formationId") formationId: string
     ) {
-        return this.formationChapterService.create(
+        return this.formationChapterService.createChapterAndQuiz(
+            formationId,
+            createFormationChapterDto
+        );
+    }
+
+    @Post(":formationId/resource")
+    @Roles(Role.TEACHER)
+    createResource(
+        @Body()
+        createFormationChapterDto: CreateResourceChapterDto,
+        @Param("formationId") formationId: string
+    ) {
+        return this.formationChapterService.createChapterAndResource(
             formationId,
             createFormationChapterDto
         );

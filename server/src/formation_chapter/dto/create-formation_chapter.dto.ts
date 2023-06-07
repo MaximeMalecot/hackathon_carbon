@@ -1,5 +1,6 @@
 import { IsInt, IsObject, IsOptional, IsString } from "class-validator";
 import { CreateQuizDto } from "src/quiz/dto/create-quiz.dto";
+import { CreateResourceDto } from "src/resource/dto/create-resource.dto";
 import { ChapterTypes } from "../schemas/formation_chapter.schema";
 
 export class ChapterDto {
@@ -11,12 +12,18 @@ export class ChapterDto {
     type: ChapterTypes;
 }
 
-export class CreateResourceDto {}
-
-export class CreateFormationChapterDto {
+export class CreateResourceChapterDto {
     @IsObject()
     chapter: ChapterDto;
 
     @IsObject()
-    data: CreateQuizDto | CreateResourceDto;
+    resource: CreateResourceDto;
+}
+
+export class CreateQuizChapterDto {
+    @IsObject()
+    chapter: ChapterDto;
+
+    @IsObject()
+    quiz: CreateQuizDto;
 }
