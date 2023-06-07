@@ -134,6 +134,12 @@ export class FormationChapterService {
                 toReturn["quiz"] = data.toObject();
                 break;
             case ChapterTypes.RESOURCE:
+                data = await this.resourceService.findOneByChapterId(
+                    chapter.id
+                );
+                if (!data)
+                    throw new NotFoundException("Resource does not exist");
+                toReturn["resource"] = data.toObject();
                 break;
         }
 
