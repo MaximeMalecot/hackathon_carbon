@@ -1,22 +1,19 @@
 import { Controller, Get, Req, Res } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
-import { EventService } from "./event.service";
+import { SseService } from "./sse.service";
 
-@ApiTags("events")
-@Controller("events")
-export class EventController {
-    private users = [];
-    constructor(private readonly eventService: EventService) {}
+@Controller("sse")
+export class SseController {
+    constructor(private sseService: SseService) {}
 
     @Get()
-    async getEvents(@Req() req, @Res() res, next) {
+    async getSse(@Req() req, @Res() res, next) {
         try {
             const userId = req.user.id;
-            this.eventService.addUser(req.user.id, res);
+            this.sseService.addUser(req.user.id, res);
 
             res.on("close", () => {
                 console.log("close", userId);
-                this.eventService.deleteUser(userId);
+                this.sseService.deleteUser(userId);
             });
 
             const headers = {
@@ -27,7 +24,7 @@ export class EventController {
             res.writeHead(200, headers);
 
             setInterval(() => {
-                this.eventService.broadcastUnknown(
+                this.sseService.broadcastSpecific(
                     { type: "connect", userId },
                     userId
                 );

@@ -8,7 +8,6 @@ import { JwtService } from "@nestjs/jwt";
 import { compareSync } from "bcrypt";
 import { UsersService } from "src/users/users.service";
 import { LoginDto } from "./dto/login.dto";
-import { RegisterDto } from "./dto/register.dto";
 
 @Injectable()
 export class AuthService {
@@ -24,7 +23,7 @@ export class AuthService {
                 throw new UnauthorizedException();
             }
             const payload = {
-                sub: user._id,
+                sub: user._id.toString(),
                 roles: user.roles,
             };
             return {
@@ -44,10 +43,5 @@ export class AuthService {
             }
             throw new HttpException(err.message, 500, err);
         }
-    }
-
-    async register(registerDto: RegisterDto) {
-        await this.userService.create(registerDto);
-        return null;
     }
 }

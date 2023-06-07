@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "./assets/font.css";
+
+@layer base {
+    html {
+        font-family: Calibri, sans-serif;
+    }
+}
+
+.height-main-container {
+    height: calc(100vh - 68px);
+}

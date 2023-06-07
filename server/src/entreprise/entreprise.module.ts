@@ -12,5 +12,6 @@ import { Entreprise, EntrepriseSchema } from "./schemas/entreprise.schema";
     ],
     controllers: [EntrepriseController],
     providers: [EntrepriseService],
+    exports: [EntrepriseService],
 })
 export class EntrepriseModule {}
