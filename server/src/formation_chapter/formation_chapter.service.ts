@@ -3,6 +3,7 @@ import {
     HttpException,
     Injectable,
     InternalServerErrorException,
+    NotFoundException,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
@@ -24,7 +25,7 @@ export class FormationChapterService {
         private readonly quizService: QuizService
     ) {}
 
-    async createQuizChapter(
+    async createChapterAndQuiz(
         formationId: string,
         createFormationChapterDto: CreateFormationChapterDto
     ) {
@@ -54,7 +55,7 @@ export class FormationChapterService {
         }
     }
 
-    async createResourceChapter() {}
+    async createResourceAndQuiz() {}
 
     async create(
         formationId: string,
@@ -67,7 +68,7 @@ export class FormationChapterService {
 
         switch (createFormationChapterDto.chapter.type) {
             case ChapterTypes.QUIZ:
-                return await this.createQuizChapter(
+                return await this.createChapterAndQuiz(
                     formationId,
                     createFormationChapterDto
                 );
@@ -85,7 +86,21 @@ export class FormationChapterService {
     }
 
     async findOne(chapterId: string) {
-        return await this.formationChapterModel.findById(chapterId);
+        const chapter = await this.formationChapterModel.findById(chapterId);
+        if (!chapter) throw new NotFoundException("Chapter does not exist");
+        const toReturn = { ...chapter.toObject() };
+        let data = null;
+        switch (chapter.type) {
+            case ChapterTypes.QUIZ:
+                data = await this.quizService.findOneByChapterId(chapter.id);
+                if (!data) throw new NotFoundException("Quiz does not exist");
+                toReturn["quiz"] = data.toObject();
+                break;
+            case ChapterTypes.RESOURCE:
+                break;
+        }
+
+        return toReturn;
     }
 
     async remove(id: string) {
