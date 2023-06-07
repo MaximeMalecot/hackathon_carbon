@@ -10,7 +10,7 @@ export default function AppLayout() {
             {/* mobile sidebar */}
             {mobileState ? (
                 <div className="md:hidden block h-screen absolute z-10 w-full">
-                    <Sidebar setMobileState={setMobileState}/>
+                    <Sidebar setMobileState={setMobileState} />
                 </div>
             ) : (
                 <Header setMobileState={setMobileState} />
@@ -18,9 +18,9 @@ export default function AppLayout() {
             <main className="w-full pt-5 height-main-container">
                 <div className="flex w-full h-full">
                     <div className="md:block hidden h-full">
-                        <Sidebar setMobileState={setMobileState}/>
+                        <Sidebar setMobileState={setMobileState} />
                     </div>
-                    <section className="container px-5">
+                    <section className="container h-full px-5 overflow-y-auto">
                         <Outlet />
                     </section>
                 </div>
