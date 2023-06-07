@@ -8,6 +8,8 @@ import {
     Post,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { Roles } from "src/auth/decorators/roles.decorator";
+import { Role } from "src/users/schemas/user.schema";
 import { CreateQuestionDto } from "./dto/create-question.dto";
 import { UpdateQuestionDto } from "./dto/update-question.dto";
 import { QuizService } from "./quiz.service";
@@ -28,7 +30,14 @@ export class QuizController {
         return this.quizService.getQuestionsWithAnswers(quizId);
     }
 
+    @Get(":quizId/full-questions")
+    @Roles(Role.TEACHER)
+    getQuestionsWithFullAnswersFromQuiz(@Param("quizId") quizId: string) {
+        return this.quizService.getQuestionsAndFullAnswers(quizId);
+    }
+
     @Post(":quizId/question")
+    @Roles(Role.TEACHER)
     async createQuestion(
         @Param("quizId") quizId: string,
         @Body() question: CreateQuestionDto
@@ -39,6 +48,7 @@ export class QuizController {
     }
 
     @Patch("question/:questionId")
+    @Roles(Role.TEACHER)
     updateQuestion(
         @Param("questionId") questionId: string,
         @Body() question: UpdateQuestionDto

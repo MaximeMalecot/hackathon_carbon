@@ -1,5 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { Roles } from "src/auth/decorators/roles.decorator";
+import { Role } from "src/users/schemas/user.schema";
 import { CreateFormationChapterDto } from "./dto/create-formation_chapter.dto";
 import { FormationChapterService } from "./formation_chapter.service";
 
@@ -11,6 +13,7 @@ export class FormationChapterController {
     ) {}
 
     @Post(":formationId")
+    @Roles(Role.TEACHER)
     create(
         @Body()
         createFormationChapterDto: CreateFormationChapterDto,
@@ -21,9 +24,6 @@ export class FormationChapterController {
             createFormationChapterDto
         );
     }
-
-    // @Post(":formationId")
-    // getChapterFromFormation(@Param("formationId") formationId: string) {}
 
     @Get("formation/:formationId")
     findAllForAFormation(@Param("formationId") formationId: string) {
@@ -36,6 +36,7 @@ export class FormationChapterController {
     }
 
     @Delete(":id")
+    @Roles(Role.TEACHER)
     remove(@Param("id") id: string) {
         return this.formationChapterService.remove(id);
     }

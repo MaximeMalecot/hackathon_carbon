@@ -87,6 +87,7 @@ export class FormationController {
 
     // DEV ONLY
     @Post(":formationId/progression")
+    @Roles(Role.ADMIN)
     createProgressionOnFormation(
         @Param("formationId") formationId: string,
         @Req() req: any
