@@ -7,6 +7,7 @@ import {
     Post,
     Query,
     Req,
+    UseGuards,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { Types } from "mongoose";
@@ -16,6 +17,7 @@ import { Role } from "src/users/schemas/user.schema";
 import { ContractService } from "./contract.service";
 import { CreateContractDto } from "./dto/create-contract.dto";
 import { FilterDto } from "./dto/filter.dto";
+import { OwnContractsGuards } from "./guards/contracts.guard";
 import { StatusPipe } from "./pipes/status.pipe";
 import { StatusEnum } from "./schemas/contract.schema";
 
@@ -62,9 +64,9 @@ export class ContractController {
         return this.contractService.findForUser(req.user.id);
     }
 
-    @Roles(Role.ASSIGNMENT_EDITOR)
+    @UseGuards(OwnContractsGuards)
     @Get(":id")
     getOne(@Param("id", ParseObjectIdPipe) id: Types.ObjectId) {
-        return this.contractService.findOne(id.toString());
+        return this.contractService.findOneWithDelivrables(id);
     }
 }

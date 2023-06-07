@@ -1,6 +1,8 @@
 import { Controller, Get, Req, Res } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { SseService } from "./sse.service";
 
+@ApiTags("sse")
 @Controller("sse")
 export class SseController {
     constructor(private sseService: SseService) {}
