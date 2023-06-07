@@ -17,6 +17,7 @@ import { Contract, StatusEnum } from "./schemas/contract.schema";
 export class ContractService {
     constructor(
         @InjectModel(Contract.name) private contractModel: Model<Contract>,
+        @Inject(forwardRef(() => EntrepriseService))
         private entrepriseService: EntrepriseService,
         private userService: UsersService,
         @Inject(forwardRef(() => DelivrableService))
@@ -118,5 +119,32 @@ export class ContractService {
         const contract = await this.contractModel.findById(id);
         if (!contract) throw new BadRequestException("Contract not found");
         return await this.delivrableService.findForContract(contract._id);
+    }
+
+    async getUsersFromEntreprise(id: string) {
+        const contracts = await this.contractModel.find({
+            entrepriseId: id,
+        });
+        const users = [];
+        for (const contract of contracts) {
+            const user = await this.userService.findOneRestricted(
+                contract.userId
+            );
+            if (user) users.push(user);
+        }
+        return users;
+    }
+
+    async isUserInEntreprise(
+        userId: Types.ObjectId,
+        entrepriseId: Types.ObjectId
+    ) {
+        const contract = await this.contractModel.findOne({
+            userId: userId,
+            entrepriseId: entrepriseId,
+            status: StatusEnum.ACTIVE,
+        });
+        console.log(contract);
+        return !!contract;
     }
 }

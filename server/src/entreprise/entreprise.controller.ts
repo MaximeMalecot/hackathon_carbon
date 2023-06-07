@@ -11,6 +11,7 @@ import {
     Post,
     Req,
     UploadedFile,
+    UseGuards,
     UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -22,6 +23,7 @@ import { Role } from "src/users/schemas/user.schema";
 import { CreateEntrepriseDto } from "./dto/create-entreprise.dto";
 import { UpdateEntrepriseDto } from "./dto/update-entreprise.dto";
 import { EntrepriseService } from "./entreprise.service";
+import { OwnEntrepriseGuards } from "./guards/entreprise.guard";
 
 @ApiTags("entreprises")
 @Controller("entreprises")
@@ -108,7 +110,12 @@ export class EntrepriseController {
         return await this.entrepriseService.getEntreprises();
     }
 
-    @Roles(Role.ENTREPRISE_EDITOR, Role.ASSIGNMENT_EDITOR, Role.VIEWER)
+    @Get("self")
+    async getEntrepriseByUser(@Req() req) {
+        return await this.entrepriseService.getEntrepriseByUser(req.user.id);
+    }
+
+    @UseGuards(OwnEntrepriseGuards)
     @Get(":id")
     async getEntreprise(@Param("id") id: string) {
         return await this.entrepriseService.getEntreprise(id);

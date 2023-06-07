@@ -12,7 +12,7 @@ import { Contract, ContractSchema } from "./schemas/contract.schema";
         MongooseModule.forFeature([
             { name: Contract.name, schema: ContractSchema },
         ]),
-        EntrepriseModule,
+        forwardRef(() => EntrepriseModule),
         UsersModule,
         forwardRef(() => DelivrableModule),
     ],

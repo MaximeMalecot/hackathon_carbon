@@ -59,6 +59,16 @@ export class UsersService {
         return user;
     }
 
+    async findOneRestricted(id: string) {
+        const user = await this.userModel
+            .findOne({ _id: id })
+            .select("-roles -createdAt");
+        if (!user) {
+            throw new NotFoundException(`User with id ${id} not found`);
+        }
+        return user;
+    }
+
     async findOneByEmail(email: string) {
         const user = await this.userModel
             .findOne({
