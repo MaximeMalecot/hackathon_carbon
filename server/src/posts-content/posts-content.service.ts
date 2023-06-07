@@ -122,7 +122,6 @@ export class PostContentService {
     }
 
     async deleteContents(postId: Types.ObjectId) {
-        console.log("DELETINGCONTENTS");
         const contents = await this.findContents(postId);
         console.log(contents);
         if (!contents) return;
