@@ -8,6 +8,7 @@ import {
     Query,
     Req,
 } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { Types } from "mongoose";
 import { Roles } from "src/auth/decorators/roles.decorator";
 import { ParseObjectIdPipe } from "src/pipes/objectid.pipe";
@@ -18,6 +19,7 @@ import { FilterDto } from "./dto/filter.dto";
 import { StatusPipe } from "./pipes/status.pipe";
 import { StatusEnum } from "./schemas/contract.schema";
 
+@ApiTags("contracts")
 @Controller("contracts")
 export class ContractController {
     constructor(private readonly contractService: ContractService) {}

@@ -17,6 +17,7 @@ import { QuizModule } from "./quiz/quiz.module";
 import { SeederModule } from "./seeder/seeder.module";
 import { SseModule } from "./sse/sse.module";
 import { UsersModule } from "./users/users.module";
+import { PostsContentModule } from './posts-content/posts-content.module';
 
 @Module({
     imports: [
@@ -43,6 +44,7 @@ import { UsersModule } from "./users/users.module";
         }),
         SeederModule,
         SseModule,
+        PostsContentModule,
     ],
     controllers: [AppController],
     providers: [AppService],

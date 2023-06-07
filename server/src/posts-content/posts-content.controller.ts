@@ -1,7 +1,6 @@
 import {
     Body,
     Controller,
-    Delete,
     FileTypeValidator,
     Get,
     MaxFileSizeValidator,
@@ -15,23 +14,42 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiTags } from "@nestjs/swagger";
+import { Types } from "mongoose";
 import { diskStorage } from "multer";
 import { extname } from "path";
-import { Roles } from "src/auth/decorators/roles.decorator";
-import { Role } from "src/users/schemas/user.schema";
-import { CreateEntrepriseDto } from "./dto/create-entreprise.dto";
-import { UpdateEntrepriseDto } from "./dto/update-entreprise.dto";
-import { EntrepriseService } from "./entreprise.service";
+import { ParseObjectIdPipe } from "src/pipes/objectid.pipe";
+import { CreatePostContentDto } from "src/posts-content/dto/post-content.dto";
+import { UpdateTextDto } from "./dto/update-text.dto";
+import { PostContentService } from "./posts-content.service";
+import { ContentType } from "./schema/post-content.schema";
 
-@ApiTags("entreprises")
-@Controller("entreprises")
-export class EntrepriseController {
-    constructor(private readonly entrepriseService: EntrepriseService) {}
+@ApiTags("posts-content")
+@Controller("posts-content")
+export class PostContentController {
+    constructor(private readonly postContentService: PostContentService) {}
 
+    @Get(":postId")
+    async getPostContent(
+        @Param("postId", ParseObjectIdPipe) postId: Types.ObjectId
+    ) {
+        return await this.postContentService.findContents(postId);
+    }
+
+    @Post(":postId/text")
+    async createText(
+        @Param("postId") postId: string,
+        @Body() body: CreatePostContentDto
+    ) {
+        return await this.postContentService.addContent(
+            postId,
+            ContentType.TEXT,
+            body
+        );
+    }
     @UseInterceptors(
         FileInterceptor("file", {
             storage: diskStorage({
-                destination: "./files/entreprise",
+                destination: "./files/post",
                 filename: (req, file, cb) => {
                     const uniqueSuffix =
                         Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -43,11 +61,11 @@ export class EntrepriseController {
             }),
         })
     )
-    @Roles(Role.ENTREPRISE_EDITOR)
-    @Post()
-    async createEntreprise(
+    @Post(":postId/image")
+    async createImage(
         @Req() req,
-        @Body() body: CreateEntrepriseDto,
+        @Param("postId") postId: string,
+        @Body("order") order: number,
         @UploadedFile(
             new ParseFilePipe({
                 validators: [
@@ -58,16 +76,20 @@ export class EntrepriseController {
         )
         file: Express.Multer.File
     ) {
-        return await this.entrepriseService.createEntreprise(
-            body,
-            `${req.protocol}://${req.get("Host")}/${file.path}`
+        return await this.postContentService.addContent(
+            postId,
+            ContentType.FILE,
+            {
+                data: `${req.protocol}://${req.get("Host")}/${file.path}`,
+                order,
+            }
         );
     }
 
     @UseInterceptors(
         FileInterceptor("file", {
             storage: diskStorage({
-                destination: "./files/entreprise",
+                destination: "./files/post",
                 filename: (req, file, cb) => {
                     const uniqueSuffix =
                         Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -79,12 +101,11 @@ export class EntrepriseController {
             }),
         })
     )
-    @Roles(Role.ENTREPRISE_EDITOR)
-    @Patch(":id")
-    async updateEntreprise(
+    @Patch(":id/image")
+    async updateImageContent(
         @Req() req,
         @Param("id") id: string,
-        @Body() body: UpdateEntrepriseDto,
+        @Body("order") order?: number,
         @UploadedFile(
             new ParseFilePipe({
                 validators: [
@@ -96,27 +117,18 @@ export class EntrepriseController {
         )
         file?: Express.Multer.File
     ) {
-        return await this.entrepriseService.updateEntreprise(
-            id,
-            body,
-            file && `${req.protocol}://${req.get("Host")}/${file.path}`
-        );
-    }
-    @Roles(Role.ENTREPRISE_EDITOR, Role.ASSIGNMENT_EDITOR, Role.VIEWER)
-    @Get()
-    async getEntreprises() {
-        return await this.entrepriseService.getEntreprises();
+        console.log("onéla");
+        return await this.postContentService.updateImage(id, {
+            data: `${req.protocol}://${req.get("Host")}/${file.path}`,
+            order,
+        });
     }
 
-    @Roles(Role.ENTREPRISE_EDITOR, Role.ASSIGNMENT_EDITOR, Role.VIEWER)
-    @Get(":id")
-    async getEntreprise(@Param("id") id: string) {
-        return await this.entrepriseService.getEntreprise(id);
-    }
-
-    @Roles(Role.ADMIN)
-    @Delete(":id")
-    async deleteEntreprise(@Param("id") id: string) {
-        return await this.entrepriseService.deleteEntreprise(id);
+    @Patch(":id/text")
+    async updateTextContent(
+        @Param("id") id: string,
+        @Body() data: UpdateTextDto
+    ) {
+        return await this.postContentService.updateText(id, data);
     }
 }

@@ -3,14 +3,6 @@ import { HydratedDocument, Types } from "mongoose";
 
 export type PostDocument = HydratedDocument<Post>;
 
-export type ContentType = "text" | "file";
-
-export type Content = {
-    type: ContentType;
-    data: string;
-    order: number;
-};
-
 export enum PostTypes {
     "TECHNO" = "TECHNO",
     "INFRA" = "INFRA",
@@ -23,12 +15,6 @@ export class Post {
         required: true,
     })
     title: string;
-
-    @Prop({
-        type: Array<Content>(),
-        required: true,
-    })
-    content: Array<Content>;
 
     @Prop({
         type: [String],

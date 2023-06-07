@@ -4,8 +4,7 @@ import { Model } from "mongoose";
 import { ContractService } from "src/contract/contract.service";
 import { StatusEnum } from "src/contract/schemas/contract.schema";
 import { Role, User } from "src/users/schemas/user.schema";
-import { CreatePostContentDto } from "./dto/post-content.dto";
-import { ContentType, Post, PostTypes } from "./schemas/post.schema";
+import { Post, PostTypes } from "./schemas/post.schema";
 
 @Injectable()
 export class PostService {
@@ -43,6 +42,10 @@ export class PostService {
         return await this.postModel.find();
     }
 
+    async findOne(id: string) {
+        return await this.postModel.findById(id);
+    }
+
     async create(user: User, body: any) {
         let data = {} as any;
         data.writerId = user._id;
@@ -50,22 +53,5 @@ export class PostService {
 
         const createdPost = new this.postModel(data);
         return await createdPost.save();
-    }
-
-    async addContent(
-        postId: string,
-        type: ContentType,
-        dto: CreatePostContentDto
-    ) {
-        const post = await this.postModel.findById(postId);
-        if (!post) throw new Error("Post not found");
-        const content = {
-            type: type,
-            data: dto.data,
-            order: dto.order,
-        };
-        post.content.push(content);
-        await post.save();
-        return content;
     }
 }
