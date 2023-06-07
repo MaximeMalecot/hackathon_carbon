@@ -6,6 +6,7 @@ import {
 import { InjectModel } from "@nestjs/mongoose";
 import * as crypto from "crypto";
 import { Model } from "mongoose";
+import { CompleteQuizDto } from "./dto/complete-quiz.dto";
 import { CreateQuestionDto } from "./dto/create-question.dto";
 import { CreateQuizDto } from "./dto/create-quiz.dto";
 import { UpdateQuestionDto } from "./dto/update-question.dto";
@@ -85,5 +86,14 @@ export class QuizService {
 
     async updateQuestion(questionId: string, newQuestion: UpdateQuestionDto) {
         return this.questionModel.findByIdAndUpdate(questionId, newQuestion);
+    }
+
+    async completeQuiz(completeQuizDto: CompleteQuizDto) {
+        const { quizId, answers } = completeQuizDto;
+
+        const quiz = await this.findOne(quizId);
+        if (!quiz) throw new NotFoundException("No quiz found");
+
+        return { mark: "10/10" };
     }
 }
