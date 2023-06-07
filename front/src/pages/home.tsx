@@ -1,4 +1,4 @@
-import { Post } from "../components/post";
+import { Post } from "../components/posts/post";
 import { Content } from "../interfaces/content";
 
 export default function Home() {
