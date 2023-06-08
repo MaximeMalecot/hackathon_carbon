@@ -121,7 +121,16 @@ export class QuizService {
         const eqSet = (xs, ys) =>
             xs.size === ys.size && [...xs].every((x) => ys.has(x));
 
-        let correctAnswersCount = 0;
+        userAnswers = userAnswers.reduce((acc, curr) => {
+            const isIncluded = acc.some(
+                (a) => a.questionId === curr.questionId
+            );
+            if (!isIncluded) {
+                acc.push(curr);
+            }
+            return acc;
+        }, []);
+
         const answersPerQuestion = questions
             .map((question) => {
                 const answers = question.answers
