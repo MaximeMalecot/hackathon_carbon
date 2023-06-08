@@ -5,7 +5,7 @@ import authHeader from "./auth.header";
 class EntrepriseService {
     async getAll() {
         try {
-            const res = await fetch(`${API_ENDPOINT}/entreprise`, {
+            const res = await fetch(`${API_ENDPOINT}/entreprises`, {
                 method: "GET",
                 headers: {
                     ...authHeader(),
@@ -21,7 +21,7 @@ class EntrepriseService {
 
     async getById(id: string | undefined) {
         try {
-            const res = await fetch(`${API_ENDPOINT}/entreprise/${id}`, {
+            const res = await fetch(`${API_ENDPOINT}/entreprises/${id}`, {
                 method: "GET",
                 headers: {
                     ...authHeader(),

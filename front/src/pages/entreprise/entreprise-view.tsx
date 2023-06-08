@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Entreprise } from "../../interfaces/entreprise";
 import entrepriseService from "../../services/entreprise.service";
 
 export default function EntrepriseView() {
     const params = useParams();
-    const [entreprise, setEntreprise] = useState<Entreprise>();
+    const [entreprise, setEntreprise] = useState<any>();
     console.log(params.id);
 
     const fetchEntreprise = async () => {
@@ -15,15 +14,23 @@ export default function EntrepriseView() {
 
     useEffect(() => {
         fetchEntreprise();
+        console.log(entreprise);
     }, []);
 
     return (
         <div>
             <div className="flex flex-col items-center h-screen">
-                <h1>Entreprise</h1>
+                <h1 className="text-2xl font-bold">
+                    {entreprise?.entreprise.name}
+                </h1>
+                <div className="avatar">
+                    <div className="w-24 rounded">
+                        <img src="https://media.foot-national.com/18/2023/06/photo_article/825003/328818/1200-L-quipe-de-france-didier-deschamps-recadr-par-la-real-sociedad.jpg" />
+                    </div>
+                </div>
                 <div className="form-control w-full max-w-xs">
                     <label className="label">
-                        <span className="label-text">{""}</span>
+                        <span className="label-text">{entreprise?.name}</span>
                     </label>
                     <input
                         type="text"
