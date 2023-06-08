@@ -97,9 +97,9 @@ export class QuizService {
         const quizAndAnswers = await this.getQuestionsAndFullAnswers(quizId);
         if (!quizAndAnswers) throw new NotFoundException("No quiz found");
         const questions = quizAndAnswers.questions;
-        const mark = this.compareAnswers(answers, questions);
-        await this.quizResultService.createResult(quizId, userId, mark);
-        return { mark };
+        const { percentage } = this.getMark(answers, questions);
+        await this.quizResultService.createResult(quizId, userId, percentage);
+        return { mark: `${percentage}%` };
     }
 
     usersAnswers = [
@@ -117,7 +117,7 @@ export class QuizService {
         questionId: ["1", "2"],
     };
 
-    private compareAnswers(userAnswers, questions: Question[]): number {
+    private getMark(userAnswers, questions: Question[]) {
         const eqSet = (xs, ys) =>
             xs.size === ys.size && [...xs].every((x) => ys.has(x));
 
@@ -140,6 +140,11 @@ export class QuizService {
             );
             return hasCorrectAnswers ? acc + 1 : acc;
         }, 0);
-        return mark;
+
+        const percentage = (mark / questions.length) * 100;
+        return {
+            mark,
+            percentage: percentage,
+        };
     }
 }

@@ -58,7 +58,7 @@ export class QuizController {
         return this.quizService.updateQuestion(questionId, question);
     }
 
-    @Post("/complete")
+    @Post("complete")
     async completeQuiz(@Body() body: CompleteQuizDto, @Req() req: any) {
         return this.quizService.completeQuiz(req.user.id, body);
     }
