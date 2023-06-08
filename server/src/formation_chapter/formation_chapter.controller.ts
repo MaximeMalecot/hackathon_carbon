@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Post,
+    Req,
+} from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { Roles } from "src/auth/decorators/roles.decorator";
 import { Role } from "src/users/schemas/user.schema";
@@ -47,8 +55,8 @@ export class FormationChapterController {
     }
 
     @Get(":id")
-    findOne(@Param("id") id: string) {
-        return this.formationChapterService.findOne(id);
+    findOne(@Param("id") id: string, @Req() req: any) {
+        return this.formationChapterService.findOne(id, req.user.id);
     }
 
     @Delete(":id")

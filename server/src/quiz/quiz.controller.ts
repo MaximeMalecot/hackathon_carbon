@@ -6,10 +6,12 @@ import {
     Param,
     Patch,
     Post,
+    Req,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { Roles } from "src/auth/decorators/roles.decorator";
 import { Role } from "src/users/schemas/user.schema";
+import { CompleteQuizDto } from "./dto/complete-quiz.dto";
 import { CreateQuestionDto } from "./dto/create-question.dto";
 import { UpdateQuestionDto } from "./dto/update-question.dto";
 import { QuizService } from "./quiz.service";
@@ -54,5 +56,10 @@ export class QuizController {
         @Body() question: UpdateQuestionDto
     ) {
         return this.quizService.updateQuestion(questionId, question);
+    }
+
+    @Post("complete")
+    async completeQuiz(@Body() body: CompleteQuizDto, @Req() req: any) {
+        return this.quizService.completeQuiz(req.user.id, body);
     }
 }

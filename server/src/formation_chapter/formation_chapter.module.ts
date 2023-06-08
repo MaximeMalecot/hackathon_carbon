@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { FormationModule } from "src/formation/formation.module";
 import { QuizModule } from "src/quiz/quiz.module";
@@ -15,11 +15,12 @@ import {
         MongooseModule.forFeature([
             { name: FormationChapter.name, schema: FormationChapterSchema },
         ]),
-        FormationModule,
+        forwardRef(() => FormationModule),
         QuizModule,
         ResourceModule,
     ],
     controllers: [FormationChapterController],
     providers: [FormationChapterService],
+    exports: [FormationChapterService],
 })
 export class FormationChapterModule {}

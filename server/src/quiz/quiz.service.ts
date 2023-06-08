@@ -6,9 +6,11 @@ import {
 import { InjectModel } from "@nestjs/mongoose";
 import * as crypto from "crypto";
 import { Model } from "mongoose";
+import { CompleteQuizDto } from "./dto/complete-quiz.dto";
 import { CreateQuestionDto } from "./dto/create-question.dto";
 import { CreateQuizDto } from "./dto/create-quiz.dto";
 import { UpdateQuestionDto } from "./dto/update-question.dto";
+import { QuizResultService } from "./quiz-result.service";
 import { Question } from "./schemas/question.schema";
 import { Quiz } from "./schemas/quiz.schema";
 
@@ -16,7 +18,8 @@ import { Quiz } from "./schemas/quiz.schema";
 export class QuizService {
     constructor(
         @InjectModel(Quiz.name) private quizModel: Model<Quiz>,
-        @InjectModel(Question.name) private questionModel: Model<Question>
+        @InjectModel(Question.name) private questionModel: Model<Question>,
+        private readonly quizResultService: QuizResultService
     ) {}
 
     async findOne(quizId: string) {
@@ -25,6 +28,7 @@ export class QuizService {
 
     async getQuestionsAndFullAnswers(quizId: string) {
         const quiz = await this.quizModel.findById(quizId).exec();
+        if (!quiz) throw new NotFoundException("No quiz found");
         const questions = await this.questionModel.find({ quizId }).exec();
         return { ...quiz.toObject(), questions };
     }
@@ -85,5 +89,71 @@ export class QuizService {
 
     async updateQuestion(questionId: string, newQuestion: UpdateQuestionDto) {
         return this.questionModel.findByIdAndUpdate(questionId, newQuestion);
+    }
+
+    async completeQuiz(userId, completeQuizDto: CompleteQuizDto) {
+        const { quizId, answers } = completeQuizDto;
+
+        const quizAndAnswers = await this.getQuestionsAndFullAnswers(quizId);
+        if (!quizAndAnswers) throw new NotFoundException("No quiz found");
+        const questions = quizAndAnswers.questions;
+        const { percentage } = this.getMark(answers, questions);
+        await this.quizResultService.createResult(quizId, userId, percentage);
+        return { mark: `${percentage}%` };
+    }
+
+    usersAnswers = [
+        {
+            questionId: "1",
+            answers: ["1", "2"],
+        },
+        {
+            questionId: "2",
+            answers: ["3"],
+        },
+    ];
+
+    corrects = {
+        questionId: ["1", "2"],
+    };
+
+    private getMark(userAnswers, questions: Question[]) {
+        const eqSet = (xs, ys) =>
+            xs.size === ys.size && [...xs].every((x) => ys.has(x));
+
+        userAnswers = userAnswers.reduce((acc, curr) => {
+            const isIncluded = acc.some(
+                (a) => a.questionId === curr.questionId
+            );
+            if (!isIncluded) {
+                acc.push(curr);
+            }
+            return acc;
+        }, []);
+
+        const answersPerQuestion = questions
+            .map((question) => {
+                const answers = question.answers
+                    .filter((a) => a.isCorrect)
+                    .map((a) => a.id);
+                return { [question.id]: answers };
+            })
+            .reduce((acc, curr) => ({ ...acc, ...curr }), {});
+
+        const mark = userAnswers.reduce((acc, curr) => {
+            const answers = answersPerQuestion[curr.questionId];
+            if (!answers) return acc;
+            const hasCorrectAnswers = eqSet(
+                new Set(answers),
+                new Set(curr.answers)
+            );
+            return hasCorrectAnswers ? acc + 1 : acc;
+        }, 0);
+
+        const percentage = (mark / questions.length) * 100;
+        return {
+            mark,
+            percentage: percentage,
+        };
     }
 }
