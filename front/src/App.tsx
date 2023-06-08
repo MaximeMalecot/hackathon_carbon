@@ -19,6 +19,9 @@ const Quiz = lazy(() => import("./pages/formation/quiz"));
 const CreationFormation = lazy(
     () => import("./pages/formation/creation-formation")
 );
+
+const Profile = lazy(() => import("./pages/profile"));
+
 //#endregion
 
 function App() {
@@ -78,6 +81,7 @@ function App() {
                                         element={<CreationEntreprise />}
                                     />
                                 </Route>
+                                <Route path="/profile" element={<Profile />} />
                                 <Route path={"/"} element={<Home />} />
                             </>
                         )}
