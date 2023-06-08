@@ -1,8 +1,9 @@
 import { useCallback, useState } from "react";
+import { Navigate } from "react-router-dom";
 import { useAuthContext } from "../contexts/auth.context";
 
 export default function Login() {
-    const { login } = useAuthContext();
+    const { login, isConnected } = useAuthContext();
 
     const [formData, setFormData] = useState({
         mail: "",
@@ -33,6 +34,9 @@ export default function Login() {
         []
     );
 
+    if (isConnected) {
+        return <Navigate to="/profile" />;
+    }
     return (
         <div>
             <h1>Login</h1>

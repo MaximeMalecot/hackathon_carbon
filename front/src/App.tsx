@@ -4,9 +4,13 @@ import { ToastContainer } from "react-toastify";
 import AppLayout from "./components/layout/app-layout";
 import { ROLES } from "./constants";
 import { useAuthContext } from "./contexts/auth.context";
+import { useAccess } from "./hooks/use-access";
 import CreationEntreprise from "./pages/entreprise/create-entreprise";
 import Entreprise from "./pages/entreprise/entreprise-view";
 import ListEntreprises from "./pages/entreprise/list-entreprise";
+import CreateUser from "./pages/users/create";
+import ListUsers from "./pages/users/list";
+import SpecificUser from "./pages/users/specific";
 
 //#region Routes
 const Home = lazy(() => import("./pages/home"));
@@ -21,18 +25,16 @@ const Quiz = lazy(() => import("./pages/formation/quiz"));
 const CreationFormation = lazy(
     () => import("./pages/formation/creation-formation")
 );
+
+const Profile = lazy(() => import("./pages/profile"));
+
 //#endregion
 
 function App() {
     //#region Auth
     const { data, isConnected } = useAuthContext();
+    const { hasAccess } = useAccess();
     //#endregion
-
-    const hasAccess = (roles: Array<string>) => {
-        if (!data) return false;
-        if (data.roles.includes(ROLES.ADMIN)) return true;
-        return roles.some((role) => data?.roles.includes(role));
-    };
 
     return (
         <div className="App relative">
@@ -76,6 +78,24 @@ function App() {
                                         />
                                     </Route>
                                 )}
+                                {hasAccess([
+                                    ROLES.ACCOUNT_EDITOR,
+                                    ROLES.VIEWER,
+                                ]) && (
+                                    <Route path={"/gestion-user"}>
+                                        <Route index element={<ListUsers />} />
+                                        <Route
+                                            path={":id"}
+                                            element={<SpecificUser />}
+                                        />
+                                        {hasAccess([ROLES.ACCOUNT_EDITOR]) && (
+                                            <Route
+                                                path={"create"}
+                                                element={<CreateUser />}
+                                            />
+                                        )}
+                                    </Route>
+                                )}
                                 <Route path={"/entreprise"}>
                                     <Route
                                         path={":id"}
@@ -90,6 +110,7 @@ function App() {
                                         element={<ListEntreprises />}
                                     />
                                 </Route>
+                                <Route path="/profile" element={<Profile />} />
                                 <Route path={"/"} element={<Home />} />
                             </>
                         )}
