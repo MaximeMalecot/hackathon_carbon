@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { ROLES } from "../../constants";
 import { useAccess } from "../../hooks/use-access";
 import { UserData } from "../../interfaces";
@@ -26,8 +27,10 @@ export default function SpecificUser() {
         if (!user) return;
         const response = await userService.patchRoles(user._id, user.roles);
         if (response) {
-            console.log(response);
             setUser(response);
+            toast.success("Les rôles ont bien été modifiés !", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
         }
     }, [user]);
 

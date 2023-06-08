@@ -53,6 +53,16 @@ class UserService {
         });
         return await res.json();
     }
+
+    async deleteUser(id: string): Promise<boolean> {
+        const res = await fetch(`${API_ENDPOINT}/users/${id}`, {
+            method: "DELETE",
+            headers: {
+                ...authHeader(),
+            },
+        });
+        return res.ok;
+    }
 }
 
 export default new UserService();
