@@ -29,8 +29,11 @@ export default function Header(props: any) {
                                     </summary>
                                     <ul className="p-2 bg-base-100">
                                         <li>
+                                            <Link to="/profile">Profil</Link>
+                                        </li>
+                                        <li>
                                             <button onClick={logout}>
-                                                Logout
+                                                Déconnexion
                                             </button>
                                         </li>
                                     </ul>
