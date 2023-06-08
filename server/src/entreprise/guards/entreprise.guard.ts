@@ -17,7 +17,6 @@ export class OwnEntrepriseGuards implements CanActivate {
         const { id } = context.switchToHttp().getRequest().params;
         const isUserInEntreprise =
             await this.contractService.isUserInEntreprise(user.id, id);
-        console.log(isUserInEntreprise);
         return (
             isUserInEntreprise ||
             [

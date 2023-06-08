@@ -66,6 +66,31 @@ export class DelivrableService {
         };
     }
 
+    async deleteForContract(contractId: Types.ObjectId) {
+        const delivrables = await this.delivrableModel.find({
+            contractId: contractId,
+        });
+        if (!delivrables)
+            throw new BadRequestException("Delivrables not found");
+        for (let i = 0; i < delivrables.length; i++) {
+            let imagePath: string = "";
+            let imagePathes: string[] = [];
+            imagePathes = delivrables[i].file.split("/") as string[];
+            imagePath = imagePathes[imagePathes.length - 1] as string;
+            const beforePath = join(
+                __dirname,
+                "../..",
+                `files/delivrables/${imagePath}`
+            );
+            await unlink(beforePath);
+        }
+        await this.delivrableModel.deleteMany({ contractId: contractId });
+        return {
+            success: true,
+            message: "Delivrables deleted successfully",
+        };
+    }
+
     async findForContract(contractId: Types.ObjectId) {
         return await this.delivrableModel.find({ contractId: contractId });
     }
