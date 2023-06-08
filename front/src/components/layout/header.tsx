@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import RedMedal from "../../assets/icons/red-medal.png";
 import { useAuthContext } from "../../contexts/auth.context";
 
 export default function Header(props: any) {
@@ -32,6 +33,18 @@ export default function Header(props: any) {
                             <li className="content-center">
                                 <details>
                                     <summary className="text-neutral">
+                                        <span className="text-xs">
+                                            {data?.experiencePoints} Points
+                                        </span>
+                                        <div
+                                            style={{
+                                                width: "20px",
+                                                height: "20px",
+                                                objectFit: "cover",
+                                            }}
+                                        >
+                                            <img src={RedMedal} alt="medal" />
+                                        </div>
                                         {data?.email}
                                     </summary>
                                     <ul className="p-2 bg-base-100">
