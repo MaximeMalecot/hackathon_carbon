@@ -10,12 +10,20 @@ class DeliverableService {
         const res = await fetch(`${API_ENDPOINT}/delivrables/${contractId}`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
+                ...authHeader(),
             },
             body: formData,
         });
 
-        return await res.json();
+        if (res.ok) {
+            return true;
+        }
+
+        if (res.status === 500) {
+            throw new Error();
+        }
+
+        throw new Error((await res.json())?.message ?? "Unknown error");
     }
 
     async delete(deliverableId: string) {

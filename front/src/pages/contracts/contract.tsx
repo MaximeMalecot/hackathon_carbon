@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import CreateDeliverableForm, {
+    CreateDeliverableData,
+} from "../../components/contracts/create-deliverable-form";
 import { ROLES } from "../../constants";
 import { CONTRACT_STATUS } from "../../constants/status";
 import { useAccess } from "../../hooks/use-access";
@@ -81,7 +85,13 @@ export default function Contracts() {
                 />
             )}
             <div className="divider"></div>
-            <DeliverablesPart deliverables={deliverables} reload={reload} />
+            {entreprise && contract && consultant && deliverables && (
+                <DeliverablesPart
+                    contractId={contract._id}
+                    deliverables={deliverables}
+                    reload={reload}
+                />
+            )}
         </div>
     );
 }
@@ -103,6 +113,9 @@ function TopPart({ entreprise, consultant, contract, reload }: TopPartProps) {
             reload();
         } catch (e: any) {
             console.log(e.message);
+            toast.error("Erreur: " + e.message, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
         }
     };
 
@@ -113,6 +126,9 @@ function TopPart({ entreprise, consultant, contract, reload }: TopPartProps) {
             reload();
         } catch (e: any) {
             console.log(e.message);
+            toast.error("Erreur: " + e.message, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
         }
     };
 
@@ -186,10 +202,16 @@ function TopPart({ entreprise, consultant, contract, reload }: TopPartProps) {
 interface DeliverablesPartProps {
     deliverables: DeliverableData[];
     reload: () => void;
+    contractId: string;
 }
 
-function DeliverablesPart({ deliverables, reload }: DeliverablesPartProps) {
+function DeliverablesPart({
+    deliverables,
+    contractId,
+    reload,
+}: DeliverablesPartProps) {
     const { hasAccess } = useAccess();
+    const [formvisibility, setFormVisibility] = useState(false);
 
     const handleDelete = async (id: string) => {
         const res = await deliverableService.delete(id);
@@ -197,7 +219,23 @@ function DeliverablesPart({ deliverables, reload }: DeliverablesPartProps) {
         reload();
     };
 
-    const addDeliverable = async () => {};
+    const addDeliverable = async (deliverable: CreateDeliverableData) => {
+        try {
+            const { file, title } = deliverable;
+            const res = await deliverableService.create(
+                contractId,
+                file,
+                title
+            );
+            if (!res) throw new Error("Error while creating deliverable");
+            reload();
+        } catch (e: any) {
+            console.log(e);
+            toast.error("Erreur: " + e.message, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+    };
 
     return (
         <div>
@@ -210,11 +248,21 @@ function DeliverablesPart({ deliverables, reload }: DeliverablesPartProps) {
                 </div>
 
                 {hasAccess([ROLES.ASSIGNMENT_EDITOR]) && (
-                    <button className="mb-auto btn btn-primary text-sm">
+                    <button
+                        onClick={() => setFormVisibility((prev) => !prev)}
+                        className="mb-auto btn btn-primary text-sm"
+                    >
                         Ajouter
                     </button>
                 )}
             </div>
+            {formvisibility && (
+                <CreateDeliverableForm
+                    contractId={contractId}
+                    create={addDeliverable}
+                />
+            )}
+
             {deliverables.length == 0 ? (
                 <div>
                     <p className="text-sm text-slate-400">Aucun document</p>
