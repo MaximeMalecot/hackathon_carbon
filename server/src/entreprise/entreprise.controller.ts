@@ -102,7 +102,7 @@ export class EntrepriseController {
             file && `${req.protocol}://${req.get("Host")}/${file.path}`
         );
     }
-    @Roles(Role.ENTREPRISE_EDITOR, Role.ASSIGNMENT_EDITOR, Role.VIEWER)
+    @Roles(Role.ENTREPRISE_EDITOR, Role.ASSIGNMENT_EDITOR, Role.VIEWER, Role.NEWS_EDITOR)
     @Get()
     async getEntreprises() {
         return await this.entrepriseService.getEntreprises();
@@ -119,4 +119,6 @@ export class EntrepriseController {
     async deleteEntreprise(@Param("id") id: string) {
         return await this.entrepriseService.deleteEntreprise(id);
     }
+
 }
+

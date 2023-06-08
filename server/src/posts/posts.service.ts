@@ -28,7 +28,7 @@ export class PostService {
             };
         }
         if (filters.status) {
-            query.status = PostTypes[filters.status];
+            query.status = PostStatus[filters.status];
         }
         if (filters.type) {
             query.type = PostTypes[filters.type];
@@ -38,6 +38,7 @@ export class PostService {
                 user._id.toString(),
                 StatusEnum.ACTIVE
             );
+            query.status = PostStatus.PUBLISHED
             return await this.postModel
                 .aggregate([
                     {
