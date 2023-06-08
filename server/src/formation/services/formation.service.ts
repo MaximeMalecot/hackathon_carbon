@@ -70,4 +70,16 @@ export class FormationService {
             userId
         );
     }
+
+    async createOrUpdateProgressionOnFormation(
+        formationId: string,
+        userId: string,
+        chaptersDone: string
+    ) {
+        return await this.progressionService.createOrUpdateProgressionOnFormation(
+            formationId,
+            userId,
+            chaptersDone
+        );
+    }
 }

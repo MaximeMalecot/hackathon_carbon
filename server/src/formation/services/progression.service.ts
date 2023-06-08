@@ -102,4 +102,33 @@ export class FormationProgressionService {
 
         return await newFormation.save();
     }
+
+    async createOrUpdateProgressionOnFormation(
+        formationId: string,
+        userId: string,
+        newChapter: string
+    ) {
+        const progression = await this.progressionModel.findOne({
+            formationId: new Types.ObjectId(formationId),
+            userId: new Types.ObjectId(userId),
+        });
+
+        if (progression) {
+            let chaptersDone = new Set([
+                ...progression.chaptersDone,
+                newChapter,
+            ]);
+            progression.chaptersDone = Array.from(chaptersDone);
+            return await progression.save();
+        } else {
+            const newProgression = new this.progressionModel({
+                formationId: new Types.ObjectId(formationId),
+                userId: new Types.ObjectId(userId),
+                chaptersDone: [newChapter],
+            });
+
+            const savedFormation = await newProgression.save();
+            return savedFormation.toObject();
+        }
+    }
 }

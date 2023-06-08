@@ -8,6 +8,7 @@ import {
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { FormationService } from "src/formation/services/formation.service";
+import { FormationProgressionService } from "src/formation/services/progression.service";
 import { QuizService } from "src/quiz/quiz.service";
 import { ResourceService } from "src/resource/resource.service";
 import {
@@ -26,7 +27,8 @@ export class FormationChapterService {
         private readonly formationChapterModel: Model<FormationChapter>,
         private readonly formationService: FormationService,
         private readonly quizService: QuizService,
-        private readonly resourceService: ResourceService
+        private readonly resourceService: ResourceService,
+        private readonly formationProgressionService: FormationProgressionService
     ) {}
 
     async createChapterAndQuiz(
@@ -113,7 +115,7 @@ export class FormationChapterService {
         }
     }
 
-    async findOne(chapterId: string) {
+    async findOne(chapterId: string, userId: string) {
         const chapter = await this.formationChapterModel.findById(chapterId);
         if (!chapter) throw new NotFoundException("Chapter does not exist");
         const toReturn = { ...chapter.toObject() };
@@ -133,7 +135,11 @@ export class FormationChapterService {
                 toReturn["resource"] = data.toObject();
                 break;
         }
-
+        await this.formationProgressionService.createOrUpdateProgressionOnFormation(
+            chapter.formationId,
+            userId,
+            chapter.id
+        );
         return toReturn;
     }
 
