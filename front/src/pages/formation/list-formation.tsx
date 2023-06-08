@@ -1,10 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Formation } from "../../interfaces";
+import FormationService from "../../services/formation.service";
+import { mapperFormation } from "../../helpers";
 
 export default function ListFormation() {
     const [research, setResearch] = useState<string>("");
-    // const [formations, setFormations] = useState([]);
+    const [formations, setFormations] = useState<Formation[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
     const [formationsFiltered, setFormationsFiltered] = useState<Formation[]>(
         []
     );
@@ -14,82 +18,31 @@ export default function ListFormation() {
         },
         []
     );
+    const fetchFormations = useCallback(async () => {
+        const response = await FormationService.getFormations();
+        if (response) {
+            const values = response.map((element) => {
+                return mapperFormation(element);
+            });
+            setFormations(values);
+            setIsLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchFormations();
+    }, []);
 
     useEffect(() => {
         filteredFormations();
-    }, [research]);
-
-    const formations: Formation[] = [
-        {
-            id: 1,
-            title: "Formation 1",
-            description: "Formation description",
-            image: "../../public/images/formation-exemple.jpg",
-            xp: 100,
-            creator: "test",
-        },
-        {
-            id: 2,
-            title: "Test 1",
-            description: "Formation description",
-            image: "../../public/images/formation-exemple.jpg",
-            xp: 100,
-            creator: "test",
-        },
-        {
-            id: 3,
-            title: "otot 1",
-            description: "Formation description",
-            image: "../../public/images/formation-exemple.jpg",
-            xp: 100,
-            creator: "test",
-        },
-        {
-            id: 4,
-            title: "ghj 1",
-            description: "Formation description",
-            image: "../../public/images/formation-exemple.jpg",
-            xp: 100,
-            creator: "test",
-        },
-        {
-            id: 4,
-            title: "xlesl 1",
-            description: "Formation description",
-            image: "../../public/images/formation-exemple.jpg",
-            xp: 100,
-            creator: "test",
-        },
-        {
-            id: 4,
-            title: "tutututututu 1",
-            description: "Formation description",
-            image: "../../public/images/formation-exemple.jpg",
-            xp: 100,
-            creator: "test",
-        },
-        {
-            id: 4,
-            title: "tititit 1",
-            description: "Formation description",
-            image: "../../public/images/formation-exemple.jpg",
-            xp: 100,
-            creator: "test",
-        },
-    ];
+    }, [research, formations]);
 
     const filteredFormations = useCallback(() => {
-        const filteredFormations: Formation[] = formations.filter(
-            (formation) =>
-                formation.title
-                    .toLowerCase()
-                    .includes(research.toLowerCase()) ||
-                formation.description
-                    .toLowerCase()
-                    .includes(research.toLowerCase())
+        const filteredFormations: Formation[] = formations.filter((formation) =>
+            formation?.title?.toLowerCase().includes(research.toLowerCase())
         );
         setFormationsFiltered(filteredFormations);
-    }, [research]);
+    }, [formations, research]);
 
     return (
         <div className="formation-liste">
@@ -112,7 +65,6 @@ export default function ListFormation() {
                         </figure>
                         <div className="card-body">
                             <h2 className="card-title">{formation.title}</h2>
-                            <p>{formation.description}</p>
                             <div className="card-actions justify-end">
                                 <div className="stat p-0">
                                     <div className="stat-value text-success">
