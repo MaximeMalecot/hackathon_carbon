@@ -7,6 +7,7 @@ import { UserData } from "../../interfaces";
 import { ContractData } from "../../interfaces/contract";
 import { Entreprise } from "../../interfaces/entreprise";
 import contractService from "../../services/contract.service";
+import deliverableService from "../../services/deliverable.service";
 import entrepriseService from "../../services/entreprise.service";
 import userService from "../../services/user.service";
 
@@ -22,12 +23,12 @@ export default function Contracts() {
     const [consultant, setConsultant] = useState<UserData | null>(null);
     const [deliverables, setDelivrables] = useState<DeliverableData[]>([]); // TODO: Create interface for deliverables
     const { id } = useParams<{ id: string }>();
-    const { hasAccess } = useAccess();
 
     const reload = () => {
         setContract(null);
         setEntreprise(null);
         setConsultant(null);
+        setDelivrables([]);
         fetchContract();
     };
 
@@ -80,70 +81,7 @@ export default function Contracts() {
                 />
             )}
             <div className="divider"></div>
-            <div>
-                <div className="flex justify-between">
-                    <div className="flex items-center">
-                        <h2 className="text-xl">Documents </h2>
-                        <div className="badge badge-info text-neutral">
-                            {deliverables.length}
-                        </div>
-                    </div>
-
-                    {hasAccess([ROLES.ASSIGNMENT_EDITOR]) && (
-                        <button className="mb-auto btn btn-primary text-sm">
-                            Ajouter
-                        </button>
-                    )}
-                </div>
-                {deliverables.length == 0 ? (
-                    <div>
-                        <p className="text-sm text-slate-400">Aucun document</p>
-                    </div>
-                ) : (
-                    // <div>
-                    //     {deliverables.map((deliverable, key) => (
-                    //         <div
-                    //             className={"flex items-center justify-between"}
-                    //             key={key}
-                    //         >
-                    //             <p>{deliverable.title}</p>
-                    //             <button className="btn btn-primary text-sm">
-                    //                 Voir
-                    //             </button>
-                    //         </div>
-                    //     ))}
-                    // </div>
-                    <div className="overflow-x-auto">
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>Nom</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {deliverables.map((deliverable, index) => (
-                                    <tr className="hover" key={index}>
-                                        <th>{deliverable.title}</th>
-                                        <td className="flex gap-3">
-                                            <Link
-                                                target="_blank"
-                                                to={deliverable.file}
-                                                className="btn btn-info text-neutral"
-                                            >
-                                                Voir
-                                            </Link>
-                                            <button className="btn btn-secondary text-neutral">
-                                                Supprimer
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-            </div>
+            <DeliverablesPart deliverables={deliverables} reload={reload} />
         </div>
     );
 }
@@ -241,6 +179,82 @@ function TopPart({ entreprise, consultant, contract, reload }: TopPartProps) {
                     </div>
                 )}
             </div>
+        </div>
+    );
+}
+
+interface DeliverablesPartProps {
+    deliverables: DeliverableData[];
+    reload: () => void;
+}
+
+function DeliverablesPart({ deliverables, reload }: DeliverablesPartProps) {
+    const { hasAccess } = useAccess();
+
+    const handleDelete = async (id: string) => {
+        const res = await deliverableService.delete(id);
+        if (!res) return console.log("Error while deleting deliverable");
+        reload();
+    };
+
+    const addDeliverable = async () => {};
+
+    return (
+        <div>
+            <div className="flex justify-between">
+                <div className="flex items-center">
+                    <h2 className="text-xl">Documents </h2>
+                    <div className="badge badge-info text-neutral">
+                        {deliverables.length}
+                    </div>
+                </div>
+
+                {hasAccess([ROLES.ASSIGNMENT_EDITOR]) && (
+                    <button className="mb-auto btn btn-primary text-sm">
+                        Ajouter
+                    </button>
+                )}
+            </div>
+            {deliverables.length == 0 ? (
+                <div>
+                    <p className="text-sm text-slate-400">Aucun document</p>
+                </div>
+            ) : (
+                <div className="overflow-x-auto">
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {deliverables.map((deliverable, index) => (
+                                <tr className="hover" key={index}>
+                                    <th>{deliverable.title}</th>
+                                    <td className="flex gap-3">
+                                        <Link
+                                            target="_blank"
+                                            to={deliverable.file}
+                                            className="btn btn-info text-neutral"
+                                        >
+                                            Voir
+                                        </Link>
+                                        <button
+                                            onClick={() =>
+                                                handleDelete(deliverable._id)
+                                            }
+                                            className="btn btn-secondary text-neutral"
+                                        >
+                                            Supprimer
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
         </div>
     );
 }
