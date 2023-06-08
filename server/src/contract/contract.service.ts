@@ -1,6 +1,12 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+    BadRequestException,
+    Inject,
+    Injectable,
+    forwardRef,
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
+import { DelivrableService } from "src/delivrable/delivrable.service";
 import { EntrepriseService } from "src/entreprise/entreprise.service";
 import { UsersService } from "src/users/users.service";
 import { CreateContractDto } from "./dto/create-contract.dto";
@@ -11,8 +17,12 @@ import { Contract, StatusEnum } from "./schemas/contract.schema";
 export class ContractService {
     constructor(
         @InjectModel(Contract.name) private contractModel: Model<Contract>,
+        @Inject(forwardRef(() => EntrepriseService))
         private entrepriseService: EntrepriseService,
-        private userService: UsersService
+        @Inject(forwardRef(() => UsersService))
+        private userService: UsersService,
+        @Inject(forwardRef(() => DelivrableService))
+        private delivrableService: DelivrableService
     ) {}
 
     async create(contractDto: CreateContractDto) {
@@ -76,8 +86,20 @@ export class ContractService {
         return await this.contractModel.find(query);
     }
 
-    async findOne(id: string) {
+    async findOne(id: Types.ObjectId) {
         return await this.contractModel.findById(id);
+    }
+
+    async findOneWithDelivrables(id: Types.ObjectId) {
+        const contract = await this.contractModel.findById(id);
+        if (!contract) throw new BadRequestException("Contract not found");
+        const delivrables = await this.delivrableService.findForContract(
+            contract._id
+        );
+        return {
+            contract: contract,
+            delivrables: delivrables,
+        };
     }
 
     async updateStatus(id: string, status: StatusEnum) {
@@ -92,5 +114,49 @@ export class ContractService {
             },
             { new: true }
         );
+    }
+
+    async getDelivrables(id: string) {
+        const contract = await this.contractModel.findById(id);
+        if (!contract) throw new BadRequestException("Contract not found");
+        return await this.delivrableService.findForContract(contract._id);
+    }
+
+    async getUsersFromEntreprise(id: string) {
+        const contracts = await this.contractModel.find({
+            entrepriseId: id,
+        });
+        const users = [];
+        for (const contract of contracts) {
+            const user = await this.userService.findOneRestricted(
+                contract.userId
+            );
+            if (user) users.push(user);
+        }
+        return users;
+    }
+
+    async isUserInEntreprise(
+        userId: Types.ObjectId,
+        entrepriseId: Types.ObjectId
+    ) {
+        const contract = await this.contractModel.findOne({
+            userId: userId,
+            entrepriseId: entrepriseId,
+            status: StatusEnum.ACTIVE,
+        });
+        return !!contract;
+    }
+
+    async deleteForUser(userId: string) {
+        const contracts = await this.contractModel.find({
+            userId: userId,
+        });
+        for (const contract of contracts) {
+            await this.delivrableService.deleteForContract(contract._id);
+        }
+        return await this.contractModel.deleteMany({
+            userId: userId,
+        });
     }
 }

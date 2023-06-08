@@ -57,6 +57,18 @@ export class User {
         default: [Role.USER],
     })
     roles: Role[];
+
+    @Prop({
+        type: Number,
+        required: true,
+        default: 0,
+    })
+    experiencePoints: number;
+
+    @Prop({
+        type: Date,
+    })
+    deletedAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -39,9 +39,14 @@ export class UserSeed {
             password: "User123+",
             roles: [Role.VIEWER],
         };
+        let teacher = {
+            email: "teacher@teacher.com",
+            password: "User123+",
+            roles: [Role.TEACHER],
+        };
         const defaultPwd = "User123+";
 
-        let usersData = [user, admin, rh, commercial, viewer];
+        let usersData = [user, admin, rh, commercial, viewer, teacher];
         for (let i = 0; i < usersData.length; i++) {
             let tmpUser = await this.usersService.create(usersData[i]);
             console.log(`Created user with id: ${tmpUser.id}`);

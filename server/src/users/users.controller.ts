@@ -13,6 +13,7 @@ import { Roles } from "src/auth/decorators/roles.decorator";
 import { ParseObjectIdPipe } from "src/pipes/objectid.pipe";
 import { Role } from "src/users/schemas/user.schema";
 import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateRolesDto } from "./dto/update-role.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UsersService } from "./users.service";
 
@@ -42,6 +43,15 @@ export class UsersController {
     @Get(":id")
     findOne(@Param("id", ParseObjectIdPipe) id: string) {
         return this.usersService.findOne(id);
+    }
+
+    @Roles(Role.ADMIN)
+    @Patch(":id/roles")
+    updateRoles(
+        @Param("id", ParseObjectIdPipe) id: string,
+        @Body() body: UpdateRolesDto
+    ) {
+        return this.usersService.updateRoles(id, body.roles);
     }
 
     @Roles(Role.ACCOUNT_EDITOR)

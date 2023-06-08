@@ -19,6 +19,7 @@ import { Types } from "mongoose";
 import { diskStorage } from "multer";
 import { extname } from "path";
 import { Roles } from "src/auth/decorators/roles.decorator";
+import { CheckObjectIdPipe } from "src/pipes/checkobjectid.pipe";
 import { ParseObjectIdPipe } from "src/pipes/objectid.pipe";
 import { CreatePostContentDto } from "src/posts-content/dto/post-content.dto";
 import { Role } from "src/users/schemas/user.schema";
@@ -41,7 +42,7 @@ export class PostContentController {
     @Roles(Role.NEWS_EDITOR)
     @Post(":postId/text")
     async createText(
-        @Param("postId") postId: string,
+        @Param("postId", CheckObjectIdPipe) postId: string,
         @Body() body: CreatePostContentDto
     ) {
         return await this.postContentService.addContent(
@@ -70,7 +71,7 @@ export class PostContentController {
     @Post(":postId/image")
     async createImage(
         @Req() req,
-        @Param("postId") postId: string,
+        @Param("postId", CheckObjectIdPipe) postId: string,
         @Body("order") order: number,
         @UploadedFile(
             new ParseFilePipe({
@@ -111,7 +112,7 @@ export class PostContentController {
     @Patch(":id/image")
     async updateImageContent(
         @Req() req,
-        @Param("id") id: string,
+        @Param("id", CheckObjectIdPipe) id: string,
         @Body("order") order?: number,
         @UploadedFile(
             new ParseFilePipe({
@@ -124,7 +125,6 @@ export class PostContentController {
         )
         file?: Express.Multer.File
     ) {
-        console.log("onéla");
         return await this.postContentService.updateImage(id, {
             data: `${req.protocol}://${req.get("Host")}/${file.path}`,
             order,
@@ -134,7 +134,7 @@ export class PostContentController {
     @Roles(Role.NEWS_EDITOR)
     @Patch(":id/text")
     async updateTextContent(
-        @Param("id") id: string,
+        @Param("id", CheckObjectIdPipe) id: string,
         @Body() data: UpdateTextDto
     ) {
         return await this.postContentService.updateText(id, data);

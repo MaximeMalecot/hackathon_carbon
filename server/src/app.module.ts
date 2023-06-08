@@ -10,14 +10,17 @@ import { AppService } from "./app.service";
 import { AuthModule } from "./auth/auth.module";
 import { DATABASE_URL } from "./constants";
 import { ContractModule } from "./contract/contract.module";
+import { DelivrableModule } from "./delivrable/delivrable.module";
 import { EntrepriseModule } from "./entreprise/entreprise.module";
 import { FormationModule } from "./formation/formation.module";
+import { FormationChapterModule } from "./formation_chapter/formation_chapter.module";
+import { PostsContentModule } from "./posts-content/posts-content.module";
 import { PostModule } from "./posts/posts.module";
 import { QuizModule } from "./quiz/quiz.module";
+import { ResourceModule } from "./resource/resource.module";
 import { SeederModule } from "./seeder/seeder.module";
 import { SseModule } from "./sse/sse.module";
 import { UsersModule } from "./users/users.module";
-import { PostsContentModule } from './posts-content/posts-content.module';
 
 @Module({
     imports: [
@@ -43,8 +46,11 @@ import { PostsContentModule } from './posts-content/posts-content.module';
             },
         }),
         SeederModule,
+        FormationChapterModule,
         SseModule,
         PostsContentModule,
+        ResourceModule,
+        DelivrableModule,
     ],
     controllers: [AppController],
     providers: [AppService],

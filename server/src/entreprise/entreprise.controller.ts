@@ -11,6 +11,7 @@ import {
     Post,
     Req,
     UploadedFile,
+    UseGuards,
     UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -18,10 +19,12 @@ import { ApiTags } from "@nestjs/swagger";
 import { diskStorage } from "multer";
 import { extname } from "path";
 import { Roles } from "src/auth/decorators/roles.decorator";
+import { CheckObjectIdPipe } from "src/pipes/checkobjectid.pipe";
 import { Role } from "src/users/schemas/user.schema";
 import { CreateEntrepriseDto } from "./dto/create-entreprise.dto";
 import { UpdateEntrepriseDto } from "./dto/update-entreprise.dto";
 import { EntrepriseService } from "./entreprise.service";
+import { OwnEntrepriseGuards } from "./guards/entreprise.guard";
 
 @ApiTags("entreprises")
 @Controller("entreprises")
@@ -83,7 +86,7 @@ export class EntrepriseController {
     @Patch(":id")
     async updateEntreprise(
         @Req() req,
-        @Param("id") id: string,
+        @Param("id", CheckObjectIdPipe) id: string,
         @Body() body: UpdateEntrepriseDto,
         @UploadedFile(
             new ParseFilePipe({
@@ -108,15 +111,20 @@ export class EntrepriseController {
         return await this.entrepriseService.getEntreprises();
     }
 
-    @Roles(Role.ENTREPRISE_EDITOR, Role.ASSIGNMENT_EDITOR, Role.VIEWER)
+    @Get("self")
+    async getEntrepriseByUser(@Req() req) {
+        return await this.entrepriseService.getEntrepriseByUser(req.user.id);
+    }
+
+    @UseGuards(OwnEntrepriseGuards)
     @Get(":id")
-    async getEntreprise(@Param("id") id: string) {
+    async getEntreprise(@Param("id", CheckObjectIdPipe) id: string) {
         return await this.entrepriseService.getEntreprise(id);
     }
 
     @Roles(Role.ADMIN)
     @Delete(":id")
-    async deleteEntreprise(@Param("id") id: string) {
+    async deleteEntreprise(@Param("id", CheckObjectIdPipe) id: string) {
         return await this.entrepriseService.deleteEntreprise(id);
     }
 

@@ -1,20 +1,27 @@
 import {
     BadRequestException,
+    Inject,
     Injectable,
     InternalServerErrorException,
     NotFoundException,
+    forwardRef,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { compareSync, hash } from "bcrypt";
 import { MongoError } from "mongodb";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
+import { ContractService } from "src/contract/contract.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { EASY_ROLES, Role, User } from "./schemas/user.schema";
 
 @Injectable()
 export class UsersService {
-    constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+    constructor(
+        @InjectModel(User.name) private userModel: Model<User>,
+        @Inject(forwardRef(() => ContractService))
+        private contractService: ContractService
+    ) {}
 
     async create(createUserDto: CreateUserDto) {
         try {
@@ -53,6 +60,16 @@ export class UsersService {
 
     async findOne(id: string) {
         const user = await this.userModel.findOne({ _id: id });
+        if (!user) {
+            throw new NotFoundException(`User with id ${id} not found`);
+        }
+        return user;
+    }
+
+    async findOneRestricted(id: string) {
+        const user = await this.userModel
+            .findOne({ _id: id })
+            .select("-roles -createdAt");
         if (!user) {
             throw new NotFoundException(`User with id ${id} not found`);
         }
@@ -105,11 +122,42 @@ export class UsersService {
         if (!user) {
             throw new NotFoundException(`User with id ${id} not found`);
         }
+        await this.contractService.deleteForUser(user.id);
         await this.userModel.deleteOne({ _id: id });
         return null;
     }
 
     async clear() {
         await this.userModel.deleteMany({});
+    }
+
+    async addExperience(userId: string, experiencePts: number) {
+        let user = await this.userModel.findOne({
+            _id: new Types.ObjectId(userId),
+        });
+        if (!user) {
+            throw new NotFoundException(`User with id ${userId} not found`);
+        }
+
+        const newExperience = user.experiencePoints + experiencePts;
+        await this.userModel.updateOne(
+            { _id: userId },
+            { experiencePoints: newExperience }
+        );
+    }
+
+    async updateRoles(userId: string, roles: Array<Role>) {
+        const user = await this.userModel.findOne({
+            _id: new Types.ObjectId(userId),
+        });
+        if (!user) {
+            throw new NotFoundException(`User with id ${userId} not found`);
+        }
+        const finalRoles = [...new Set([...roles, Role.USER])];
+        return await this.userModel.findOneAndUpdate(
+            { _id: userId },
+            { roles: finalRoles },
+            { new: true }
+        );
     }
 }

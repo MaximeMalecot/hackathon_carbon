@@ -1,6 +1,6 @@
 export interface Entreprise {
-    _id: number;
+    _id: string;
     name: string;
     address: string;
-    image: File;
+    image: string;
 }

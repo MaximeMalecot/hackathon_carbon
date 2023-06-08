@@ -77,7 +77,12 @@ export default function FormationPage() {
     }, []);
 
     return (
-        <div className="formation-liste">
+        <div className="formation-liste overflow-auto">
+            {/* <div className="avatar">
+                <div className="w-24 mask mask-hexagon">
+                    <img src="/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                </div>
+            </div> */}
             <h1 className="text-4xl mb-5">Formations name</h1>
             <ul className="steps steps-vertical w-full gap-4 py-4">
                 {sortedChapters.map((chapter, index) => (

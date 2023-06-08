@@ -34,7 +34,6 @@ const useAuth = () => {
     const login = useCallback(async (mail: string, password: string) => {
         const res = await authService.login(mail, password);
         if (res && res.access_token) {
-            console.log(res.access_token);
             setToken(res.access_token);
             localStorage.setItem(TOKEN_STORAGE_KEY, res.access_token);
         }
@@ -44,6 +43,7 @@ const useAuth = () => {
     const logout = useCallback(() => {
         localStorage.removeItem(TOKEN_STORAGE_KEY);
         setToken(null);
+        setUserData(null);
         return true;
     }, []);
 
