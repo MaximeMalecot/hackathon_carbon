@@ -12,6 +12,8 @@ import userService from "../../services/user.service";
 
 interface DeliverableData {
     _id: string;
+    title: string;
+    file: string;
 }
 
 export default function Contracts() {
@@ -98,7 +100,48 @@ export default function Contracts() {
                         <p className="text-sm text-slate-400">Aucun document</p>
                     </div>
                 ) : (
-                    <div></div>
+                    // <div>
+                    //     {deliverables.map((deliverable, key) => (
+                    //         <div
+                    //             className={"flex items-center justify-between"}
+                    //             key={key}
+                    //         >
+                    //             <p>{deliverable.title}</p>
+                    //             <button className="btn btn-primary text-sm">
+                    //                 Voir
+                    //             </button>
+                    //         </div>
+                    //     ))}
+                    // </div>
+                    <div className="overflow-x-auto">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {deliverables.map((deliverable, index) => (
+                                    <tr className="hover" key={index}>
+                                        <th>{deliverable.title}</th>
+                                        <td className="flex gap-3">
+                                            <Link
+                                                target="_blank"
+                                                to={deliverable.file}
+                                                className="btn btn-info text-neutral"
+                                            >
+                                                Voir
+                                            </Link>
+                                            <button className="btn btn-secondary text-neutral">
+                                                Supprimer
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </div>
         </div>
