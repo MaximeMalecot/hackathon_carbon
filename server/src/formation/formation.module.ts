@@ -1,5 +1,6 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
+import { FormationChapterModule } from "src/formation_chapter/formation_chapter.module";
 import { FormationController } from "./formation.controller";
 import {
     FormationProgression,
@@ -20,6 +21,7 @@ import { FormationProgressionService } from "./services/progression.service";
                 schema: FormationProgressionSchema,
             },
         ]),
+        forwardRef(() => FormationChapterModule),
     ],
     controllers: [FormationController],
     providers: [FormationService, FormationProgressionService],

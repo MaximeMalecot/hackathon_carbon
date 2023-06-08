@@ -1,9 +1,11 @@
 import {
     BadRequestException,
     HttpException,
+    Inject,
     Injectable,
     InternalServerErrorException,
     NotFoundException,
+    forwardRef,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
@@ -25,9 +27,11 @@ export class FormationChapterService {
     constructor(
         @InjectModel(FormationChapter.name)
         private readonly formationChapterModel: Model<FormationChapter>,
+        @Inject(forwardRef(() => FormationService))
         private readonly formationService: FormationService,
         private readonly quizService: QuizService,
         private readonly resourceService: ResourceService,
+        @Inject(forwardRef(() => FormationProgressionService))
         private readonly formationProgressionService: FormationProgressionService
     ) {}
 

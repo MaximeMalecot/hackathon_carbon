@@ -61,11 +61,14 @@ export class FormationProgressionService {
     }
 
     async getProgressionOfUser(formationId: string, userId: string) {
-        const exists = await this.progressionExists({ formationId, userId });
-        if (!exists) {
+        const progression = await this.progressionExists({
+            formationId,
+            userId,
+        });
+        if (!progression) {
             throw new NotFoundException("No progression found");
         }
-        return exists;
+        return progression;
     }
 
     async getAllFormationOfUser(userId: string) {
