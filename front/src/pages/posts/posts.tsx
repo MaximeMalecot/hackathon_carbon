@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Post } from "../../interfaces/post";
 import postServices from "../../services/post.services";
 
-export default function ListPosts() {
+export default function Posts() {
     const [research, setResearch] = useState<string>("");
     const [posts, setPosts] = useState<any>([]);
     const [postsFiltered, setPostsFiltered] = useState<Post[]>([]);

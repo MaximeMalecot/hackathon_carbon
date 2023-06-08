@@ -2,6 +2,21 @@ import { toast } from "react-toastify";
 import { API_ENDPOINT } from "../constants/endpoints";
 import authHeader from "./auth.header";
 class EntrepriseService {
+    async getAllPublic() {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/posts?status=PUBLISHED`, {
+                method: "GET",
+                headers: {
+                    ...authHeader(),
+                },
+            });
+            return await res.json();
+        } catch (e) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+    }
     async getAll() {
         try {
             const res = await fetch(`${API_ENDPOINT}/posts`, {
