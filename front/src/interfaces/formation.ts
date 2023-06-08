@@ -6,7 +6,6 @@ export enum FORMATION_TYPE {
 export interface Formation {
     id: number;
     title: string;
-    description: string;
     xp: number;
     image: string;
     creator: string;
@@ -18,6 +17,12 @@ export interface FormationChapters {
     name: string;
     resourceID: object;
     type: FORMATION_TYPE;
+}
+
+export interface FormationDTO {
+    _id: number;
+    name: string;
+    referent: string;
 }
 
 export interface QuestionQuiz {

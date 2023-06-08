@@ -1,42 +1,68 @@
+import { toast } from "react-toastify";
 import { API_ENDPOINT } from "../constants/endpoints";
+import { FormationDTO } from "../interfaces";
+import authHeader from "./auth.header";
 
 class FormationService {
-    async login(email: string, password: string) {
-        const res = await fetch(`${API_ENDPOINT}/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                email,
-                password,
-            }),
-        });
+    async createFormation(name: string) {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/formations`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...authHeader(),
+                },
+                body: JSON.stringify({
+                    name,
+                }),
+            });
 
-        return await res.json();
+            const data = await res.json();
+
+            if (res.ok) {
+                toast.success("La formation a bien été créée !", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            } else {
+                toast.error("Erreur: " + data.message, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+
+            return data;
+        } catch (e: any) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_LEFT,
+            });
+        }
     }
 
-    async mockLogin(email: string, password: string) {
-        const access_token =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ0ZXN0QGdtYWlsLmNvbSIsInVzZXJuYW1lIjoidGVzdCIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE1MTYyMzkwMjJ9.OR_ey4gd5qbP5pcuSqp9T473GTZ-mPwGJCSTDVwHlLM";
-        return {
-            access_token,
-        };
-    }
+    async getFormations(): Promise<FormationDTO[] | null> {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/formations`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...authHeader(),
+                },
+            });
 
-    async register(email: string, password: string) {
-        const res = await fetch(`${API_ENDPOINT}/register`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                email,
-                password,
-            }),
-        });
+            const data = await res.json();
 
-        return await res.json();
+            if (!res.ok) {
+                toast.error("Erreur: " + data.message, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+                return null;
+            }
+
+            return data;
+        } catch (e: any) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_LEFT,
+            });
+        }
+        return null;
     }
 }
 
