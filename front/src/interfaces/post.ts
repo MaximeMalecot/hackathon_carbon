@@ -6,4 +6,5 @@ export interface Post {
     writer: string;
     createAt: string;
     enterprise: string;
+    status: string;
 }

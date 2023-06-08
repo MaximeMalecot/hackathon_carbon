@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import AppLayout from "./components/layout/app-layout";
 import CreationEntreprise from "./pages/entreprise/create-entreprise";
 import CreatePost from "./pages/posts/createPost";
+import ListPosts from "./pages/posts/listPosts";
 
 const Home = lazy(() => import("./pages/home"));
 const Login = lazy(() => import("./pages/login"));
@@ -36,10 +37,10 @@ function App() {
                         <Route path={"/login"} element={<Login />} />
                         <Route path={"/"} element={<Home />} />
                         <Route path={"*"} element={<NotFound />} />
-                        <Route
-                            path={"/posts/create"}
-                            element={<CreatePost />}
-                        />
+                        <Route path={"/posts"}>
+                            <Route path={"liste"} element={<ListPosts />} />
+                            <Route path={"create"} element={<CreatePost />} />
+                        </Route>
                     </Route>
                 </Routes>
             </Suspense>
