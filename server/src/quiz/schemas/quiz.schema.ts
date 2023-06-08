@@ -2,13 +2,6 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Types } from "mongoose";
 
 export type QuizDocument = HydratedDocument<Quiz>;
-
-export enum Level {
-    EASY = 200,
-    MEDIUM = 400,
-    HARD = 600,
-}
-
 @Schema()
 export class Quiz {
     @Prop({
@@ -22,12 +15,6 @@ export class Quiz {
         required: true,
     })
     description: string;
-
-    @Prop({
-        type: Number,
-        required: true,
-    })
-    level: Level;
 
     @Prop({
         type: Date,
