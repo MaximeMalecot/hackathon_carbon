@@ -66,6 +66,18 @@ export default function Sidebar(props: any) {
                         </details>
                     </li>
                 )}
+                {hasAccess([ROLES.ASSIGNMENT_EDITOR]) && (
+                    <li>
+                        <details open>
+                            <summary>Gestion contrats</summary>
+                            <ul>
+                                <li>
+                                    <Link to={"/contracts"}>Gestion</Link>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                )}
             </div>
             <button
                 className="md:hidden btn btn-primary mt-5"

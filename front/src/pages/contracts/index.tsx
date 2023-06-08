@@ -65,8 +65,8 @@ export default function Contracts() {
                                         <td>
                                             <Link
                                                 target="_blank"
-                                                to={`/contract/${contract._id}`}
-                                                className="btn btn-primary"
+                                                to={`/contracts/${contract._id}`}
+                                                className="btn btn-info text-neutral"
                                             >
                                                 Voir
                                             </Link>

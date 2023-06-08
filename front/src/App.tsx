@@ -29,6 +29,7 @@ const CreationFormation = lazy(
 const Profile = lazy(() => import("./pages/profile"));
 
 const Contracts = lazy(() => import("./pages/contracts"));
+const Contract = lazy(() => import("./pages/contracts/contract"));
 //#endregion
 
 function App() {
@@ -107,9 +108,20 @@ function App() {
                                     </Route>
                                 )}
                                 {hasAccess([ROLES.ASSIGNMENT_EDITOR]) && (
-                                    <Route path={"/contracts"}>
-                                        <Route index element={<Contracts />} />
-                                    </Route>
+                                    <Route
+                                        path={"/contracts"}
+                                        element={<Contracts />}
+                                    />
+                                )}
+
+                                {hasAccess([
+                                    ROLES.ASSIGNMENT_EDITOR,
+                                    ROLES.USER,
+                                ]) && (
+                                    <Route
+                                        path="/contracts/:id"
+                                        element={<Contract />}
+                                    />
                                 )}
                                 <Route path={"/entreprise"}>
                                     <Route
