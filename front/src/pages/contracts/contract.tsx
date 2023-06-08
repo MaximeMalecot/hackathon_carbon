@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { ROLES } from "../../constants";
+import { CONTRACT_STATUS } from "../../constants/status";
+import { useAccess } from "../../hooks/use-access";
 import { UserData } from "../../interfaces";
 import { ContractData } from "../../interfaces/contract";
 import { Entreprise } from "../../interfaces/entreprise";
@@ -17,6 +20,14 @@ export default function Contracts() {
     const [consultant, setConsultant] = useState<UserData | null>(null);
     const [deliverables, setDelivrables] = useState<DeliverableData[]>([]); // TODO: Create interface for deliverables
     const { id } = useParams<{ id: string }>();
+    const { hasAccess } = useAccess();
+
+    const reload = () => {
+        setContract(null);
+        setEntreprise(null);
+        setConsultant(null);
+        fetchContract();
+    };
 
     const fetchData = useCallback(async () => {
         try {
@@ -38,7 +49,6 @@ export default function Contracts() {
         try {
             if (!id) throw new Error("No id provided");
             const { contract, delivrables } = await contractService.getOne(id);
-            console.log(contract);
             setContract(contract);
             setDelivrables(delivrables);
         } catch (e) {
@@ -64,16 +74,25 @@ export default function Contracts() {
                     entreprise={entreprise}
                     contract={contract}
                     consultant={consultant}
+                    reload={reload}
                 />
             )}
             <div className="divider"></div>
             <div>
-                <h2 className="text-xl">
-                    Documents{" "}
-                    <div className="badge badge-info text-neutral">
-                        {deliverables.length}
+                <div className="flex justify-between">
+                    <div className="flex items-center">
+                        <h2 className="text-xl">Documents </h2>
+                        <div className="badge badge-info text-neutral">
+                            {deliverables.length}
+                        </div>
                     </div>
-                </h2>
+
+                    {hasAccess([ROLES.ASSIGNMENT_EDITOR]) && (
+                        <button className="mb-auto btn btn-primary text-sm">
+                            Ajouter
+                        </button>
+                    )}
+                </div>
                 {deliverables.length == 0 ? (
                     <div>
                         <p className="text-sm text-slate-400">Aucun document</p>
@@ -90,8 +109,32 @@ interface TopPartProps {
     entreprise: Entreprise;
     consultant: UserData;
     contract: ContractData;
+    reload: () => void;
 }
-function TopPart({ entreprise, consultant, contract }: TopPartProps) {
+function TopPart({ entreprise, consultant, contract, reload }: TopPartProps) {
+    const { hasAccess } = useAccess();
+    const canUpdateContract = contract.status === CONTRACT_STATUS.ACTIVE;
+
+    const handleCancelContract = async () => {
+        try {
+            const res = await contractService.cancelContract(contract._id);
+            if (!res) throw new Error("Error while canceling contract");
+            reload();
+        } catch (e: any) {
+            console.log(e.message);
+        }
+    };
+
+    const handleFinishContract = async () => {
+        try {
+            const res = await contractService.finishContract(contract._id);
+            if (!res) throw new Error("Error while finishing contract");
+            reload();
+        } catch (e: any) {
+            console.log(e.message);
+        }
+    };
+
     return (
         <div className="flex flex-col md:flex-row gap-5">
             <div className="card w-96 bg-base-100 shadow-xl image-full">
@@ -115,7 +158,7 @@ function TopPart({ entreprise, consultant, contract }: TopPartProps) {
                     </div>
                 </div>
             </div>
-            <div>
+            <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
                     <h2 className="text-xl">Consultant</h2>
                     <Link
@@ -137,9 +180,23 @@ function TopPart({ entreprise, consultant, contract }: TopPartProps) {
                         {new Date(contract.endDate).toLocaleDateString()}
                     </p>
                 )}
-                <p className="btn btn-info cursor-default text-neutral">
-                    {contract.status}
-                </p>
+                <p className="">{contract.status}</p>
+                {hasAccess([ROLES.ASSIGNMENT_EDITOR]) && canUpdateContract && (
+                    <div className="flex gap-2">
+                        <button
+                            onClick={handleCancelContract}
+                            className="btn btn-secondary"
+                        >
+                            Annuler le contrat
+                        </button>
+                        <button
+                            onClick={handleFinishContract}
+                            className="btn btn-info text-neutral"
+                        >
+                            Terminer le contrat
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

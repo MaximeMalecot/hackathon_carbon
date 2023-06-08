@@ -31,6 +31,42 @@ class ContractService {
         });
         return await res.json();
     }
+
+    async cancelContract(contractId: string) {
+        const res = await fetch(
+            `${API_ENDPOINT}/contracts/cancel/${contractId}`,
+            {
+                method: "PATCH",
+                headers: {
+                    ...authHeader(),
+                },
+            }
+        );
+
+        if (res.status === 200) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    async finishContract(contractId: string) {
+        const res = await fetch(
+            `${API_ENDPOINT}/contracts/finish/${contractId}`,
+            {
+                method: "PATCH",
+                headers: {
+                    ...authHeader(),
+                },
+            }
+        );
+
+        if (res.status === 200) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 export default new ContractService();
