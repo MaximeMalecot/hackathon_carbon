@@ -1,5 +1,6 @@
 import { API_ENDPOINT } from "../constants/endpoints";
 import { UserData } from "../interfaces/user";
+import { UserDto } from "../interfaces/user-dto";
 import authHeader from "./auth.header";
 
 const mockUser = {
@@ -62,6 +63,18 @@ class UserService {
             },
         });
         return res.ok;
+    }
+
+    async create(user: UserDto): Promise<Response> {
+        const res = await fetch(`${API_ENDPOINT}/users`, {
+            method: "POST",
+            headers: {
+                ...authHeader(),
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(user),
+        });
+        return res;
     }
 }
 

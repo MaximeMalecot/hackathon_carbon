@@ -6,6 +6,7 @@ import { ROLES } from "./constants";
 import { useAuthContext } from "./contexts/auth.context";
 import { useAccess } from "./hooks/use-access";
 import CreationEntreprise from "./pages/entreprise/create-entreprise";
+import CreateUser from "./pages/users/create";
 import ListUsers from "./pages/users/list";
 import SpecificUser from "./pages/users/specific";
 
@@ -85,7 +86,7 @@ function App() {
                                         {hasAccess([ROLES.ACCOUNT_EDITOR]) && (
                                             <Route
                                                 path={"create"}
-                                                element={<SpecificUser />}
+                                                element={<CreateUser />}
                                             />
                                         )}
                                     </Route>

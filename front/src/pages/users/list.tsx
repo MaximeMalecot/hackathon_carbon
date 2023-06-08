@@ -10,6 +10,8 @@ export default function ListUsers() {
     const [users, setUsers] = useState<UserData[]>([]);
     const { hasAccess } = useAccess();
 
+    const hasEditorAccess = hasAccess([ROLES.ACCOUNT_EDITOR]);
+
     const fetchUsers = useCallback(async () => {
         const response = await userService.getUsers();
         if (response) {
@@ -35,6 +37,14 @@ export default function ListUsers() {
     return (
         <div className="formation-liste">
             <h1 className="text-4xl mb-5">Liste des utilisateurs</h1>
+            {hasEditorAccess && (
+                <Link
+                    to="/gestion-user/create"
+                    className="btn btn-primary text-neutral"
+                >
+                    Ajouter un utilisateur
+                </Link>
+            )}
             <section>
                 <table className="table w-full">
                     <thead>
@@ -57,7 +67,7 @@ export default function ListUsers() {
                                         >
                                             Go
                                         </Link>
-                                        {hasAccess([ROLES.ACCOUNT_EDITOR]) && (
+                                        {hasEditorAccess && (
                                             <button
                                                 className="btn btn-error"
                                                 onClick={() =>
