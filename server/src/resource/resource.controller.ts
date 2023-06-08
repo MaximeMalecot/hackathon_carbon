@@ -16,6 +16,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { diskStorage } from "multer";
 import { extname } from "path";
 import { Roles } from "src/auth/decorators/roles.decorator";
+import { CheckObjectIdPipe } from "src/pipes/checkobjectid.pipe";
 import { Role } from "src/users/schemas/user.schema";
 import { ResourceService } from "./resource.service";
 
@@ -25,7 +26,7 @@ export class ResourceController {
     constructor(private readonly resourceService: ResourceService) {}
 
     @Get(":id")
-    findOneByChapterId(@Param("id") id: string) {
+    findOneByChapterId(@Param("id", CheckObjectIdPipe) id: string) {
         return this.resourceService.findOne(id);
     }
 
@@ -48,7 +49,7 @@ export class ResourceController {
     @Patch(":id")
     updateResource(
         @Req() req,
-        @Param("id") id: string,
+        @Param("id", CheckObjectIdPipe) id: string,
         @UploadedFile(
             new ParseFilePipe({
                 validators: [
@@ -64,7 +65,7 @@ export class ResourceController {
     }
 
     @Delete(":id")
-    remove(@Param("id") id: string) {
+    remove(@Param("id", CheckObjectIdPipe) id: string) {
         return this.resourceService.remove(id);
     }
 }

@@ -10,6 +10,7 @@ import {
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { Roles } from "src/auth/decorators/roles.decorator";
+import { CheckObjectIdPipe } from "src/pipes/checkobjectid.pipe";
 import { Role } from "src/users/schemas/user.schema";
 import { CreateFormationDto } from "./dto/create-formation.dto";
 import { UpdateFormationDto } from "./dto/update-formation.dto";
@@ -32,14 +33,14 @@ export class FormationController {
     }
 
     @Get(":id")
-    findOne(@Param("id") id: string) {
+    findOne(@Param("id", CheckObjectIdPipe) id: string) {
         return this.formationService.findOne(id);
     }
 
     @Patch(":id")
     @Roles(Role.TEACHER)
     update(
-        @Param("id") id: string,
+        @Param("id", CheckObjectIdPipe) id: string,
         @Body() updateFormationDto: UpdateFormationDto
     ) {
         return this.formationService.update(id, updateFormationDto);
@@ -47,13 +48,13 @@ export class FormationController {
 
     @Delete(":id")
     @Roles(Role.ADMIN)
-    remove(@Param("id") id: string) {
+    remove(@Param("id", CheckObjectIdPipe) id: string) {
         return this.formationService.remove(id);
     }
 
     @Get(":formationId/progression/self")
     getSelfProgressionOnFormation(
-        @Param("formationId") formationId: string,
+        @Param("formationId", CheckObjectIdPipe) formationId: string,
         @Req() req: any
     ) {
         return this.formationService.getUserProgressionOnFormation(
@@ -65,8 +66,8 @@ export class FormationController {
     @Roles(Role.VIEWER)
     @Get(":formationId/progression/:userId")
     getProgressionOfUserOnFormation(
-        @Param("formationId") formationId: string,
-        @Param("userId") userId: string
+        @Param("formationId", CheckObjectIdPipe) formationId: string,
+        @Param("userId", CheckObjectIdPipe) userId: string
     ) {
         return this.formationService.getUserProgressionOnFormation(
             formationId,
@@ -81,7 +82,9 @@ export class FormationController {
 
     @Roles(Role.VIEWER)
     @Get("current/:userId")
-    getCurrentFormationsOfUser(@Param("userId") userId: string) {
+    getCurrentFormationsOfUser(
+        @Param("userId", CheckObjectIdPipe) userId: string
+    ) {
         return this.formationService.getCurrentFormationsOfUser(userId);
     }
 
@@ -89,7 +92,7 @@ export class FormationController {
     @Post(":formationId/progression")
     @Roles(Role.ADMIN)
     createProgressionOnFormation(
-        @Param("formationId") formationId: string,
+        @Param("formationId", CheckObjectIdPipe) formationId: string,
         @Req() req: any
     ) {
         return this.formationService.createProgressionOnFormation(

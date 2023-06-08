@@ -9,6 +9,7 @@ import {
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { Roles } from "src/auth/decorators/roles.decorator";
+import { CheckObjectIdPipe } from "src/pipes/checkobjectid.pipe";
 import { Role } from "src/users/schemas/user.schema";
 import {
     CreateQuizChapterDto,
@@ -28,7 +29,7 @@ export class FormationChapterController {
     createQuiz(
         @Body()
         createFormationChapterDto: CreateQuizChapterDto,
-        @Param("formationId") formationId: string
+        @Param("formationId", CheckObjectIdPipe) formationId: string
     ) {
         return this.formationChapterService.createChapterAndQuiz(
             formationId,
@@ -41,7 +42,7 @@ export class FormationChapterController {
     createResource(
         @Body()
         createFormationChapterDto: CreateResourceChapterDto,
-        @Param("formationId") formationId: string
+        @Param("formationId", CheckObjectIdPipe) formationId: string
     ) {
         return this.formationChapterService.createChapterAndResource(
             formationId,
@@ -50,18 +51,20 @@ export class FormationChapterController {
     }
 
     @Get("formation/:formationId")
-    findAllForAFormation(@Param("formationId") formationId: string) {
+    findAllForAFormation(
+        @Param("formationId", CheckObjectIdPipe) formationId: string
+    ) {
         return this.formationChapterService.findAllForAFormation(formationId);
     }
 
     @Get(":id")
-    findOne(@Param("id") id: string, @Req() req: any) {
+    findOne(@Param("id", CheckObjectIdPipe) id: string, @Req() req: any) {
         return this.formationChapterService.findOne(id, req.user.id);
     }
 
     @Delete(":id")
     @Roles(Role.TEACHER)
-    remove(@Param("id") id: string) {
+    remove(@Param("id", CheckObjectIdPipe) id: string) {
         return this.formationChapterService.remove(id);
     }
 }
