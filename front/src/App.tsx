@@ -28,6 +28,7 @@ const CreationFormation = lazy(
 
 const Profile = lazy(() => import("./pages/profile"));
 
+const Contracts = lazy(() => import("./pages/contracts"));
 //#endregion
 
 function App() {
@@ -103,6 +104,11 @@ function App() {
                                             path={"create"}
                                             element={<CreatePost />}
                                         />
+                                    </Route>
+                                )}
+                                {hasAccess([ROLES.ASSIGNMENT_EDITOR]) && (
+                                    <Route path={"/contracts"}>
+                                        <Route index element={<Contracts />} />
                                     </Route>
                                 )}
                                 <Route path={"/entreprise"}>

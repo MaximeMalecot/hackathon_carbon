@@ -11,6 +11,16 @@ class ContractService {
         });
         return await res.json();
     }
+
+    async getAll() {
+        const res = await fetch(`${API_ENDPOINT}/contracts`, {
+            method: "GET",
+            headers: {
+                ...authHeader(),
+            },
+        });
+        return await res.json();
+    }
 }
 
 export default new ContractService();
