@@ -39,6 +39,20 @@ class UserService {
         });
         return await res.json();
     }
+
+    async patchRoles(id: string, roles: Array<string>): Promise<UserData> {
+        const res = await fetch(`${API_ENDPOINT}/users/${id}/roles`, {
+            method: "PATCH",
+            headers: {
+                ...authHeader(),
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                roles,
+            }),
+        });
+        return await res.json();
+    }
 }
 
 export default new UserService();

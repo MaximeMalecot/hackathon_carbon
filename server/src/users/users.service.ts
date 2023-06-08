@@ -145,8 +145,7 @@ export class UsersService {
         if (!user) {
             throw new NotFoundException(`User with id ${userId} not found`);
         }
-        const finalRoles = [...new Set([...roles, ...user.roles])];
-        console.log(finalRoles);
+        const finalRoles = [...new Set([...roles, Role.USER])];
         return await this.userModel.findOneAndUpdate(
             { _id: userId },
             { roles: finalRoles },

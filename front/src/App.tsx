@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import AppLayout from "./components/layout/app-layout";
 import { ROLES } from "./constants";
 import { useAuthContext } from "./contexts/auth.context";
+import { useAccess } from "./hooks/use-access";
 import CreationEntreprise from "./pages/entreprise/create-entreprise";
 import ListUsers from "./pages/users/list";
 import SpecificUser from "./pages/users/specific";
@@ -26,13 +27,8 @@ const CreationFormation = lazy(
 function App() {
     //#region Auth
     const { data, isConnected } = useAuthContext();
+    const { hasAccess } = useAccess();
     //#endregion
-
-    const hasAccess = (roles: Array<string>) => {
-        if (!data) return false;
-        if (data.roles.includes(ROLES.ADMIN)) return true;
-        return roles.some((role) => data?.roles.includes(role));
-    };
 
     return (
         <div className="App relative">
