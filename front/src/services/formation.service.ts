@@ -2,9 +2,12 @@ import { toast } from "react-toastify";
 import { API_ENDPOINT } from "../constants/endpoints";
 import { FormationDTO } from "../interfaces";
 import authHeader from "./auth.header";
-
+interface CreateFormationQuery{
+    name: string;
+    level: number;
+}
 class FormationService {
-    async createFormation(name: string) {
+    async createFormation(formData: CreateFormationQuery) {
         try {
             const res = await fetch(`${API_ENDPOINT}/formations`, {
                 method: "POST",
@@ -12,9 +15,7 @@ class FormationService {
                     "Content-Type": "application/json",
                     ...authHeader(),
                 },
-                body: JSON.stringify({
-                    name,
-                }),
+                body: JSON.stringify(formData),
             });
 
             const data = await res.json();

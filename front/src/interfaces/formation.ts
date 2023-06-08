@@ -23,6 +23,7 @@ export interface FormationDTO {
     _id: number;
     name: string;
     referent: string;
+    level: number;
 }
 
 export interface QuestionQuiz {
