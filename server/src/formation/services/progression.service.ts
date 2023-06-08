@@ -119,40 +119,37 @@ export class FormationProgressionService {
         userId: string,
         newChapter: string
     ) {
-        const progression = await this.progressionModel.findOne({
+        let progression = await this.progressionModel.findOne({
             formationId: new Types.ObjectId(formationId),
             userId: new Types.ObjectId(userId),
         });
 
-        if (progression) {
-            let chaptersDone = new Set([
-                ...progression.chaptersDone,
-                newChapter,
-            ]);
-
-            //Checking if all chapters are done
-            const chapters = await this.chapterService.findAllForAFormation(
-                formationId
-            );
-
-            const areAllChaptersDone = Object.values(chapters)
-                .map((c) => c.id)
-                .every((chapter) => chaptersDone.has(chapter));
-
-            if (areAllChaptersDone) {
-                progression.finished = new Date();
-            }
-            progression.chaptersDone = Array.from(chaptersDone);
-            return await progression.save();
-        } else {
-            const newProgression = new this.progressionModel({
+        if (!progression) {
+            progression = new this.progressionModel({
                 formationId: new Types.ObjectId(formationId),
                 userId: new Types.ObjectId(userId),
                 chaptersDone: [newChapter],
             });
-
-            const savedFormation = await newProgression.save();
-            return savedFormation.toObject();
         }
+
+        let chaptersDone = new Set([...progression.chaptersDone, newChapter]);
+
+        //Checking if all chapters are done
+        const chapters = await this.chapterService.findAllForAFormation(
+            formationId
+        );
+
+        const areAllChaptersDone = Object.values(chapters)
+            .map((c) => c.id)
+            .every((chapter) => chaptersDone.has(chapter));
+
+        if (
+            areAllChaptersDone &&
+            (!progression.finished || progression.finished === undefined)
+        ) {
+            progression.finished = new Date();
+        }
+        progression.chaptersDone = Array.from(chaptersDone);
+        return await progression.save();
     }
 }
