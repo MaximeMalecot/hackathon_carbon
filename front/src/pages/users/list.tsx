@@ -49,6 +49,7 @@ export default function ListUsers() {
                 <table className="table w-full">
                     <thead>
                         <tr>
+                            <th>Nom</th>
                             <th>Email</th>
                             <th>Roles</th>
                             <th>Actions</th>
@@ -58,6 +59,9 @@ export default function ListUsers() {
                         {users &&
                             users.map((user, index) => (
                                 <tr key={index}>
+                                    <th>
+                                        {user.firstName + " " + user.lastName}
+                                    </th>
                                     <th>{user.email}</th>
                                     <th>{JSON.stringify(user.roles)}</th>
                                     <th>
