@@ -69,7 +69,7 @@ export default function Profile() {
                 </div>
             </div>
             <div className="rounded-md shadow-lg py-4 px-6 flex flex-col gap-5 bg-white">
-                <h1 className="text-4xl">Formations</h1>
+                <h2 className="text-4xl">Formations</h2>
                 {formations && formations.length < 1 ? (
                     <p className="text-sm text-slate-400">
                         Vous ne suivez actuellement aucune formation
