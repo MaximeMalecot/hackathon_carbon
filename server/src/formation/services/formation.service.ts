@@ -65,12 +65,19 @@ export class FormationService {
 
         const formationChapters =
             await this.formationChapterService.findAllForAFormation(
-                progression.formationId
+                progression.formationId.toString()
             );
 
-        console.log(formationChapters);
+        const progressionPercentage =
+            (progression.chaptersDone.length / formationChapters.length) * 100;
 
-        return progression;
+        return {
+            chaptersDone: progression.chaptersDone,
+            progressionPercentage: {
+                value: progressionPercentage,
+                unit: "%",
+            },
+        };
     }
 
     async getCurrentFormationsOfUser(userId: string) {
