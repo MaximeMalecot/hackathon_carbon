@@ -88,7 +88,6 @@ export class PostService {
     }
 
     async delete(id: Types.ObjectId) {
-        console.log("onéla");
         await this.postContentService.deleteContents(id);
         return await this.postModel.deleteOne(id);
     }

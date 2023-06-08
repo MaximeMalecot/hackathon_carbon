@@ -39,12 +39,10 @@ import { FormationProgressionService } from "./services/progression.service";
                             const formation = await formationService.findOne(
                                 progress.formationId.toString()
                             );
-                            console.log("formation", formation);
                             if (!formation) return;
                             const { level } = formation;
                             await usersService.addExperience(user, level);
                         }
-                        console.log("pre save");
                     });
                     return schema;
                 },

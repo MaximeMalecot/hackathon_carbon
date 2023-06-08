@@ -145,7 +145,6 @@ export class ContractService {
             entrepriseId: entrepriseId,
             status: StatusEnum.ACTIVE,
         });
-        console.log(contract);
         return !!contract;
     }
 
@@ -154,7 +153,6 @@ export class ContractService {
             userId: userId,
         });
         for (const contract of contracts) {
-            console.log("contract", contract);
             await this.delivrableService.deleteForContract(contract._id);
         }
         return await this.contractModel.deleteMany({
