@@ -23,7 +23,7 @@ export class AuthService {
                 throw new UnauthorizedException();
             }
             const payload = {
-                sub: user._id,
+                sub: user._id.toString(),
                 roles: user.roles,
             };
             return {

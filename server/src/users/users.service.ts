@@ -7,7 +7,7 @@ import {
 import { InjectModel } from "@nestjs/mongoose";
 import { compareSync, hash } from "bcrypt";
 import { MongoError } from "mongodb";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { EASY_ROLES, Role, User } from "./schemas/user.schema";
@@ -53,6 +53,16 @@ export class UsersService {
 
     async findOne(id: string) {
         const user = await this.userModel.findOne({ _id: id });
+        if (!user) {
+            throw new NotFoundException(`User with id ${id} not found`);
+        }
+        return user;
+    }
+
+    async findOneRestricted(id: string) {
+        const user = await this.userModel
+            .findOne({ _id: id })
+            .select("-roles -createdAt");
         if (!user) {
             throw new NotFoundException(`User with id ${id} not found`);
         }
@@ -111,5 +121,36 @@ export class UsersService {
 
     async clear() {
         await this.userModel.deleteMany({});
+    }
+
+    async addExperience(userId: string, experiencePts: number) {
+        let user = await this.userModel.findOne({
+            _id: new Types.ObjectId(userId),
+        });
+        if (!user) {
+            throw new NotFoundException(`User with id ${userId} not found`);
+        }
+
+        const newExperience = user.experiencePoints + experiencePts;
+        await this.userModel.updateOne(
+            { _id: userId },
+            { experiencePoints: newExperience }
+        );
+    }
+
+    async updateRoles(userId: string, roles: Array<Role>) {
+        const user = await this.userModel.findOne({
+            _id: new Types.ObjectId(userId),
+        });
+        if (!user) {
+            throw new NotFoundException(`User with id ${userId} not found`);
+        }
+        const finalRoles = [...new Set([...roles, ...user.roles])];
+        console.log(finalRoles);
+        return await this.userModel.findOneAndUpdate(
+            { _id: userId },
+            { roles: finalRoles },
+            { new: true }
+        );
     }
 }

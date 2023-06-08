@@ -7,15 +7,14 @@ import {
     Patch,
     Post,
     Req,
-    UseGuards,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { Roles } from "src/auth/decorators/roles.decorator";
 import { ParseObjectIdPipe } from "src/pipes/objectid.pipe";
 import { Role } from "src/users/schemas/user.schema";
 import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateRolesDto } from "./dto/update-role.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { OwnUserGuards } from "./guards/users.guard";
 import { UsersService } from "./users.service";
 
 @ApiTags("users")
@@ -23,13 +22,13 @@ import { UsersService } from "./users.service";
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
-    @Roles(Role.ADMIN)
+    @Roles(Role.VIEWER)
     @Get()
     findAll() {
         return this.usersService.findAll();
     }
 
-    @Roles(Role.ACCOUNT_EDITOR, Role.ACCOUNT_CREATOR)
+    @Roles(Role.ACCOUNT_EDITOR)
     @Post()
     create(@Body() createUserDto: CreateUserDto) {
         return this.usersService.create(createUserDto);
@@ -37,16 +36,25 @@ export class UsersController {
 
     @Get("self")
     findSelf(@Req() req: any) {
-        if (!req.user) throw new Error("User not found");
         return this.usersService.findOne(req.user.id);
     }
 
-    @UseGuards(OwnUserGuards)
+    @Roles(Role.VIEWER)
     @Get(":id")
     findOne(@Param("id", ParseObjectIdPipe) id: string) {
         return this.usersService.findOne(id);
     }
 
+    @Roles(Role.ADMIN)
+    @Patch(":id/roles")
+    updateRoles(
+        @Param("id", ParseObjectIdPipe) id: string,
+        @Body() body: UpdateRolesDto
+    ) {
+        return this.usersService.updateRoles(id, body.roles);
+    }
+
+    @Roles(Role.ACCOUNT_EDITOR)
     @Patch(":id")
     update(
         @Param("id", ParseObjectIdPipe) id: string,
@@ -55,7 +63,7 @@ export class UsersController {
         return this.usersService.update(id, updateUserDto);
     }
 
-    @UseGuards(OwnUserGuards)
+    @Roles(Role.ACCOUNT_EDITOR)
     @Delete(":id")
     remove(@Param("id", ParseObjectIdPipe) id: string) {
         return this.usersService.remove(id);

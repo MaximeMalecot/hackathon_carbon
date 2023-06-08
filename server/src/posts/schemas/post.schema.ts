@@ -3,15 +3,14 @@ import { HydratedDocument, Types } from "mongoose";
 
 export type PostDocument = HydratedDocument<Post>;
 
-type ContentType = {
-    type: "text" | "file";
-    data: string;
-    order: number;
-};
-
 export enum PostTypes {
     "TECHNO" = "TECHNO",
     "INFRA" = "INFRA",
+}
+
+export enum PostStatus {
+    "DRAFT" = "DRAFT",
+    "PUBLISHED" = "PUBLISHED",
 }
 
 @Schema()
@@ -23,12 +22,6 @@ export class Post {
     title: string;
 
     @Prop({
-        type: Array<ContentType>(),
-        required: true,
-    })
-    content: Array<ContentType>;
-
-    @Prop({
         type: [String],
         default: [],
     })
@@ -38,13 +31,20 @@ export class Post {
         type: Types.ObjectId,
         ref: "user",
     })
-    writer: string;
+    writerId: string;
 
     @Prop({
         type: Types.ObjectId,
         ref: "entreprise",
     })
-    entreprise: string;
+    entrepriseId: string;
+
+    @Prop({
+        type: String,
+        enum: PostStatus,
+        default: PostStatus.DRAFT,
+    })
+    status: PostStatus;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

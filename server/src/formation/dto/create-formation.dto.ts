@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateFormationDto {
     @IsString()
@@ -7,4 +7,8 @@ export class CreateFormationDto {
     @IsString()
     @IsOptional()
     referent?: string;
+
+    @IsNumber()
+    @IsOptional()
+    level: number;
 }

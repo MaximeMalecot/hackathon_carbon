@@ -32,7 +32,7 @@ const useAuth = () => {
     }, []);
 
     const login = useCallback(async (mail: string, password: string) => {
-        const res = await authService.mockLogin(mail, password);
+        const res = await authService.login(mail, password);
         if (res && res.access_token) {
             setToken(res.access_token);
             localStorage.setItem(TOKEN_STORAGE_KEY, res.access_token);

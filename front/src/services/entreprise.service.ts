@@ -32,7 +32,6 @@ class EntrepriseService {
                 },
                 body: data,
             });
-            console.log(res);
             if (res.ok) {
                 toast.success("L'entreprise a bien été créée !", {
                     position: toast.POSITION.TOP_RIGHT,
