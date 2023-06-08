@@ -19,6 +19,7 @@ export class ContractService {
         @InjectModel(Contract.name) private contractModel: Model<Contract>,
         @Inject(forwardRef(() => EntrepriseService))
         private entrepriseService: EntrepriseService,
+        @Inject(forwardRef(() => UsersService))
         private userService: UsersService,
         @Inject(forwardRef(() => DelivrableService))
         private delivrableService: DelivrableService
@@ -144,7 +145,18 @@ export class ContractService {
             entrepriseId: entrepriseId,
             status: StatusEnum.ACTIVE,
         });
-        console.log(contract);
         return !!contract;
+    }
+
+    async deleteForUser(userId: string) {
+        const contracts = await this.contractModel.find({
+            userId: userId,
+        });
+        for (const contract of contracts) {
+            await this.delivrableService.deleteForContract(contract._id);
+        }
+        return await this.contractModel.deleteMany({
+            userId: userId,
+        });
     }
 }

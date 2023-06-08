@@ -28,16 +28,20 @@ export class PostService {
             };
         }
         if (filters.status) {
-            query.status = PostTypes[filters.status];
+            query.status = PostStatus[filters.status];
         }
         if (filters.type) {
             query.type = PostTypes[filters.type];
         }
-        if (!user.roles.includes(Role.ADMIN)) {
+        if (
+            !user.roles.includes(Role.ADMIN) &&
+            !user.roles.includes(Role.NEWS_EDITOR)
+        ) {
             const contracts = await this.contractService.findForUser(
                 user._id.toString(),
                 StatusEnum.ACTIVE
             );
+            query.status = PostStatus.PUBLISHED;
             return await this.postModel
                 .aggregate([
                     {
@@ -88,7 +92,6 @@ export class PostService {
     }
 
     async delete(id: Types.ObjectId) {
-        console.log("onéla");
         await this.postContentService.deleteContents(id);
         return await this.postModel.deleteOne(id);
     }

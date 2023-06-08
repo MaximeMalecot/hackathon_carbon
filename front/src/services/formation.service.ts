@@ -169,6 +169,16 @@ class FormationService {
             });
         }
     }
+    
+    async getSelfFormations() {
+        const res = await fetch(`${API_ENDPOINT}/formations/current/self`, {
+            method: "GET",
+            headers: {
+                ...authHeader(),
+            },
+        });
+        return await res.json();
+    }
 }
 
 export default new FormationService();

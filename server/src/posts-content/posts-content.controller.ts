@@ -125,7 +125,6 @@ export class PostContentController {
         )
         file?: Express.Multer.File
     ) {
-        console.log("onéla");
         return await this.postContentService.updateImage(id, {
             data: `${req.protocol}://${req.get("Host")}/${file.path}`,
             order,

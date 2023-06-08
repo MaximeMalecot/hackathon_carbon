@@ -64,6 +64,11 @@ export class User {
         default: 0,
     })
     experiencePoints: number;
+
+    @Prop({
+        type: Date,
+    })
+    deletedAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

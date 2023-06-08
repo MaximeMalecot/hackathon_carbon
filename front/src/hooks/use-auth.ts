@@ -43,6 +43,7 @@ const useAuth = () => {
     const logout = useCallback(() => {
         localStorage.removeItem(TOKEN_STORAGE_KEY);
         setToken(null);
+        setUserData(null);
         return true;
     }, []);
 

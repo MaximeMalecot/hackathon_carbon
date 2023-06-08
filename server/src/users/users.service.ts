@@ -1,20 +1,27 @@
 import {
     BadRequestException,
+    Inject,
     Injectable,
     InternalServerErrorException,
     NotFoundException,
+    forwardRef,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { compareSync, hash } from "bcrypt";
 import { MongoError } from "mongodb";
 import { Model, Types } from "mongoose";
+import { ContractService } from "src/contract/contract.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { EASY_ROLES, Role, User } from "./schemas/user.schema";
 
 @Injectable()
 export class UsersService {
-    constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+    constructor(
+        @InjectModel(User.name) private userModel: Model<User>,
+        @Inject(forwardRef(() => ContractService))
+        private contractService: ContractService
+    ) {}
 
     async create(createUserDto: CreateUserDto) {
         try {
@@ -115,6 +122,7 @@ export class UsersService {
         if (!user) {
             throw new NotFoundException(`User with id ${id} not found`);
         }
+        await this.contractService.deleteForUser(user.id);
         await this.userModel.deleteOne({ _id: id });
         return null;
     }
@@ -135,6 +143,21 @@ export class UsersService {
         await this.userModel.updateOne(
             { _id: userId },
             { experiencePoints: newExperience }
+        );
+    }
+
+    async updateRoles(userId: string, roles: Array<Role>) {
+        const user = await this.userModel.findOne({
+            _id: new Types.ObjectId(userId),
+        });
+        if (!user) {
+            throw new NotFoundException(`User with id ${userId} not found`);
+        }
+        const finalRoles = [...new Set([...roles, Role.USER])];
+        return await this.userModel.findOneAndUpdate(
+            { _id: userId },
+            { roles: finalRoles },
+            { new: true }
         );
     }
 }

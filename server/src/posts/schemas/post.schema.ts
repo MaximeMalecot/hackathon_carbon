@@ -45,6 +45,13 @@ export class Post {
         default: PostStatus.DRAFT,
     })
     status: PostStatus;
+    
+    @Prop({
+        type: Date,
+        required: true,
+        default: Date.now(),
+    })
+    createdAt: Date;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

@@ -1,10 +1,16 @@
-import { Suspense, lazy, useMemo } from "react";
+import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import AppLayout from "./components/layout/app-layout";
 import { ROLES } from "./constants";
 import { useAuthContext } from "./contexts/auth.context";
+import { useAccess } from "./hooks/use-access";
 import CreationEntreprise from "./pages/entreprise/create-entreprise";
+import CreatePost from "./pages/posts/createPost";
+import { default as ListPosts, default as Posts } from "./pages/posts/posts";
+import CreateUser from "./pages/users/create";
+import ListUsers from "./pages/users/list";
+import SpecificUser from "./pages/users/specific";
 
 //#region Routes
 const Home = lazy(() => import("./pages/home"));
@@ -26,16 +32,15 @@ const CreateQuestionQuiz = lazy(
     () => import("./pages/formation/create-question-quiz")
 );
 
+const Profile = lazy(() => import("./pages/profile"));
+
 //#endregion
 
 function App() {
     //#region Auth
     const { data, isConnected } = useAuthContext();
+    const { hasAccess } = useAccess();
     //#endregion
-
-    const isTeacher = useMemo(() => {
-        return data?.roles.includes(ROLES.TEACHER);
-    }, [data]);
 
     return (
         <div className="App relative">
@@ -63,7 +68,7 @@ function App() {
                                         element={<Formation />}
                                     />
                                 </Route>
-                                {isTeacher && (
+                                {hasAccess([ROLES.TEACHER]) && (
                                     <Route path={"/gestion-formations"}>
                                         <Route
                                             index
@@ -86,18 +91,47 @@ function App() {
                                         />
                                     </Route>
                                 )}
+                                {hasAccess([
+                                    ROLES.ACCOUNT_EDITOR,
+                                    ROLES.VIEWER,
+                                ]) && (
+                                    <Route path={"/gestion-user"}>
+                                        <Route index element={<ListUsers />} />
+                                        <Route
+                                            path={":id"}
+                                            element={<SpecificUser />}
+                                        />
+                                        {hasAccess([ROLES.ACCOUNT_EDITOR]) && (
+                                            <Route
+                                                path={"create"}
+                                                element={<CreateUser />}
+                                            />
+                                        )}
+                                    </Route>
+                                )}
+                                {hasAccess([ROLES.NEWS_EDITOR]) && (
+                                    <Route path={"/gestion-posts"}>
+                                        <Route index element={<ListPosts />} />
+                                        <Route
+                                            path={"create"}
+                                            element={<CreatePost />}
+                                        />
+                                    </Route>
+                                )}
                                 <Route path={"/entreprise"}>
                                     <Route
                                         path={"create"}
                                         element={<CreationEntreprise />}
                                     />
                                 </Route>
+                                <Route path="/profile" element={<Profile />} />
                                 <Route path={"/"} element={<Home />} />
                             </>
                         )}
                         <Route path={"/login"} element={<Login />} />
 
                         <Route path={"*"} element={<NotFound />} />
+                        <Route path={"/posts"} element={<Posts />} />
                     </Route>
                 </Routes>
             </Suspense>
