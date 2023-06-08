@@ -10,7 +10,21 @@ class EntrepriseService {
                     ...authHeader(),
                 },
             });
-            //console.log(await res.json());
+            return await res.json();
+        } catch (e) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+    }
+    async getAllTypes() {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/posts/types`, {
+                method: "GET",
+                headers: {
+                    ...authHeader(),
+                },
+            });
             return await res.json();
         } catch (e) {
             toast.error("Error :" + e, {
@@ -19,22 +33,43 @@ class EntrepriseService {
         }
     }
 
-    async create(name: string, address: string, file: any) {
-        const data = new FormData();
-        data.append("name", name);
-        data.append("address", address);
-        data.append("file", file);
+    async getAllEntreprises() {
         try {
-            const res = await fetch(`${API_ENDPOINT}/entreprise`, {
-                method: "POST",
+            const res = await fetch(`${API_ENDPOINT}/entreprises`, {
+                method: "GET",
                 headers: {
                     ...authHeader(),
                 },
-                body: data,
             });
-            console.log(res);
+            return await res.json();
+        } catch (e) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+    }
+
+    async create(title: string, types: Array<string>, entrepriseId: string) {
+        try {
+            const body = {
+                title,
+            } as any;
+            if (entrepriseId && entrepriseId !== "") {
+                body.entrepriseId = entrepriseId;
+            }
+            if (types && types.length > 0) {
+                body.types = types;
+            }
+            const res = await fetch(`${API_ENDPOINT}/posts`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...authHeader(),
+                },
+                body: JSON.stringify(body),
+            });
             if (res.ok) {
-                toast.success("L'entreprise a bien été créée !", {
+                toast.success("Le post a bien été créée !", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
             } else {

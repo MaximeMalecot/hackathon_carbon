@@ -13,14 +13,14 @@ export default function ListPosts() {
         },
         []
     );
-    const setPostsFunction = async () => {
+    const fetchPosts = async () => {
         const posts = await postServices.getAll();
         console.log(posts);
         setPosts(posts);
     };
 
     useEffect(() => {
-        setPostsFunction();
+        fetchPosts();
     }, []);
 
     useEffect(() => {
