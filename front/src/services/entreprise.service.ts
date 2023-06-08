@@ -47,6 +47,20 @@ class EntrepriseService {
 
         return await res.json();
     }
+
+    async getOne(entrepriseId: string) {
+        const res = await fetch(`${API_ENDPOINT}/entreprises/${entrepriseId}`, {
+            method: "GET",
+            headers: {
+                ...authHeader(),
+            },
+        });
+
+        if (!res.ok) {
+            throw new Error("Entreprise not found");
+        }
+        return await res.json();
+    }
 }
 
 export default new EntrepriseService();

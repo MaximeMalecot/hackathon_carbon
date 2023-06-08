@@ -1,8 +1,16 @@
-import { Link } from "react-router-dom";
+import { useCallback } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import RedMedal from "../../assets/icons/red-medal.png";
 import { useAuthContext } from "../../contexts/auth.context";
 
 export default function Header(props: any) {
+    const navigate = useNavigate();
     const { isConnected, data, logout } = useAuthContext();
+
+    const handleLogout = useCallback(() => {
+        logout();
+        navigate("/login");
+    }, []);
 
     return (
         <header>
@@ -25,12 +33,27 @@ export default function Header(props: any) {
                             <li className="content-center">
                                 <details>
                                     <summary className="text-neutral">
+                                        <span className="text-xs">
+                                            {data?.experiencePoints} Points
+                                        </span>
+                                        <div
+                                            style={{
+                                                width: "20px",
+                                                height: "20px",
+                                                objectFit: "cover",
+                                            }}
+                                        >
+                                            <img src={RedMedal} alt="medal" />
+                                        </div>
                                         {data?.email}
                                     </summary>
                                     <ul className="p-2 bg-base-100">
                                         <li>
-                                            <button onClick={logout}>
-                                                Logout
+                                            <Link to="/profile">Profil</Link>
+                                        </li>
+                                        <li>
+                                            <button onClick={handleLogout}>
+                                                Déconnexion
                                             </button>
                                         </li>
                                     </ul>
