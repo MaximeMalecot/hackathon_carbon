@@ -1,8 +1,15 @@
-import { Link } from "react-router-dom";
+import { useCallback } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/auth.context";
 
 export default function Header(props: any) {
+    const navigate = useNavigate();
     const { isConnected, data, logout } = useAuthContext();
+
+    const handleLogout = useCallback(() => {
+        logout();
+        navigate("/login");
+    }, []);
 
     return (
         <header>
@@ -32,7 +39,7 @@ export default function Header(props: any) {
                                             <Link to="/profile">Profil</Link>
                                         </li>
                                         <li>
-                                            <button onClick={logout}>
+                                            <button onClick={handleLogout}>
                                                 Déconnexion
                                             </button>
                                         </li>
