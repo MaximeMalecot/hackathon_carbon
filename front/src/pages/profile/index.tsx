@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
+import ContractItem from "../../components/contracts/contract-item";
 import ProgressionItem from "../../components/formation/progress-item";
 import { UserData } from "../../interfaces";
+import { ContractData } from "../../interfaces/contract";
+import contractService from "../../services/contract.service";
 import formationService from "../../services/formation.service";
 import userService from "../../services/user.service";
 
@@ -17,17 +20,20 @@ export interface FormationWithProgression {
 
 export default function Profile() {
     const [userData, setUserData] = useState<UserData | null>(null);
-    const [formations, setFormations] = useState<
-        FormationWithProgression[] | null
-    >(null);
+    const [contracts, setContracts] = useState<ContractData[]>([]);
+    const [formations, setFormations] = useState<FormationWithProgression[]>(
+        []
+    );
 
     const fetchUserData = useCallback(async () => {
         Promise.all([
             userService.getSelf(),
             formationService.getSelfFormations(),
-        ]).then(([user, progression]) => {
+            contractService.getSelfContract(),
+        ]).then(([user, progression, contract]) => {
             setUserData(user);
             setFormations(progression);
+            setContracts(contract);
         });
     }, []);
 
@@ -83,6 +89,23 @@ export default function Profile() {
                                     formationProgression={formation}
                                 />
                             ))}
+                    </div>
+                )}
+            </div>
+            <div className="rounded-md shadow-lg py-4 px-6 flex flex-col gap-5 bg-white">
+                <h2 className="text-4xl">Contrats</h2>
+                {contracts && contracts.length < 1 ? (
+                    <p className="text-sm text-slate-400">
+                        Vous n'avez aucun historique de contrat
+                    </p>
+                ) : (
+                    <div className="grid grid-cols-3 gap-4">
+                        {contracts.map((contract) => (
+                            <ContractItem
+                                key={contract._id}
+                                contract={contract}
+                            />
+                        ))}
                     </div>
                 )}
             </div>
