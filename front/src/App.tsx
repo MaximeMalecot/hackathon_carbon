@@ -19,6 +19,13 @@ const Quiz = lazy(() => import("./pages/formation/quiz"));
 const CreationFormation = lazy(
     () => import("./pages/formation/creation-formation")
 );
+const CreationChapterFormation = lazy(
+    () => import("./pages/formation/create-chapter-formation")
+);
+const CreateQuestionQuiz = lazy(
+    () => import("./pages/formation/create-question-quiz")
+);
+
 //#endregion
 
 function App() {
@@ -67,8 +74,15 @@ function App() {
                                             element={<CreationFormation />}
                                         />
                                         <Route
-                                            path={"quiz/create/:id"}
-                                            element={<CreationFormation />}
+                                            path="quiz/:id"
+                                            element={<CreateQuestionQuiz />}
+                                        />
+
+                                        <Route
+                                            path={":id"}
+                                            element={
+                                                <CreationChapterFormation />
+                                            }
                                         />
                                     </Route>
                                 )}
