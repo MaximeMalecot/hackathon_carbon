@@ -102,7 +102,25 @@ export class QuizService {
         return { mark };
     }
 
+    usersAnswers = [
+        {
+            questionId: "1",
+            answers: ["1", "2"],
+        },
+        {
+            questionId: "2",
+            answers: ["3"],
+        },
+    ];
+
+    corrects = {
+        questionId: ["1", "2"],
+    };
+
     private compareAnswers(userAnswers, questions: Question[]): number {
+        const eqSet = (xs, ys) =>
+            xs.size === ys.size && [...xs].every((x) => ys.has(x));
+
         let correctAnswersCount = 0;
         const answersPerQuestion = questions
             .map((question) => {
@@ -112,6 +130,16 @@ export class QuizService {
                 return { [question.id]: answers };
             })
             .reduce((acc, curr) => ({ ...acc, ...curr }), {});
-        return 10;
+
+        const mark = userAnswers.reduce((acc, curr) => {
+            const answers = answersPerQuestion[curr.questionId];
+            if (!answers) return acc;
+            const hasCorrectAnswers = eqSet(
+                new Set(answers),
+                new Set(curr.answers)
+            );
+            return hasCorrectAnswers ? acc + 1 : acc;
+        }, 0);
+        return mark;
     }
 }
