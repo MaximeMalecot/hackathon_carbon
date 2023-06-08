@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import AppLayout from "./components/layout/app-layout";
 import CreationEntreprise from "./pages/entreprise/create-entreprise";
+import ListEntreprises from "./pages/entreprise/list-entreprise";
 
 const Home = lazy(() => import("./pages/home"));
 const Login = lazy(() => import("./pages/login"));
@@ -30,6 +31,10 @@ function App() {
                             <Route
                                 path={"create"}
                                 element={<CreationEntreprise />}
+                            />
+                            <Route
+                                path={"liste"}
+                                element={<ListEntreprises />}
                             />
                         </Route>
                         <Route path={"/login"} element={<Login />} />

@@ -3,6 +3,22 @@ import { API_ENDPOINT } from "../constants/endpoints";
 import authHeader from "./auth.header";
 
 class EntrepriseService {
+    async getAll() {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/entreprise`, {
+                method: "GET",
+                headers: {
+                    ...authHeader(),
+                },
+            });
+            return await res.json();
+        } catch (e) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+    }
+
     async create(name: string, address: string, file: any) {
         const data = new FormData();
         data.append("name", name);
