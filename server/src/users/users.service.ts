@@ -137,4 +137,20 @@ export class UsersService {
             { experiencePoints: newExperience }
         );
     }
+
+    async updateRole(userId: string, roles: Array<Role>) {
+        const user = await this.userModel.findOne({
+            _id: new Types.ObjectId(userId),
+        });
+        if (!user) {
+            throw new NotFoundException(`User with id ${userId} not found`);
+        }
+        const finalRoles = [...new Set([...roles, ...user.roles])];
+        console.log(finalRoles);
+        return await this.userModel.findOneAndUpdate(
+            { _id: userId },
+            { roles: finalRoles },
+            { new: true }
+        );
+    }
 }
