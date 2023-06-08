@@ -1,4 +1,4 @@
-import { Suspense, lazy, useMemo } from "react";
+import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import AppLayout from "./components/layout/app-layout";
@@ -26,9 +26,11 @@ function App() {
     const { data, isConnected } = useAuthContext();
     //#endregion
 
-    const isTeacher = useMemo(() => {
-        return data?.roles.includes(ROLES.TEACHER);
-    }, [data]);
+    const hasAccess = (roles: Array<string>) => {
+        if (!data) return false;
+        if (data.roles.includes(ROLES.ADMIN)) return true;
+        return roles.some((role) => data?.roles.includes(role));
+    };
 
     return (
         <div className="App relative">
@@ -56,7 +58,7 @@ function App() {
                                         element={<Formation />}
                                     />
                                 </Route>
-                                {isTeacher && (
+                                {hasAccess([ROLES.TEACHER]) && (
                                     <Route path={"/gestion-formations"}>
                                         <Route
                                             index

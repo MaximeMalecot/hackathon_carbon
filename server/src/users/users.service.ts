@@ -138,7 +138,7 @@ export class UsersService {
         );
     }
 
-    async updateRole(userId: string, roles: Array<Role>) {
+    async updateRoles(userId: string, roles: Array<Role>) {
         const user = await this.userModel.findOne({
             _id: new Types.ObjectId(userId),
         });
