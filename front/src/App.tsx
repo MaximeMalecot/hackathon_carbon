@@ -5,6 +5,8 @@ import AppLayout from "./components/layout/app-layout";
 import { ROLES } from "./constants";
 import { useAuthContext } from "./contexts/auth.context";
 import CreationEntreprise from "./pages/entreprise/create-entreprise";
+import Entreprise from "./pages/entreprise/entreprise-view";
+import ListEntreprises from "./pages/entreprise/list-entreprise";
 
 //#region Routes
 const Home = lazy(() => import("./pages/home"));
@@ -76,8 +78,16 @@ function App() {
                                 )}
                                 <Route path={"/entreprise"}>
                                     <Route
+                                        path={":id"}
+                                        element={<Entreprise />}
+                                    />
+                                    <Route
                                         path={"create"}
                                         element={<CreationEntreprise />}
+                                    />
+                                    <Route
+                                        path={"liste"}
+                                        element={<ListEntreprises />}
                                     />
                                 </Route>
                                 <Route path={"/"} element={<Home />} />

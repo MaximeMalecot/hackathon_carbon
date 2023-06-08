@@ -54,7 +54,7 @@ export default function ListEntreprises() {
                 {entreprisesFiltered.length > 0 &&
                     entreprisesFiltered.map((entreprise, index) => (
                         <Link
-                            to=""
+                            to={"/entreprise/" + entreprise._id}
                             key={index}
                             className="card max-w-sm w-auto bg-base-100 shadow-xl"
                         >
