@@ -1,13 +1,21 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+    Inject,
+    Injectable,
+    NotFoundException,
+    forwardRef,
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
+import { FormationChapterService } from "src/formation_chapter/formation_chapter.service";
 import { FormationProgression } from "../schemas/formation-progression.schema";
 
 @Injectable()
 export class FormationProgressionService {
     constructor(
         @InjectModel(FormationProgression.name)
-        private readonly progressionModel: Model<FormationProgression>
+        private readonly progressionModel: Model<FormationProgression>,
+        @Inject(forwardRef(() => FormationChapterService))
+        private readonly chapterService: FormationChapterService
     ) {}
 
     private async progressionExists(params: {
@@ -121,6 +129,19 @@ export class FormationProgressionService {
                 ...progression.chaptersDone,
                 newChapter,
             ]);
+
+            //Checking if all chapters are done
+            const chapters = await this.chapterService.findAllForAFormation(
+                formationId
+            );
+
+            const areAllChaptersDone = Object.values(chapters)
+                .map((c) => c.id)
+                .every((chapter) => chaptersDone.has(chapter));
+
+            if (areAllChaptersDone) {
+                progression.finished = new Date();
+            }
             progression.chaptersDone = Array.from(chaptersDone);
             return await progression.save();
         } else {

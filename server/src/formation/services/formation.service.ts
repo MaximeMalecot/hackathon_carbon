@@ -74,7 +74,7 @@ export class FormationService {
         return {
             chaptersDone: progression.chaptersDone,
             progressionPercentage: {
-                value: progressionPercentage,
+                value: parseFloat(progressionPercentage.toFixed(2)),
                 unit: "%",
             },
         };
