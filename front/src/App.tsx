@@ -6,6 +6,8 @@ import { ROLES } from "./constants";
 import { useAuthContext } from "./contexts/auth.context";
 import { useAccess } from "./hooks/use-access";
 import CreationEntreprise from "./pages/entreprise/create-entreprise";
+import CreatePost from "./pages/posts/createPost";
+import { default as ListPosts, default as Posts } from "./pages/posts/posts";
 import CreateUser from "./pages/users/create";
 import ListUsers from "./pages/users/list";
 import SpecificUser from "./pages/users/specific";
@@ -94,6 +96,15 @@ function App() {
                                         )}
                                     </Route>
                                 )}
+                                {hasAccess([ROLES.NEWS_EDITOR]) && (
+                                    <Route path={"/gestion-posts"}>
+                                        <Route index element={<ListPosts />} />
+                                        <Route
+                                            path={"create"}
+                                            element={<CreatePost />}
+                                        />
+                                    </Route>
+                                )}
                                 <Route path={"/entreprise"}>
                                     <Route
                                         path={"create"}
@@ -107,6 +118,7 @@ function App() {
                         <Route path={"/login"} element={<Login />} />
 
                         <Route path={"*"} element={<NotFound />} />
+                        <Route path={"/posts"} element={<Posts />} />
                     </Route>
                 </Routes>
             </Suspense>

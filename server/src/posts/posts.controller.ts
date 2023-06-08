@@ -17,6 +17,7 @@ import { Role } from "src/users/schemas/user.schema";
 import { CreatePostDto } from "./dto/create-post.dto";
 import { FindPostDto } from "./dto/find-post.dto";
 import { PostService } from "./posts.service";
+import { PostTypes } from "./schemas/post.schema";
 
 @ApiTags("posts")
 @Controller("posts")
@@ -28,6 +29,11 @@ export class PostController {
         return await this.postService.findAll(req.user, filters);
     }
 
+    @Get("types")
+    async getPostTypes() {
+        return Object.keys(PostTypes);
+    }
+    
     @Roles(Role.NEWS_EDITOR)
     @Post()
     async createPost(@Req() req: any, @Body() body: CreatePostDto) {
