@@ -33,6 +33,11 @@ export const useAuthContext = () => {
 
     return context;
 };
+const hasAccess = (roles: Array<string>) => {
+    if (!data) return false;
+    if (data.roles.includes(ROLES.ADMIN)) return true;
+    return roles.some((role) => data?.roles.includes(role));
+};
 
 export const AuthContextProvider: React.FC<Props> = ({ children }) => {
     const { login, logout, isConnected, register, data } = useAuth();
