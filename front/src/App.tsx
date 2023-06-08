@@ -5,6 +5,8 @@ import AppLayout from "./components/layout/app-layout";
 import { ROLES } from "./constants";
 import { useAuthContext } from "./contexts/auth.context";
 import CreationEntreprise from "./pages/entreprise/create-entreprise";
+import ListUsers from "./pages/users/list";
+import SpecificUser from "./pages/users/specific";
 
 //#region Routes
 const Home = lazy(() => import("./pages/home"));
@@ -72,6 +74,24 @@ function App() {
                                             path={"quiz/create/:id"}
                                             element={<CreationFormation />}
                                         />
+                                    </Route>
+                                )}
+                                {hasAccess([
+                                    ROLES.ACCOUNT_EDITOR,
+                                    ROLES.VIEWER,
+                                ]) && (
+                                    <Route path={"/gestion-user"}>
+                                        <Route index element={<ListUsers />} />
+                                        <Route
+                                            path={":id"}
+                                            element={<SpecificUser />}
+                                        />
+                                        {hasAccess([ROLES.ACCOUNT_EDITOR]) && (
+                                            <Route
+                                                path={"create"}
+                                                element={<SpecificUser />}
+                                            />
+                                        )}
                                     </Route>
                                 )}
                                 <Route path={"/entreprise"}>

@@ -19,6 +19,26 @@ class UserService {
         });
         return await res.json();
     }
+
+    async getUsers(): Promise<UserData[]> {
+        const res = await fetch(`${API_ENDPOINT}/users`, {
+            method: "GET",
+            headers: {
+                ...authHeader(),
+            },
+        });
+        return await res.json();
+    }
+
+    async getUser(id: string): Promise<UserData> {
+        const res = await fetch(`${API_ENDPOINT}/users/${id}`, {
+            method: "GET",
+            headers: {
+                ...authHeader(),
+            },
+        });
+        return await res.json();
+    }
 }
 
 export default new UserService();
