@@ -59,7 +59,7 @@ class EntrepriseService {
         data.append("address", address);
         data.append("file", file);
         try {
-            const res = await fetch(`${API_ENDPOINT}/entreprise`, {
+            const res = await fetch(`${API_ENDPOINT}/entreprises`, {
                 method: "POST",
                 headers: {
                     ...authHeader(),
