@@ -29,9 +29,6 @@ export class PostSeed {
             {
                 title: "Post 1",
                 description: "Description 1",
-                entrepriseId: faker.helpers
-                    .arrayElement(entreprises)
-                    ._id.toString(),
             },
             {
                 title: "Post 2",

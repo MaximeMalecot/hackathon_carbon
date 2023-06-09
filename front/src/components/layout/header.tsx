@@ -13,7 +13,7 @@ export default function Header(props: any) {
     }, []);
 
     return (
-        <header>
+        <header style={{ position: "relative", zIndex: 10000 }}>
             <nav className="navbar bg-primary text-neutral-content">
                 <div className="flex-1">
                     <Link

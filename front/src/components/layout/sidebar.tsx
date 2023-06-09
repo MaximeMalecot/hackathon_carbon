@@ -12,15 +12,6 @@ export default function Sidebar(props: any) {
                     <Link to={"/posts"}>Posts</Link>
                     <Link to={"/formation/liste"}>Formations</Link>
                     <Link to={"/prizes"}>Échanger ses points</Link>
-                    <Link className="hover:bg-secondary" to={"/posts"}>
-                        Posts
-                    </Link>
-                    <Link
-                        className="hover:bg-secondary"
-                        to={"/formation/liste"}
-                    >
-                        Formations
-                    </Link>
                 </li>
                 <li></li>
                 {hasAccess([ROLES.TEACHER]) && (

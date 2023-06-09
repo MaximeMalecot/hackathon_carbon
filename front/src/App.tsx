@@ -11,7 +11,6 @@ import ListEntreprises from "./pages/entreprise/list-entreprise";
 import CreatePost from "./pages/posts/createPost";
 import EditPost from "./pages/posts/edit";
 import { default as ListPosts } from "./pages/posts/listPosts";
-import { default as Posts } from "./pages/posts/posts";
 import SpecificPost from "./pages/posts/specific";
 import CreateUser from "./pages/users/create";
 import ListUsers from "./pages/users/list";
@@ -83,7 +82,7 @@ function App() {
                                     />
                                 </Route>
                                 <Route path={"/posts"}>
-                                    <Route index element={<Posts />} />
+                                    <Route index element={<Home />} />
                                     <Route
                                         path={":id"}
                                         element={<SpecificPost />}
@@ -177,11 +176,11 @@ function App() {
                                         element={<ListEntreprises />}
                                     />
                                 </Route>
-                                <Route path="/profile" element={<Profile />} />
-                                <Route path={"/"} element={<Home />} />
                             </>
                         )}
                         <Route path={"/prizes"} element={<Prizes />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path={"/"} element={<Home />} />
 
                         {hasAccess([ROLES.PRIZE_EDITOR]) && (
                             <Route path={"/gestion-prizes"}>
@@ -198,7 +197,6 @@ function App() {
                         />
 
                         <Route path={"/login"} element={<Login />} />
-                        <Route path={"/posts"} element={<Posts />} />
                         <Route path={"*"} element={<NotFound />} />
                     </Route>
                 </Routes>
