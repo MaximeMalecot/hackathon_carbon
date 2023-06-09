@@ -87,6 +87,17 @@ class PrizeService {
             });
         }
     }
+
+    async getSelfTransactions() {
+        const res = await fetch(`${API_ENDPOINT}/transactions/self`, {
+            method: "GET",
+            headers: {
+                ...authHeader(),
+            },
+        });
+        if (!res.ok) throw new Error("Error while fetching transactions");
+        return await res.json();
+    }
 }
 
 export default new PrizeService();

@@ -46,6 +46,8 @@ const CreatePrize = lazy(() => import("./pages/prizes/create-prize"));
 
 const Contracts = lazy(() => import("./pages/contracts"));
 const Contract = lazy(() => import("./pages/contracts/contract"));
+
+const Transactions = lazy(() => import("./pages/transactions"));
 //#endregion
 
 function App() {
@@ -190,6 +192,10 @@ function App() {
                                 />
                             </Route>
                         )}
+                        <Route
+                            path={"/transactions"}
+                            element={<Transactions />}
+                        />
 
                         <Route path={"/login"} element={<Login />} />
                         <Route path={"/posts"} element={<Posts />} />
