@@ -31,7 +31,9 @@ export default function Profile() {
             formationService.getSelfFormations(),
             contractService.getSelfContract(),
         ]).then(([user, progression, contract]) => {
-            setUserData(user);
+            if (typeof user !== "boolean") {
+                setUserData(user);
+            }
             setFormations(progression);
             setContracts(contract);
         });

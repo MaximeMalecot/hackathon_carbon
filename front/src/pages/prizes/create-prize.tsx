@@ -65,8 +65,9 @@ export default function CreatePrize() {
                         </label>
                         <input
                             onChange={handleChange}
-                            type="text"
+                            value={formData.name}
                             name="name"
+                            type="text"
                             placeholder="Ex: Bon d'achat de 10€ chez Amazon"
                             className="input input-bordered w-full max-w-xs"
                         />
@@ -77,6 +78,7 @@ export default function CreatePrize() {
                         </label>
                         <input
                             onChange={handleChange}
+                            value={formData.price}
                             name="price"
                             type="number"
                             minLength={0}
@@ -90,6 +92,7 @@ export default function CreatePrize() {
                         </label>
                         <input
                             onChange={handleChange}
+                            value={formData.quantity}
                             name="quantity"
                             type="number"
                             minLength={0}
