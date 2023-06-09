@@ -36,35 +36,40 @@ export default function EntrepriseView() {
                 </h1>
                 <div className="avatar">
                     <div className="w-24 rounded">
-                        <img src="https://media.foot-national.com/18/2023/06/photo_article/825003/328818/1200-L-quipe-de-france-didier-deschamps-recadr-par-la-real-sociedad.jpg" />
+                        <img src={entreprise?.entreprise.image} />
                     </div>
                 </div>
                 <p className="text-xl">{entreprise?.entreprise.address}</p>
-                <section>
-                    <table className="table table-xs w-full">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Position</th>
-                                <th>Consultant</th>
-                                <th>Entreprise</th>
-                                <th>status</th>
-                                <th>Début</th>
-                                <th>Fin</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {contracts.length > 0 &&
-                                contracts.map(
-                                    (contract: ContractData, index) => (
-                                        <ContracteEntrepriseItem
-                                            contract={contract}
-                                        />
-                                    )
-                                )}
-                        </tbody>
-                    </table>
-                </section>
+                {contracts.length > 0 ? (
+                    <section>
+                        <table className="table table-xs w-full">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Position</th>
+                                    <th>Consultant</th>
+                                    <th>Entreprise</th>
+                                    <th>status</th>
+                                    <th>Début</th>
+                                    <th>Fin</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {contracts.length > 0 &&
+                                    contracts.map(
+                                        (contract: ContractData, index) => (
+                                            <ContracteEntrepriseItem
+                                                contract={contract}
+                                                key={index}
+                                            />
+                                        )
+                                    )}
+                            </tbody>
+                        </table>
+                    </section>
+                ) : (
+                    <h1> Il n'y a aucun contrats</h1>
+                )}
             </div>
         </div>
     );

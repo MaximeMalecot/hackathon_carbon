@@ -56,11 +56,11 @@ export default function ListEntreprises() {
                         <Link
                             to={"/entreprise/" + entreprise._id}
                             key={index}
-                            className="card max-w-sm w-auto bg-base-100 shadow-xl"
+                            className="card max-w-sm w-auto bg-base-100 shadow-xl h-80"
                         >
                             <figure>
                                 <img
-                                    src="https://media.foot-national.com/18/2023/06/photo_article/825003/328818/1200-L-quipe-de-france-didier-deschamps-recadr-par-la-real-sociedad.jpg"
+                                    src={entreprise.image}
                                     alt="entreprise image"
                                 />
                             </figure>
