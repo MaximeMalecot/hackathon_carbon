@@ -6,6 +6,7 @@ import {
     forwardRef,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { existsSync } from "fs";
 import { unlink } from "fs/promises";
 import { Model, Types } from "mongoose";
 import { join } from "path";
@@ -41,7 +42,9 @@ export class DelivrableService {
                 "../..",
                 `files/delivrables/${imagePath}`
             );
-            await unlink(beforePath);
+            if (existsSync(beforePath)) {
+                await unlink(beforePath);
+            }
             throw new InternalServerErrorException(err.message);
         }
     }
@@ -58,7 +61,10 @@ export class DelivrableService {
             "../..",
             `files/delivrables/${imagePath}`
         );
-        await unlink(beforePath);
+
+        if (existsSync(beforePath)) {
+            await unlink(beforePath);
+        }
         await this.delivrableModel.deleteOne(id);
         return {
             success: true,
@@ -68,7 +74,7 @@ export class DelivrableService {
 
     async deleteForContract(contractId: Types.ObjectId) {
         const delivrables = await this.delivrableModel.find({
-            contractId: contractId,
+            contractId: contractId.toString(),
         });
         if (!delivrables)
             throw new BadRequestException("Delivrables not found");
@@ -82,7 +88,10 @@ export class DelivrableService {
                 "../..",
                 `files/delivrables/${imagePath}`
             );
-            await unlink(beforePath);
+
+            if (existsSync(beforePath)) {
+                await unlink(beforePath);
+            }
         }
         await this.delivrableModel.deleteMany({ contractId: contractId });
         return {

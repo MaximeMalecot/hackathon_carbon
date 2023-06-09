@@ -105,4 +105,12 @@ export class PostService {
             { new: true }
         );
     }
+
+    async clear() {
+        const posts = await this.postModel.find();
+        for (const post of posts) {
+            await this.postContentService.deleteContents(post._id);
+        }
+        return await this.postModel.deleteMany();
+    }
 }
