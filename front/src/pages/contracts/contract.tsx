@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import CreateDeliverableForm, {
-    CreateDeliverableData,
-} from "../../components/contracts/create-deliverable-form";
+import { CreateDeliverableData } from "../../components/contracts/create-deliverable-form";
+import CreateDeliverableModal from "../../components/contracts/create-deliverable-modal";
 import { ROLES } from "../../constants";
 import { CONTRACT_STATUS } from "../../constants/status";
 import { useAccess } from "../../hooks/use-access";
@@ -256,12 +255,13 @@ function DeliverablesPart({
                     </button>
                 )}
             </div>
-            {formvisibility && (
-                <CreateDeliverableForm
-                    contractId={contractId}
-                    create={addDeliverable}
-                />
-            )}
+
+            <CreateDeliverableModal
+                contractId={contractId}
+                create={addDeliverable}
+                isVisible={formvisibility}
+                setVisibility={setFormVisibility}
+            />
 
             {deliverables.length == 0 ? (
                 <div>
