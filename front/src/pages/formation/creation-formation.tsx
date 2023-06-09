@@ -18,9 +18,7 @@ export default function CreationFormation() {
                 if (!name || !level) throw new Error("Missing field(s)");
                 res = await FormationService.createFormation(formData);
             } catch (e: any) {
-                toast.error("Erreur: " + e.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + e.message);
             }
             if (!res?.statusCode) {
                 console.log("ok");

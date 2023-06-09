@@ -22,9 +22,7 @@ export default function ManagePrizes() {
         try {
             const res = await prizeService.clearStock(prizeId);
             if (res) {
-                toast.success("Stock du prix réduit à 0 !", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.success("Stock du prix réduit à 0 !");
                 reload();
                 await fetchPrizes();
             } else {

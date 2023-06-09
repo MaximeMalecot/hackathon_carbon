@@ -26,9 +26,7 @@ export default function CreatePrize() {
 
                 await prizeService.create(formData);
             } catch (e: any) {
-                toast.error("Erreur: " + e.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + e.message);
             }
         },
         [formData]

@@ -99,13 +99,9 @@ class PostService {
                 body: JSON.stringify(body),
             });
             if (res.ok) {
-                toast.success("Le post a bien été créée !", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.success("Le post a bien été créée !");
             } else {
-                toast.error("Erreur: " + res.statusText, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + res.statusText);
             }
             return await res.json();
         } catch (e) {
@@ -125,13 +121,9 @@ class PostService {
                 },
             });
             if (res.ok) {
-                toast.success("Le post a bien été publié !", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.success("Le post a bien été publié !");
             } else {
-                toast.error("Erreur: " + res.statusText, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + res.statusText);
             }
             return await res.json();
         } catch (e) {

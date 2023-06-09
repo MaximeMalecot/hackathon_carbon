@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CreateContractDto, Entreprise, UserData } from "../../interfaces";
 import contractService from "../../services/contract.service";
 import entrepriseService from "../../services/entreprise.service";
 import userService from "../../services/user.service";
 
 export default function ContractsCreate() {
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [formData, setFormData] = useState<CreateContractDto>({
         entrepriseId: "",
@@ -30,7 +32,9 @@ export default function ContractsCreate() {
         async (e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             const res = await contractService.createContract(formData);
-            if (!res.statusCode) return;
+            if (res.statusCode) return;
+
+            navigate("/contracts");
         },
         [formData]
     );

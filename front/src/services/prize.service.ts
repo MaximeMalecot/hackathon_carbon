@@ -72,13 +72,9 @@ class PrizeService {
                 body: data,
             });
             if (res.ok) {
-                toast.success("Le prix a été crée !", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.success("Le prix a été crée !");
             } else {
-                toast.error("Erreur: " + res.statusText, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + res.statusText);
             }
             return await res.json();
         } catch (e) {

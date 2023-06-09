@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import AppLayout from "./components/layout/app-layout";
 import RestrictedLayout from "./components/layout/restricted-layout";
 import { ROLES } from "./constants";
@@ -64,7 +64,7 @@ function App() {
                     <span className="loading loading-spinner loading-lg"></span>
                 }
             >
-                <ToastContainer />
+                <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} />
                 <Routes>
                     <Route
                         element={

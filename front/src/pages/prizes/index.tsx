@@ -33,9 +33,7 @@ export default function Prizes() {
                 }
             } catch (e: any) {
                 console.log(e);
-                toast.error("Erreur: " + e.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + e.message);
             }
         },
         [prizes]
