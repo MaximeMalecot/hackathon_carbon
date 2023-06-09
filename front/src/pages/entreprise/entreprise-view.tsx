@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ContracteEntrepriseItem from "../../components/contracts/contract-entreprise-item";
-import { UserData } from "../../interfaces";
 import { ContractData } from "../../interfaces/contract";
 import entrepriseService from "../../services/entreprise.service";
 
@@ -9,7 +8,6 @@ export default function EntrepriseView() {
     const params = useParams();
     const [entreprise, setEntreprise] = useState<any>();
     const [contracts, setContracts] = useState<Array<ContractData>>([]);
-    const [users, setUsers] = useState<Array<UserData>>([]);
 
     const fetchEntreprise = async () => {
         const entreprise = await entrepriseService.getById(params.id);
@@ -30,7 +28,7 @@ export default function EntrepriseView() {
 
     return (
         <div>
-            <div className="flex flex-col items-center h-screen">
+            <div className="flex flex-col items-center">
                 <h1 className="text-2xl font-bold">
                     {entreprise?.entreprise.name}
                 </h1>
