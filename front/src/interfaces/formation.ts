@@ -37,6 +37,21 @@ export interface Answer {
     label: string;
 }
 
+export interface CreateAnswersVM {
+    isCorrect: boolean;
+    label: string;
+}
+
+export interface CreateAnswersDTO {
+    label: string;
+    answers: CreateAnswersVM[];
+}
+
+export interface CreateQuizQuery {
+    id: string;
+    data: CreateAnswersDTO;
+}
+
 export interface SendAnswer {
     questionId: number;
     answers: number[];
