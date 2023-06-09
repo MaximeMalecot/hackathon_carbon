@@ -39,6 +39,7 @@ const Profile = lazy(() => import("./pages/profile"));
 
 const Prizes = lazy(() => import("./pages/prizes"));
 const ManagePrizes = lazy(() => import("./pages/prizes/manage-prizes"));
+const CreatePrize = lazy(() => import("./pages/prizes/create-prize"));
 
 //#endregion
 
@@ -148,10 +149,13 @@ function App() {
                         <Route path={"/prizes"} element={<Prizes />} />
 
                         {hasAccess([ROLES.PRIZE_EDITOR]) && (
-                            <Route
-                                path={"/gestion-prizes"}
-                                element={<ManagePrizes />}
-                            />
+                            <Route path={"/gestion-prizes"}>
+                                <Route index element={<ManagePrizes />} />
+                                <Route
+                                    path={"create"}
+                                    element={<CreatePrize />}
+                                />
+                            </Route>
                         )}
 
                         <Route path={"/login"} element={<Login />} />
