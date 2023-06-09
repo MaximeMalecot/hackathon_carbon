@@ -67,6 +67,23 @@ export default function Sidebar(props: any) {
                         </details>
                     </li>
                 )}
+                {hasAccess([ROLES.PRIZE_EDITOR]) && (
+                    <li>
+                        <details open>
+                            <summary>Gestion échange de points</summary>
+                            <ul>
+                                <li>
+                                    <Link to={"/gestion-prizes"}>Gestion</Link>
+                                </li>
+                                <li>
+                                    <Link to={"/gestion-prizes/create"}>
+                                        Création de prix
+                                    </Link>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                )}
             </div>
             <button
                 className="md:hidden btn btn-primary mt-5"
