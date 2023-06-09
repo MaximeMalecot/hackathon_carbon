@@ -21,6 +21,8 @@ import { ResourceModule } from "./resource/resource.module";
 import { SeederModule } from "./seeder/seeder.module";
 import { SseModule } from "./sse/sse.module";
 import { UsersModule } from "./users/users.module";
+import { PrizeModule } from './prize/prize.module';
+import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
     imports: [
@@ -51,6 +53,8 @@ import { UsersModule } from "./users/users.module";
         PostsContentModule,
         ResourceModule,
         DelivrableModule,
+        PrizeModule,
+        TransactionModule,
     ],
     controllers: [AppController],
     providers: [AppService],
