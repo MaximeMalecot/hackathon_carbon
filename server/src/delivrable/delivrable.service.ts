@@ -74,7 +74,7 @@ export class DelivrableService {
 
     async deleteForContract(contractId: Types.ObjectId) {
         const delivrables = await this.delivrableModel.find({
-            contractId: contractId.toString(),
+            contractId: contractId,
         });
         if (!delivrables)
             throw new BadRequestException("Delivrables not found");
