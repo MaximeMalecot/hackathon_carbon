@@ -1,5 +1,5 @@
 import { Content } from "./content";
-export interface Post {
+export interface PostData {
     _id: string;
     title: string;
     content: Array<Content>;

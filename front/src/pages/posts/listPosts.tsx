@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Post } from "../../interfaces/post";
+import { PostData } from "../../interfaces/post";
 import postServices from "../../services/post.services";
 
 export default function ListPosts() {
     const [research, setResearch] = useState<string>("");
     const [posts, setPosts] = useState<any>([]);
-    const [postsFiltered, setPostsFiltered] = useState<Post[]>([]);
+    const [postsFiltered, setPostsFiltered] = useState<PostData[]>([]);
     const handleChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             setResearch(e.target.value);
@@ -32,8 +32,8 @@ export default function ListPosts() {
     }, []);
 
     const filteredPosts = useCallback(() => {
-        const filteredPosts: Post[] = posts.filter(
-            (post: Post) =>
+        const filteredPosts: PostData[] = posts.filter(
+            (post: PostData) =>
                 post.title?.toLowerCase().includes(research.toLowerCase()) ||
                 post.writer?.toLowerCase().includes(research.toLowerCase()) ||
                 post.enterprise?.toLowerCase().includes(research.toLowerCase())
@@ -83,7 +83,11 @@ export default function ListPosts() {
                                         </button>
                                     )}
                                 </td>
-                                <td>{post.createdAt}</td>
+                                <td>
+                                    {new Date(
+                                        post.createdAt
+                                    ).toLocaleDateString()}
+                                </td>
                                 <td>
                                     <Link
                                         to={`/gestion-posts/edit/${post._id}`}
@@ -99,9 +103,6 @@ export default function ListPosts() {
                                             Publish
                                         </button>
                                     ) : null}
-                                    <button className="btn btn-error ml-2">
-                                        Delete
-                                    </button>
                                 </td>
                             </tr>
                         ))}
