@@ -21,7 +21,15 @@ export default function Contracts() {
 
     return (
         <div className="flex flex-col gap-5">
-            <h1 className="text-4xl mb-5">Liste des contrats</h1>
+            <div className="flex justify-between">
+                <h1 className="text-4xl mb-5">Liste des contrats</h1>
+                <Link
+                    to="/contracts/create"
+                    className="btn btn-primary text-neutral"
+                >
+                    Créer un contrat
+                </Link>
+            </div>
             {contracts.length === 0 ? (
                 <div>
                     <p className="text-sm text-slate-400">

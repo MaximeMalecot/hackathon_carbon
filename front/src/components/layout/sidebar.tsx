@@ -137,6 +137,9 @@ export default function Sidebar(props: any) {
                                         Création d'entreprise
                                     </Link>
                                 </li>
+                                <li>
+                                    <Link to={"/contracts/create"}>Création de contrat</Link>
+                                </li>
                             </ul>
                         </details>
                     </li>

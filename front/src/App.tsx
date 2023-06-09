@@ -46,6 +46,7 @@ const CreatePrize = lazy(() => import("./pages/prizes/create-prize"));
 
 const Contracts = lazy(() => import("./pages/contracts"));
 const Contract = lazy(() => import("./pages/contracts/contract"));
+const ContractCreate = lazy(() => import("./pages/contracts/create-contracts"));
 
 const Transactions = lazy(() => import("./pages/transactions"));
 //#endregion
@@ -152,10 +153,16 @@ function App() {
                                     </Route>
                                 )}
                                 {hasAccess([ROLES.ASSIGNMENT_EDITOR]) && (
-                                    <Route
-                                        path={"/contracts"}
-                                        element={<Contracts />}
-                                    />
+                                    <>
+                                        <Route
+                                            path={"/contracts"}
+                                            element={<Contracts />}
+                                        />
+                                        <Route
+                                            path={"/contracts/create"}
+                                            element={<ContractCreate />}
+                                        />
+                                    </>
                                 )}
 
                                 {hasAccess([

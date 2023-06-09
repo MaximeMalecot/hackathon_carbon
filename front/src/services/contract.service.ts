@@ -1,4 +1,6 @@
+import { toast } from "react-toastify";
 import { API_ENDPOINT } from "../constants";
+import { CreateContractDto } from "../interfaces";
 import authHeader from "./auth.header";
 
 class ContractService {
@@ -48,6 +50,25 @@ class ContractService {
         } else {
             return false;
         }
+    }
+
+    async createContract(contract: CreateContractDto) {
+        const res = await fetch(`${API_ENDPOINT}/contracts`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                ...authHeader(),
+            },
+            body: JSON.stringify(contract),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            return toast.error(data.message);
+        }
+        toast.success("Contrat créé avec succès");
+        return data;
     }
 
     async finishContract(contractId: string) {
