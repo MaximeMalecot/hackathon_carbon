@@ -55,7 +55,8 @@ export default function Profile() {
                 </div>
                 <div className="flex flex-col">
                     <h1 className="text-4xl">
-                        {"Lastname"} {"Firstname"}
+                        <span className="capitalize">{userData.firstName}</span>
+                        <span> {userData.lastName}</span>
                     </h1>
                     <h3 className="text-md text-slate-400">
                         {userData?.email}
