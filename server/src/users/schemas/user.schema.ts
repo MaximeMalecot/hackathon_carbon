@@ -27,6 +27,19 @@ export const EASY_ROLES = {
 @Schema()
 export class User {
     _id: Types.ObjectId;
+
+    @Prop({
+        type: String,
+        required: true,
+    })
+    firstName: string;
+
+    @Prop({
+        type: String,
+        required: true,
+    })
+    lastName: string;
+
     @Prop({
         type: String,
         required: true,
