@@ -22,7 +22,7 @@ export default function Sidebar(props: any) {
                 <li></li>
                 {hasAccess([ROLES.TEACHER]) && (
                     <li>
-                        <details open>
+                        <details>
                             <summary className="md:hover:bg-secondary">
                                 Gestion formation
                             </summary>
@@ -49,7 +49,7 @@ export default function Sidebar(props: any) {
                 )}
                 {hasAccess([ROLES.NEWS_EDITOR]) && (
                     <li>
-                        <details open>
+                        <details>
                             <summary className="md:hover:bg-secondary">
                                 Gestion posts
                             </summary>
@@ -76,7 +76,7 @@ export default function Sidebar(props: any) {
                 )}
                 {hasAccess([ROLES.ACCOUNT_EDITOR, ROLES.VIEWER]) && (
                     <li>
-                        <details open>
+                        <details>
                             <summary className="md:hover:bg-secondary">
                                 Gestion user
                             </summary>
@@ -103,7 +103,7 @@ export default function Sidebar(props: any) {
                 )}
                 {hasAccess([ROLES.ASSIGNMENT_EDITOR]) && (
                     <li>
-                        <details open>
+                        <details>
                             <summary className="md:hover:bg-secondary">
                                 Gestion contrats
                             </summary>
@@ -114,6 +114,33 @@ export default function Sidebar(props: any) {
                                         to={"/contracts"}
                                     >
                                         Gestion
+                                    </Link>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                )}
+                {hasAccess([ROLES.ENTREPRISE_EDITOR]) && (
+                    <li>
+                        <details>
+                            <summary className="md:hover:bg-secondary">
+                                Gestion entreprises
+                            </summary>
+                            <ul>
+                                <li>
+                                    <Link
+                                        className="hover:bg-secondary"
+                                        to={"/entreprise/liste"}
+                                    >
+                                        Gestion
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        className="hover:bg-secondary"
+                                        to={"/entreprise/create"}
+                                    >
+                                        Création d'entreprise
                                     </Link>
                                 </li>
                             </ul>

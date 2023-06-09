@@ -172,7 +172,7 @@ export default function EditPost() {
                             Add image
                         </div>
                     </div>
-                    {/* <div className="form-control w-full max-w-xs">
+                    <div className="form-control w-full max-w-xs">
                         <button
                             className="btn w-full max-w-xs mt-4"
                             onClick={(e) => {
@@ -182,7 +182,7 @@ export default function EditPost() {
                         >
                             Enregister
                         </button>
-                    </div> */}
+                    </div>
                 </div>
             </form>
         </div>
