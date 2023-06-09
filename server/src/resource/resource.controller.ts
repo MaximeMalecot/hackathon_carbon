@@ -27,7 +27,7 @@ export class ResourceController {
 
     @Get(":id")
     findOneByChapterId(@Param("id", CheckObjectIdPipe) id: string) {
-        return this.resourceService.findOne(id);
+        return this.resourceService.findOneByChapterId(id);
     }
 
     @UseInterceptors(

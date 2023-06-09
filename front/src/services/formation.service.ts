@@ -142,7 +142,41 @@ class FormationService {
                 });
             }
 
-            return data;
+            return response;
+        } catch (e: any) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_LEFT,
+            });
+        }
+    }
+
+    async addResourceChapter({ id, data }) {
+        try {
+            const body = new FormData();
+            body.append("file", data?.resource?.file ?? "");
+            const res = await fetch(`${API_ENDPOINT}/resources/${id}`, {
+                method: "PATCH",
+                headers: {
+                    ...authHeader(),
+                },
+                body: body,
+            });
+
+            console.log(res, "res service");
+
+            const response = await res.json();
+
+            if (res.ok) {
+                toast.success("Fichier bien sauvegarder", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            } else {
+                toast.error("Erreur: " + response.message, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+
+            return response;
         } catch (e: any) {
             toast.error("Error :" + e, {
                 position: toast.POSITION.TOP_LEFT,
@@ -353,6 +387,32 @@ class FormationService {
             return await res.json();
         } else {
             throw new Error("Erreur lors de la complétion du quiz");
+        }
+    }
+
+    async getResoucesByChapter(id: string) {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/resources/${id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...authHeader(),
+                },
+            });
+
+            const response = await res.json();
+
+            if (!res.ok) {
+                toast.error("Erreur: " + response.message, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+
+            return response;
+        } catch (e: any) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_LEFT,
+            });
         }
     }
 }

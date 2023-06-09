@@ -28,18 +28,22 @@ export default function CreationChapterFormation() {
                 chapter: { name: chapterName },
                 [type]: value,
             };
-            let res;
+
             const id = params?.id ?? "";
             if (type === ChapterTypes.QUIZ) {
-                res = await FormationService.createChapterQuiz({ id, data });
+                await FormationService.createChapterQuiz({ id, data });
             } else if (type === ChapterTypes.RESOURCE) {
-                res = await FormationService.createChapterResource({
+                const res = await FormationService.createChapterResource({
                     id,
                     data,
                 });
-            }
 
-            console.log(res);
+                if (!res.resource._id) return toast.error("Missing field(s)");
+                await FormationService.addResourceChapter({
+                    id: res.resource._id,
+                    data: data,
+                });
+            }
         },
         [chapterName, params, type]
     );

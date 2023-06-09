@@ -36,6 +36,7 @@ const CreationChapterFormation = lazy(
 const CreateQuestionQuiz = lazy(
     () => import("./pages/formation/create-question-quiz")
 );
+const CoursRessource = lazy(() => import("./pages/formation/cours-ressource"));
 
 const Profile = lazy(() => import("./pages/profile"));
 
@@ -86,6 +87,10 @@ function App() {
                                         element={<SpecificPost />}
                                     />
                                 </Route>
+                                <Route
+                                    path={"/formation/cours/:id"}
+                                    element={<CoursRessource />}
+                                />
                                 {hasAccess([ROLES.TEACHER]) && (
                                     <Route path={"/gestion-formations"}>
                                         <Route
@@ -187,9 +192,8 @@ function App() {
                         )}
 
                         <Route path={"/login"} element={<Login />} />
-
-                        <Route path={"*"} element={<NotFound />} />
                         <Route path={"/posts"} element={<Posts />} />
+                        <Route path={"*"} element={<NotFound />} />
                     </Route>
                 </Routes>
             </Suspense>
