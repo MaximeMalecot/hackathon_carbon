@@ -6,6 +6,7 @@ import {
     MaxFileSizeValidator,
     Param,
     ParseFilePipe,
+    Patch,
     Post,
     Req,
     UploadedFile,
@@ -34,6 +35,12 @@ export class PrizeController {
     @Get(":id")
     async getPrize(@Param("id", CheckObjectIdPipe) id: string) {
         return this.prizeService.findOne(id);
+    }
+
+    @Roles(Role.PRIZE_EDITOR)
+    @Patch(":id/out-of-stock")
+    async outOfStock(@Param("id", CheckObjectIdPipe) id: string) {
+        return this.prizeService.outOfStock(id);
     }
 
     @UseInterceptors(

@@ -30,4 +30,10 @@ export class PrizeService {
         prize.quantity = newStock;
         return await prize.save();
     }
+
+    async outOfStock(id: string) {
+        const prize = await this.findOne(id);
+        prize.quantity = 0;
+        return await prize.save();
+    }
 }
