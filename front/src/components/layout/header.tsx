@@ -45,7 +45,7 @@ export default function Header(props: any) {
                                         >
                                             <img src={RedMedal} alt="medal" />
                                         </div>
-                                        {data?.email}
+                                        {data?.firstName + " " + data?.lastName}
                                     </summary>
                                     <ul className="p-2 bg-base-100">
                                         <li>

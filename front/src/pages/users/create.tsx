@@ -2,12 +2,14 @@ import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ROLES } from "../../constants";
-import { UserDto } from "../../interfaces/user-dto";
+import { UserDto } from "../../interfaces/dto/user.dto";
 import userService from "../../services/user.service";
 
 export default function CreateUser() {
     const navigate = useNavigate();
     const [user, setUser] = useState<UserDto>({
+        firstName: "",
+        lastName: "",
         email: "",
         password: "",
         roles: [],
@@ -58,6 +60,30 @@ export default function CreateUser() {
         <div>
             <h1 className="text-3xl font-bold">Création d'un utilisateur</h1>
             <div className="mt-5">
+                <div className="form-control">
+                    <label className="label">
+                        <span className="label-text">Prénom</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="firstName"
+                        placeholder="Prénom"
+                        className="input input-bordered"
+                        onChange={handleInput}
+                    />
+                </div>
+                <div className="form-control">
+                    <label className="label">
+                        <span className="label-text">Nom</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="lastName"
+                        placeholder="Nom"
+                        className="input input-bordered"
+                        onChange={handleInput}
+                    />
+                </div>
                 <div className="form-control">
                     <label className="label">
                         <span className="label-text">Email</span>

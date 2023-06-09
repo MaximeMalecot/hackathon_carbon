@@ -14,8 +14,7 @@ export default function ListPosts() {
         []
     );
     const fetchPosts = async () => {
-        const posts = await postServices.getAllPublic();
-        console.log(posts);
+        const posts = await postServices.getAll();
         setPosts(posts);
     };
 
@@ -26,6 +25,11 @@ export default function ListPosts() {
     useEffect(() => {
         filteredPosts();
     }, [research, posts]);
+
+    const publish = useCallback(async (id: string) => {
+        await postServices.publish(id);
+        fetchPosts();
+    }, []);
 
     const filteredPosts = useCallback(() => {
         const filteredPosts: Post[] = posts.filter(
@@ -58,8 +62,9 @@ export default function ListPosts() {
                         <tr>
                             <th></th>
                             <th>Titre</th>
-                            <th>Auteur</th>
+                            <th>Status</th>
                             <th>Date</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -67,8 +72,37 @@ export default function ListPosts() {
                             <tr className="hover" key={index}>
                                 <th></th>
                                 <td>{post.title}</td>
-                                <td>{post.writer}</td>
-                                <td>{post.createAt}</td>
+                                <td>
+                                    {post.status === "DRAFT" ? (
+                                        <button className="btn btn-warning text-neutral">
+                                            DRAFT
+                                        </button>
+                                    ) : (
+                                        <button className="btn btn-success">
+                                            PUBLISHED
+                                        </button>
+                                    )}
+                                </td>
+                                <td>{post.createdAt}</td>
+                                <td>
+                                    <Link
+                                        to={`/gestion-posts/edit/${post._id}`}
+                                        className="btn btn-primary"
+                                    >
+                                        Edit
+                                    </Link>
+                                    {post.status === "DRAFT" ? (
+                                        <button
+                                            className="btn btn-warning ml-2 text-neutral"
+                                            onClick={(e) => publish(post._id)}
+                                        >
+                                            Publish
+                                        </button>
+                                    ) : null}
+                                    <button className="btn btn-error ml-2">
+                                        Delete
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

@@ -1,15 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ROLES } from "../../constants";
+import { useAuthContext } from "../../contexts/auth.context";
 import { useAccess } from "../../hooks/use-access";
 import { UserData } from "../../interfaces";
 import userService from "../../services/user.service";
 
 export default function SpecificUser() {
+    const navigate = useNavigate();
     const [user, setUser] = useState<UserData>();
     const { id } = useParams();
     const { hasAccess } = useAccess();
+    const { data } = useAuthContext();
 
     const fetchUser = useCallback(async () => {
         if (!id) return;
@@ -48,48 +51,85 @@ export default function SpecificUser() {
         [user]
     );
 
+    const deleteUser = useCallback(async (id: string) => {
+        console.log("deleting", id);
+        const response = await userService.deleteUser(id);
+        if (response) {
+            toast.success("L'utilisateur a bien été supprimé !", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            navigate("/gestion-user");
+        }
+    }, []);
+
     return (
-        <div className="formation-liste">
-            <h1 className="text-4xl mb-5">User</h1>
-            {hasAccess([ROLES.ACCOUNT_EDITOR]) ? (
-                <section>
-                    <p>Email: {user?.email}</p>
-                    <div>Roles</div>
+        user && (
+            <div className="formation-liste">
+                <h1 className="text-4xl mb-5">User</h1>
+
+                {hasAccess([ROLES.ACCOUNT_EDITOR]) ? (
+                    <>
+                        {user._id !== data?._id && (
+                            <button
+                                className="btn btn-error"
+                                onClick={() => deleteUser(user._id)}
+                            >
+                                Delete
+                            </button>
+                        )}
+                        <section>
+                            <p>
+                                Name: {user?.firstName + " " + user?.lastName}
+                            </p>
+                            <p>Email: {user?.email}</p>
+                            <div>Roles</div>
+                            <section>
+                                {Object.values(ROLES).map((role) => (
+                                    <div
+                                        className="p-1 w-60 card bordered"
+                                        key={role}
+                                    >
+                                        <div className="form-control">
+                                            <label className="cursor-pointer label">
+                                                <span className="label-text">
+                                                    {role}
+                                                </span>
+                                                <input
+                                                    type="checkbox"
+                                                    className="checkbox"
+                                                    onChange={(e) =>
+                                                        handleCheckboxClick(
+                                                            role
+                                                        )
+                                                    }
+                                                    value={role}
+                                                    checked={
+                                                        user?.roles?.includes(
+                                                            role
+                                                        ) ?? false
+                                                    }
+                                                />
+                                            </label>
+                                        </div>
+                                    </div>
+                                ))}
+                            </section>
+                            <button
+                                className="btn btn-primary"
+                                onClick={handleSave}
+                            >
+                                Save
+                            </button>
+                        </section>
+                    </>
+                ) : (
                     <section>
-                        {Object.values(ROLES).map((role) => (
-                            <div className="p-1 w-60 card bordered" key={role}>
-                                <div className="form-control">
-                                    <label className="cursor-pointer label">
-                                        <span className="label-text">
-                                            {role}
-                                        </span>
-                                        <input
-                                            type="checkbox"
-                                            className="checkbox"
-                                            onChange={(e) =>
-                                                handleCheckboxClick(role)
-                                            }
-                                            value={role}
-                                            checked={
-                                                user?.roles?.includes(role) ??
-                                                false
-                                            }
-                                        />
-                                    </label>
-                                </div>
-                            </div>
-                        ))}
+                        <p>Name: {user?.firstName + " " + user?.lastName}</p>
+                        <p>Email: {user?.email}</p>
+                        <p>Roles: {JSON.stringify(user?.roles)}</p>
                     </section>
-                    <button className="btn btn-primary" onClick={handleSave}>
-                        Save
-                    </button>
-                </section>
-            ) : (
-                <section>
-                    <p>Email: {user?.email}</p>
-                    <p>Roles: {JSON.stringify(user?.roles)}</p>
-                </section>
-            )}
-        </div>
+                )}
+            </div>
+        )
     );
 }

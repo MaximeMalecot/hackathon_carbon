@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import { API_ENDPOINT } from "../constants/endpoints";
 import authHeader from "./auth.header";
-class EntrepriseService {
+class PostService {
     async getAllPublic() {
         try {
             const res = await fetch(`${API_ENDPOINT}/posts?status=PUBLISHED`, {
@@ -99,6 +99,58 @@ class EntrepriseService {
             });
         }
     }
+
+    async publish(postId: string) {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/posts/publish/${postId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...authHeader(),
+                },
+            });
+            if (res.ok) {
+                toast.success("Le post a bien été publié !", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            } else {
+                toast.error("Erreur: " + res.statusText, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+            return await res.json();
+        } catch (e) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+    }
+
+    async getOne(postId: string) {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/posts/${postId}`, {
+                method: "GET",
+                headers: {
+                    ...authHeader(),
+                },
+            });
+            return await res.json();
+        } catch (e) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+    }
+
+    async getContents(postId: string) {
+        const res = await fetch(`${API_ENDPOINT}/posts-content/${postId}`, {
+            method: "GET",
+            headers: {
+                ...authHeader(),
+            },
+        });
+        return await res.json();
+    }
 }
 
-export default new EntrepriseService();
+export default new PostService();

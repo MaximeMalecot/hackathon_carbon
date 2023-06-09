@@ -2,10 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { Answer } from "../../interfaces";
 interface AnswersQuestionProps {
     answers: Answer[];
-    initValue: number[] | null;
+    initValue: string[] | null;
     nbQuestions: number;
     currentQuestion: number;
-    setNextQuestion: (answers: number[]) => void;
+    setNextQuestion: (answers: string[]) => void;
     setBackQuestion: () => void;
 }
 
@@ -17,7 +17,8 @@ export const AnswersQuestion = ({
     setNextQuestion,
     setBackQuestion,
 }: AnswersQuestionProps) => {
-    const [currentAnswer, setCurrentAnswer] = useState<number[]>([]);
+    const [currentAnswer, setCurrentAnswer] = useState<string[]>([]);
+
     useEffect(() => {
         if (!initValue) return;
         setCurrentAnswer(initValue ?? []);
@@ -44,7 +45,7 @@ export const AnswersQuestion = ({
     return (
         <>
             <div className="grid xl:grid-cols-3 sm:grid-cols-2 gap-4">
-                {answers.map((answerOption, index) => (
+                {answers?.map((answerOption, index) => (
                     <div
                         key={index}
                         className="indicator shadow-sm hover:shadow-xl w-full cursor-pointer"

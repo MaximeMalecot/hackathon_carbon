@@ -9,6 +9,12 @@ import { Role } from "../schemas/user.schema";
 
 export class CreateUserDto {
     @IsString()
+    public firstName: string;
+
+    @IsString()
+    public lastName: string;
+
+    @IsString()
     @IsEmail()
     public email: string;
 

@@ -6,8 +6,13 @@ import { ROLES } from "./constants";
 import { useAuthContext } from "./contexts/auth.context";
 import { useAccess } from "./hooks/use-access";
 import CreationEntreprise from "./pages/entreprise/create-entreprise";
+import Entreprise from "./pages/entreprise/entreprise-view";
+import ListEntreprises from "./pages/entreprise/list-entreprise";
 import CreatePost from "./pages/posts/createPost";
-import { default as ListPosts, default as Posts } from "./pages/posts/posts";
+import EditPost from "./pages/posts/edit";
+import { default as ListPosts } from "./pages/posts/listPosts";
+import { default as Posts } from "./pages/posts/posts";
+import SpecificPost from "./pages/posts/specific";
 import CreateUser from "./pages/users/create";
 import ListUsers from "./pages/users/list";
 import SpecificUser from "./pages/users/specific";
@@ -25,9 +30,17 @@ const Quiz = lazy(() => import("./pages/formation/quiz"));
 const CreationFormation = lazy(
     () => import("./pages/formation/creation-formation")
 );
+const CreationChapterFormation = lazy(
+    () => import("./pages/formation/create-chapter-formation")
+);
+const CreateQuestionQuiz = lazy(
+    () => import("./pages/formation/create-question-quiz")
+);
 
 const Profile = lazy(() => import("./pages/profile"));
 
+const Contracts = lazy(() => import("./pages/contracts"));
+const Contract = lazy(() => import("./pages/contracts/contract"));
 //#endregion
 
 function App() {
@@ -62,6 +75,13 @@ function App() {
                                         element={<Formation />}
                                     />
                                 </Route>
+                                <Route path={"/posts"}>
+                                    <Route index element={<Posts />} />
+                                    <Route
+                                        path={":id"}
+                                        element={<SpecificPost />}
+                                    />
+                                </Route>
                                 {hasAccess([ROLES.TEACHER]) && (
                                     <Route path={"/gestion-formations"}>
                                         <Route
@@ -73,8 +93,15 @@ function App() {
                                             element={<CreationFormation />}
                                         />
                                         <Route
-                                            path={"quiz/create/:id"}
-                                            element={<CreationFormation />}
+                                            path="quiz/:id"
+                                            element={<CreateQuestionQuiz />}
+                                        />
+
+                                        <Route
+                                            path={":id"}
+                                            element={
+                                                <CreationChapterFormation />
+                                            }
                                         />
                                     </Route>
                                 )}
@@ -103,12 +130,40 @@ function App() {
                                             path={"create"}
                                             element={<CreatePost />}
                                         />
+                                        <Route
+                                            path={"edit/:id"}
+                                            element={<EditPost />}
+                                        />
                                     </Route>
+                                )}
+                                {hasAccess([ROLES.ASSIGNMENT_EDITOR]) && (
+                                    <Route
+                                        path={"/contracts"}
+                                        element={<Contracts />}
+                                    />
+                                )}
+
+                                {hasAccess([
+                                    ROLES.ASSIGNMENT_EDITOR,
+                                    ROLES.USER,
+                                ]) && (
+                                    <Route
+                                        path="/contracts/:id"
+                                        element={<Contract />}
+                                    />
                                 )}
                                 <Route path={"/entreprise"}>
                                     <Route
+                                        path={":id"}
+                                        element={<Entreprise />}
+                                    />
+                                    <Route
                                         path={"create"}
                                         element={<CreationEntreprise />}
+                                    />
+                                    <Route
+                                        path={"liste"}
+                                        element={<ListEntreprises />}
                                     />
                                 </Route>
                                 <Route path="/profile" element={<Profile />} />
