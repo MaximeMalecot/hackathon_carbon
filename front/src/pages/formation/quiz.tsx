@@ -12,33 +12,11 @@ export default function Quiz() {
     const [questions, setQuestions] = useState<QuestionQuiz[]>([]);
     const params = useParams<{ id: string }>();
 
-    useEffect(() => {
-        if (!isLoading) {
-            fetchQuiz();
-        }
-        setIsLoading(false);
-    }, [isLoading]);
-
-    const fetchQuiz = useCallback(async () => {
-        const response = await formationService.getQuizByChapter(
-            params.id ?? ""
-        );
-
-        if (!response.statusCode) {
-            const res =
-                await formationService.getQuizQuestionsWithoutAnswersCorrect(
-                    response._id
-                );
-            if (!res.statusCode) {
-                res?.questions.map((item) => {
-                    const value = mapperQuizQuestion(item);
-                    setQuestions((prev) => [...prev, value]);
-                });
-            }
-        }
-    }, [params.id]);
-
     const currentQuestionId = useMemo(() => {
+        // console.log(
+        //     "questionsId",
+        //     questions.map((i) => i.id)
+        // );
         return questions[currentQuestion - 1]?.id;
     }, [currentQuestion, questions]);
 
@@ -49,38 +27,80 @@ export default function Quiz() {
         );
     }, [selectedAnswers, currentQuestionId]);
 
-    const validateQuiz = useCallback(() => {
-        console.log(selectedAnswers);
-    }, [selectedAnswers]);
+    useEffect(() => {
+        if (!isLoading) {
+            fetchQuiz();
+        }
+        setIsLoading(false);
+    }, [isLoading]);
+
+    const fetchQuiz = useCallback(async () => {
+        if (!params.id) return;
+
+        const response = await formationService.getQuizByChapter(params.id);
+
+        if (!response.statusCode) {
+            const res =
+                await formationService.getQuizQuestionsWithoutAnswersCorrect(
+                    response._id
+                );
+            if (!res.statusCode) {
+                res?.questions.map((item: any) => {
+                    console.log(item, "item");
+                    const value = mapperQuizQuestion(item);
+                    setQuestions((prev) => [...prev, value]);
+                });
+            }
+        }
+    }, [params.id]);
+
+    const validateQuiz = useCallback(
+        (answers: any[]) => {
+            try {
+                console.log(
+                    "ending with",
+                    answers.map((i) => {
+                        return { ...i, answers: i.answers.length };
+                    })
+                );
+            } catch (e: any) {
+                console.log(e.message);
+            }
+        },
+        [selectedAnswers]
+    );
 
     const setNextQuestion = useCallback(
-        (answers: string[]) => {
-            console.log(answers, 'answers');
-            console.log(selectedAnswers, 'selected');
-            console.log(currentAnswers, "currentAnswers");
-            console.log(currentQuestionId, "currentQuestionId");
+        (receivedAnswers: string[]) => {
+            let answersToQuestion = [];
             if (currentAnswers) {
-                setSelectedAnswer(
-                    selectedAnswers?.map((ele) =>
-                        ele.questionId === currentQuestionId
-                            ? { ...ele, answers }
-                            : ele
-                    )
+                const updatedAnswers = Array.from(
+                    new Set([...currentAnswers, ...receivedAnswers])
                 );
+
+                answersToQuestion = selectedAnswers.map((el) => {
+                    if (el.questionId === currentQuestionId) {
+                        return {
+                            ...el,
+                            answers: updatedAnswers,
+                        };
+                    }
+                    return el;
+                });
             } else {
-                setSelectedAnswer([
+                answersToQuestion = [
                     ...selectedAnswers,
                     {
                         questionId: currentQuestionId,
-                        answers,
+                        answers: receivedAnswers,
                     },
-                ]);
+                ];
             }
-
+            setSelectedAnswer(answersToQuestion);
             if (currentQuestion !== questions.length) {
-                setCurrentQuestion(currentQuestion + 1);
+                setCurrentQuestion((prev) => prev + 1);
             } else {
-                validateQuiz();
+                validateQuiz(answersToQuestion);
             }
         },
         [
@@ -89,7 +109,6 @@ export default function Quiz() {
             questions,
             selectedAnswers,
             currentQuestionId,
-            validateQuiz,
         ]
     );
 

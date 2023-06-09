@@ -18,6 +18,7 @@ export const AnswersQuestion = ({
     setBackQuestion,
 }: AnswersQuestionProps) => {
     const [currentAnswer, setCurrentAnswer] = useState<string[]>([]);
+
     useEffect(() => {
         if (!initValue) return;
         setCurrentAnswer(initValue ?? []);
@@ -37,6 +38,7 @@ export const AnswersQuestion = ({
     );
 
     const nextQuestion = useCallback(() => {
+        console.log("responding with", currentAnswer);
         setNextQuestion(currentAnswer);
         setCurrentAnswer([]);
     }, [currentAnswer, setNextQuestion]);

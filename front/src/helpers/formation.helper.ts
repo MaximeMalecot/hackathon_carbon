@@ -29,10 +29,10 @@ export const mapperFormationChapter = (
     };
 };
 
-export const mapperQuizQuestion = (quiz: QuizQuestionDTO): QuestionQuiz => {
+export const mapperQuizQuestion = (question: QuizQuestionDTO): QuestionQuiz => {
     return {
-        id: quiz.quizId,
-        label: quiz.label,
-        answers: quiz.answers,
+        id: question._id,
+        label: question.label,
+        answers: question.answers,
     };
 };
