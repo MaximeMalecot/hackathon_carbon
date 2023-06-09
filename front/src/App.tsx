@@ -36,6 +36,7 @@ const CreateQuestionQuiz = lazy(
 );
 
 const Profile = lazy(() => import("./pages/profile"));
+const Prizes = lazy(() => import("./pages/prizes"));
 
 //#endregion
 
@@ -142,6 +143,12 @@ function App() {
                                 <Route path={"/"} element={<Home />} />
                             </>
                         )}
+                        <Route path={"/prizes"} element={<Prizes />} />
+
+                        {hasAccess([ROLES.PRIZE_EDITOR]) && (
+                            <Route path={"/gestion-prizes"} element={null} />
+                        )}
+
                         <Route path={"/login"} element={<Login />} />
 
                         <Route path={"*"} element={<NotFound />} />
