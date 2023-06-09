@@ -36,6 +36,22 @@ class PrizeService {
         if (res.status === 500) throw new Error("Error while fetching prize");
         return await res.json();
     }
+
+    async clearStock(prizeId: string) {
+        const res = await fetch(
+            `${API_ENDPOINT}/prizes/${prizeId}/out-of-stock`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...authHeader(),
+                },
+            }
+        );
+        if (res.status === 500)
+            throw new Error("Error while reducing prize stock");
+        return await res.json();
+    }
 }
 
 export default new PrizeService();
