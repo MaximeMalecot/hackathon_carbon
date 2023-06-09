@@ -20,7 +20,7 @@ export default function ManagePrizes() {
 
     const disablePrize = useCallback(async (prizeId: string) => {
         try {
-            const res = await prizeService.buyPrize(prizeId);
+            const res = await prizeService.clearStock(prizeId);
             if (res.success) {
                 toast.success("Stock du prix réduit à 0 !", {
                     position: toast.POSITION.TOP_RIGHT,
