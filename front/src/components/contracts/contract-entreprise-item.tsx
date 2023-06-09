@@ -62,7 +62,7 @@ export default function ContracteEntrepriseItem({
             </td>
             <td>
                 <Link
-                    to={`/contacts/${contract._id}`}
+                    to={`/contracts/${contract._id}`}
                     className="btn btn-info text-neutral"
                 >
                     Go
