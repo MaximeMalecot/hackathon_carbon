@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model, Types } from "mongoose";
+import { Model } from "mongoose";
 import { PrizeService } from "src/prize/prize.service";
 import { UsersService } from "src/users/users.service";
 import { Transaction } from "./schemas/transaction.schema";
@@ -17,21 +17,43 @@ export class TransactionService {
     async create(userId: string, prizeId: string) {
         const prize = await this.prizeService.findOne(prizeId);
         const user = await this.userService.findOne(userId);
+        if (user.experiencePoints < prize.price)
+            throw new BadRequestException("Not enough points");
+        if (prize.quantity <= 0)
+            throw new BadRequestException("Prize out of stock");
         const newTransaction = await this.transactionModel.create({
             userId,
-            prizeId,
-            points: prize.price,
-            prizeName: prize.name,
-            user: user,
+            prizeId: prize._id,
+            price: prize.price,
         });
-        const savedTransaction = await newTransaction.save();
-        return savedTransaction;
+        await newTransaction.save();
+        await this.prizeService.updateStock(prizeId, prize.quantity - 1);
+        await this.userService.removePointsFromUser(userId, prize.price);
+        return {
+            success: true,
+            message: "Transaction created",
+        };
     }
 
-    async findAllForUser(userId: Types.ObjectId) {
-        const transactions = await this.transactionModel.find({
-            userId: userId,
-        });
+    async findAllForUser(userId: string) {
+        const transactions = await this.transactionModel.aggregate([
+            {
+                $match: {
+                    userId: userId,
+                },
+            },
+            {
+                $lookup: {
+                    from: "prizes",
+                    localField: "prizeId",
+                    foreignField: "_id",
+                    as: "prize",
+                },
+            },
+            {
+                $unwind: "$prize",
+            },
+        ]);
         return transactions;
     }
 }

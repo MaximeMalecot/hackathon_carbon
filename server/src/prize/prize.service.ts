@@ -24,4 +24,10 @@ export class PrizeService {
         }
         return prize;
     }
+
+    async updateStock(id: string, newStock: number) {
+        const prize = await this.findOne(id);
+        prize.quantity = newStock;
+        return await prize.save();
+    }
 }

@@ -160,4 +160,19 @@ export class UsersService {
             { new: true }
         );
     }
+
+    async removePointsFromUser(userId: string, pointsAmount: number) {
+        const user = await this.userModel.findOne({
+            _id: new Types.ObjectId(userId),
+        });
+        if (!user) {
+            throw new NotFoundException(`User with id ${userId} not found`);
+        }
+        const points =
+            pointsAmount > user.experiencePoints
+                ? 0
+                : user.experiencePoints - pointsAmount;
+        user.experiencePoints = points;
+        return await user.save();
+    }
 }
