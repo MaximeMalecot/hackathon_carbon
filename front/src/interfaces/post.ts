@@ -3,7 +3,7 @@ export interface Post {
     _id: string;
     title: string;
     content: Array<Content>;
-    type: string;
+    types: string;
     writer: string;
     createdAt: string;
     enterprise: string;

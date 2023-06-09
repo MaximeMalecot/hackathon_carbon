@@ -38,7 +38,7 @@ export default function Home() {
         <div className="flex flex-col items-center justify-center">
             <Post
                 title="Title"
-                type="BACKEND"
+                types="BACKEND"
                 content={dataContent}
                 writer="Clarence Potel"
                 createdAt="2021-01-22"

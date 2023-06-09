@@ -27,7 +27,7 @@ export default function SpecificPost() {
             {post && (
                 <PostComponent
                     title={post.title}
-                    type={post.type}
+                    types={post.types}
                     content={contents}
                     createdAt={post.createdAt}
                 />

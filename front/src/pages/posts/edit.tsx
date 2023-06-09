@@ -3,30 +3,20 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UpdateContentDto } from "../../interfaces/dto/update-content.dto";
-import { Entreprise } from "../../interfaces/entreprise";
+import { Post } from "../../interfaces/post";
 import postContentService from "../../services/post-content.service";
 import postServices from "../../services/post.services";
 
 export default function EditPost() {
     const navigate = useNavigate();
     const { id } = useParams();
-    const [types, setTypes] = useState<Array<string>>([]);
-    const [entreprises, setEntreprises] = useState<Array<Entreprise>>([]);
-    const [formData, setFormData] = useState({
-        title: "",
-        types: [],
-        entrepriseId: "",
-    });
+    const [post, setPost] = useState<Post>();
     const [contents, setContents] = useState<Array<UpdateContentDto>>([]);
 
     const fetchPost = async (postId: string) => {
         const post = await postServices.getOne(postId);
         const contents = await postServices.getContents(postId);
-        setFormData({
-            title: post.title,
-            types: post.types,
-            entrepriseId: post.entrepriseId,
-        });
+        setPost(post);
         setContents(contents);
     };
 
@@ -35,73 +25,25 @@ export default function EditPost() {
         fetchPost(id);
     }, []);
 
-    const fetchTypes = async () => {
-        const types = await postServices.getAllTypes();
-        setTypes(types);
-    };
-    const fetchEntreprises = async () => {
-        const entreprises = await postServices.getAllEntreprises();
-        setEntreprises(entreprises);
-    };
-
-    useEffect(() => {
-        fetchTypes();
-        fetchEntreprises();
-    }, []);
-
     const handleSubmit = useCallback(async () => {
         try {
-            const { title, types, entrepriseId } = formData;
-            console.log(formData);
-            console.log(contents);
-            if (!title) throw new Error("Missing field(s)");
-
-            const post = await postServices.create(title, types, entrepriseId);
-            if (!post || !post._id)
-                throw new Error("Error while creating post");
+            if (!post) return;
             contents.forEach(async (content) => {
+                if (content._id) return;
+                console.log("ahi");
                 if (content.type === "text") {
                     await postContentService.postContentText(post._id, content);
                 } else if (content.type === "file") {
                     await postContentService.postContentFile(post._id, content);
                 }
+                fetchPost(post._id);
             });
-            navigate("/gestion-posts");
         } catch (e: any) {
             toast.error("Erreur: " + e.message, {
                 position: toast.POSITION.TOP_RIGHT,
             });
         }
-    }, [formData, contents]);
-
-    const handleChange = useCallback(
-        (e: React.ChangeEvent<HTMLInputElement>) => {
-            setFormData((prev) => ({
-                ...prev,
-                [e.target.name]: e.target.value,
-            }));
-        },
-        []
-    );
-
-    const handleChangeSelect = useCallback(
-        (e: React.ChangeEvent<HTMLSelectElement>) => {
-            setFormData((prev) => ({
-                ...prev,
-                [e.target.name]: e.target.value,
-            }));
-        },
-        []
-    );
-    const handleChangeMultipleSelect = useCallback(
-        (e: React.ChangeEvent<HTMLSelectElement>) => {
-            setFormData((prev) => ({
-                ...prev,
-                [e.target.name]: [e.target.value],
-            }));
-        },
-        []
-    );
+    }, [post, contents]);
 
     const addContent = useCallback((type: "text" | "file") => {
         setContents((prev) => [
@@ -164,52 +106,32 @@ export default function EditPost() {
         <div>
             <form onSubmit={(e) => e.preventDefault()}>
                 <div className="flex flex-col items-center h-screen">
-                    <h1>Création d'un post</h1>
+                    <h1>Modification d'un post</h1>
                     <div className="form-control w-full max-w-xs">
                         <label className="label">
-                            <span className="label-text">Titre du post</span>
+                            <span className="label-text">
+                                Title: {post?.title}
+                            </span>
                         </label>
-                        <input
-                            onChange={handleChange}
-                            type="text"
-                            name="title"
-                            className="input input-bordered w-full max-w-xs"
-                        />
                     </div>
-                    <div className="form-control w-full max-w-xs  mt-4">
-                        <select
-                            defaultValue=""
-                            name="types"
-                            className="select select-bordered"
-                            onChange={handleChangeMultipleSelect}
-                        >
-                            <option disabled value="">
-                                Choisissez un type
-                            </option>
-                            {types.length > 0 &&
-                                types.map((type, index) => (
-                                    <option key={index}> {type}</option>
-                                ))}
-                        </select>
-                    </div>
-                    <div className="form-control w-full max-w-xs  mt-4">
-                        <select
-                            defaultValue=""
-                            name="entrepriseId"
-                            className="select select-bordered"
-                            onChange={handleChangeSelect}
-                        >
-                            <option disabled value="">
-                                Choisissez une entreprise
-                            </option>
-                            {entreprises.length > 0 &&
-                                entreprises.map((entreprise, index) => (
-                                    <option value={entreprise._id} key={index}>
-                                        {entreprise.name}
-                                    </option>
-                                ))}
-                        </select>
-                    </div>
+                    {post?.types && (
+                        <div className="form-control w-full max-w-xs  mt-4">
+                            <label className="label">
+                                <span className="label-text">
+                                    Types : {JSON.stringify(post?.types)}
+                                </span>
+                            </label>
+                        </div>
+                    )}
+                    {post?.enterprise && (
+                        <div className="form-control w-full max-w-xs  mt-4">
+                            <label className="label">
+                                <span className="label-text">
+                                    Entreprise : {post?.enterprise}
+                                </span>
+                            </label>
+                        </div>
+                    )}
                     <div className="form-control w-full max-w-xs mt-4">
                         {contents.length > 0 && (
                             <>

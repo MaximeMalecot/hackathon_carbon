@@ -6,7 +6,7 @@ import entrepriseService from "../../services/entreprise.service";
 export function Post(props: {
     title: string;
     content: Array<Content>;
-    type: string;
+    types: string;
     writer?: string;
     enterprise?: string;
     createdAt: string;
