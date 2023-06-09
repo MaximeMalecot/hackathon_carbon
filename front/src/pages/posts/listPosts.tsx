@@ -99,9 +99,6 @@ export default function ListPosts() {
                                             Publish
                                         </button>
                                     ) : null}
-                                    <button className="btn btn-error ml-2">
-                                        Delete
-                                    </button>
                                 </td>
                             </tr>
                         ))}
