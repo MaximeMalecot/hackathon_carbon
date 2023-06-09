@@ -6,9 +6,7 @@ import CreateDeliverableModal from "../../components/contracts/create-deliverabl
 import { ROLES } from "../../constants";
 import { CONTRACT_STATUS } from "../../constants/status";
 import { useAccess } from "../../hooks/use-access";
-import { UserData } from "../../interfaces";
-import { ContractData } from "../../interfaces/contract";
-import { Entreprise } from "../../interfaces/entreprise";
+import { UserData, ContractData, Entreprise } from "../../interfaces";
 import contractService from "../../services/contract.service";
 import deliverableService from "../../services/deliverable.service";
 import entrepriseService from "../../services/entreprise.service";
