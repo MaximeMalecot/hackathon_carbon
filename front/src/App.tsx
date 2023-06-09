@@ -2,6 +2,7 @@ import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import AppLayout from "./components/layout/app-layout";
+import RestrictedLayout from "./components/layout/restricted-layout";
 import { ROLES } from "./constants";
 import { useAuthContext } from "./contexts/auth.context";
 import { useAccess } from "./hooks/use-access";
@@ -64,7 +65,11 @@ function App() {
             >
                 <ToastContainer />
                 <Routes>
-                    <Route element={<AppLayout />}>
+                    <Route
+                        element={
+                            isConnected ? <AppLayout /> : <RestrictedLayout />
+                        }
+                    >
                         {isConnected && (
                             <>
                                 <Route path={"/formation"}>
@@ -176,25 +181,28 @@ function App() {
                                         element={<ListEntreprises />}
                                     />
                                 </Route>
+                                <Route path={"/prizes"} element={<Prizes />} />
+                                <Route path="/profile" element={<Profile />} />
+                                <Route path={"/"} element={<Home />} />
+
+                                {hasAccess([ROLES.PRIZE_EDITOR]) && (
+                                    <Route path={"/gestion-prizes"}>
+                                        <Route
+                                            index
+                                            element={<ManagePrizes />}
+                                        />
+                                        <Route
+                                            path={"create"}
+                                            element={<CreatePrize />}
+                                        />
+                                    </Route>
+                                )}
+                                <Route
+                                    path={"/transactions"}
+                                    element={<Transactions />}
+                                />
                             </>
                         )}
-                        <Route path={"/prizes"} element={<Prizes />} />
-                        <Route path="/profile" element={<Profile />} />
-                        <Route path={"/"} element={<Home />} />
-
-                        {hasAccess([ROLES.PRIZE_EDITOR]) && (
-                            <Route path={"/gestion-prizes"}>
-                                <Route index element={<ManagePrizes />} />
-                                <Route
-                                    path={"create"}
-                                    element={<CreatePrize />}
-                                />
-                            </Route>
-                        )}
-                        <Route
-                            path={"/transactions"}
-                            element={<Transactions />}
-                        />
 
                         <Route path={"/login"} element={<Login />} />
                         <Route path={"*"} element={<NotFound />} />

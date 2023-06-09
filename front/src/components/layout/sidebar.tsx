@@ -144,8 +144,10 @@ export default function Sidebar(props: any) {
 
                 {hasAccess([ROLES.PRIZE_EDITOR]) && (
                     <li>
-                        <details open>
-                            <summary>Gestion échange de points</summary>
+                        <details>
+                            <summary className="md:hover:bg-secondary">
+                                Gestion échange de points
+                            </summary>
                             <ul>
                                 <li>
                                     <Link to={"/gestion-prizes"}>Gestion</Link>

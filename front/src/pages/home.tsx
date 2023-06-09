@@ -17,16 +17,20 @@ export default function Home() {
 
     return (
         <div className="flex flex-col items-center justify-center">
-            {posts.map((post: PostData, index) => (
-                <Post
-                    key={index}
-                    id={post._id}
-                    title={post.title}
-                    types={post.types}
-                    createdAt={post.createdAt}
-                    enterprise={post.enterprise}
-                />
-            ))}
+            {posts.length > 0 ? (
+                posts.map((post: PostData, index) => (
+                    <Post
+                        key={index}
+                        id={post._id}
+                        title={post.title}
+                        types={post.types}
+                        createdAt={post.createdAt}
+                        enterprise={post.enterprise}
+                    />
+                ))
+            ) : (
+                <p>Aucun post</p>
+            )}
         </div>
     );
 }
