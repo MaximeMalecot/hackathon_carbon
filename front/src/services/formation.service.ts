@@ -4,6 +4,7 @@ import {
     CreateAnswersDTO,
     CreateQuizChapterDto,
     FormationDTO,
+    QuestionQuiz,
 } from "../interfaces";
 import authHeader from "./auth.header";
 
@@ -180,6 +181,37 @@ class FormationService {
         }
     }
 
+    async getChapterData(formationId: string) {
+        try {
+            const res = await fetch(
+                `${API_ENDPOINT}/formation-chapter/${formationId}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        ...authHeader(),
+                    },
+                }
+            );
+
+            const response = await res.json();
+
+            if (res.ok) {
+                return response;
+            } else {
+                toast.error("Erreur: " + response.message, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+
+            return response;
+        } catch (e: any) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_LEFT,
+            });
+        }
+    }
+
     async getQuizByChapter(id: string) {
         try {
             const res = await fetch(`${API_ENDPOINT}/quiz/${id}/quiz`, {
@@ -302,6 +334,26 @@ class FormationService {
             },
         });
         return await res.json();
+    }
+
+    async completeQuiz(quizId: string, answers: QuestionQuiz[]) {
+        const res = await fetch(`${API_ENDPOINT}/quiz/complete`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                ...authHeader(),
+            },
+            body: JSON.stringify({
+                quizId,
+                answers,
+            }),
+        });
+
+        if (res.ok) {
+            return await res.json();
+        } else {
+            throw new Error("Erreur lors de la complétion du quiz");
+        }
     }
 }
 

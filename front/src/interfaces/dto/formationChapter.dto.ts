@@ -19,6 +19,14 @@ interface CreateResourceDto {
 }
 
 export interface QuizQuestionDTO {
+    id: string;
+    label: string;
+    quizId: string;
+    answers: Answer[];
+}
+
+export interface StoreQuestionDTO {
+    _id: string;
     label: string;
     quizId: string;
     answers: Answer[];

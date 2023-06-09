@@ -6,6 +6,8 @@ import { ROLES } from "./constants";
 import { useAuthContext } from "./contexts/auth.context";
 import { useAccess } from "./hooks/use-access";
 import CreationEntreprise from "./pages/entreprise/create-entreprise";
+import Entreprise from "./pages/entreprise/entreprise-view";
+import ListEntreprises from "./pages/entreprise/list-entreprise";
 import CreatePost from "./pages/posts/createPost";
 import EditPost from "./pages/posts/edit";
 import { default as ListPosts } from "./pages/posts/listPosts";
@@ -41,6 +43,8 @@ const Prizes = lazy(() => import("./pages/prizes"));
 const ManagePrizes = lazy(() => import("./pages/prizes/manage-prizes"));
 const CreatePrize = lazy(() => import("./pages/prizes/create-prize"));
 
+const Contracts = lazy(() => import("./pages/contracts"));
+const Contract = lazy(() => import("./pages/contracts/contract"));
 //#endregion
 
 function App() {
@@ -136,10 +140,34 @@ function App() {
                                         />
                                     </Route>
                                 )}
+                                {hasAccess([ROLES.ASSIGNMENT_EDITOR]) && (
+                                    <Route
+                                        path={"/contracts"}
+                                        element={<Contracts />}
+                                    />
+                                )}
+
+                                {hasAccess([
+                                    ROLES.ASSIGNMENT_EDITOR,
+                                    ROLES.USER,
+                                ]) && (
+                                    <Route
+                                        path="/contracts/:id"
+                                        element={<Contract />}
+                                    />
+                                )}
                                 <Route path={"/entreprise"}>
+                                    <Route
+                                        path={":id"}
+                                        element={<Entreprise />}
+                                    />
                                     <Route
                                         path={"create"}
                                         element={<CreationEntreprise />}
+                                    />
+                                    <Route
+                                        path={"liste"}
+                                        element={<ListEntreprises />}
                                     />
                                 </Route>
                                 <Route path="/profile" element={<Profile />} />

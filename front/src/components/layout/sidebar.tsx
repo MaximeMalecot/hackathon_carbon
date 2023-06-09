@@ -67,6 +67,19 @@ export default function Sidebar(props: any) {
                         </details>
                     </li>
                 )}
+                {hasAccess([ROLES.ASSIGNMENT_EDITOR]) && (
+                    <li>
+                        <details open>
+                            <summary>Gestion contrats</summary>
+                            <ul>
+                                <li>
+                                    <Link to={"/contracts"}>Gestion</Link>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                )}
+
                 {hasAccess([ROLES.PRIZE_EDITOR]) && (
                     <li>
                         <details open>
