@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ROLES } from "../../constants";
-import { UserDto } from "../../interfaces/user-dto";
+import { UserDto } from "../../interfaces/dto/user.dto";
 import userService from "../../services/user.service";
 
 export default function CreateUser() {

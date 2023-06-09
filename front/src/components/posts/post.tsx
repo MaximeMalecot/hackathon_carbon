@@ -1,13 +1,28 @@
+import { useEffect, useState } from "react";
 import { Content } from "../../interfaces/content";
+import { Entreprise } from "../../interfaces/entreprise";
+import entrepriseService from "../../services/entreprise.service";
 
 export function Post(props: {
     title: string;
     content: Array<Content>;
-    type: string;
-    writer: string;
-    enterprise: string;
+    types: string;
+    writer?: string;
+    enterprise?: string;
     createdAt: string;
 }) {
+    const [entreprise, setEntreprise] = useState<Entreprise>();
+
+    const fetchEntreprise = async (entrepriseId: string) => {
+        const entreprise = await entrepriseService.getOne(entrepriseId);
+        setEntreprise(entreprise);
+    };
+
+    useEffect(() => {
+        if (!props.enterprise) return;
+        fetchEntreprise(props.enterprise);
+    }, []);
+
     const sortContents = props.content.sort(function (a, b) {
         return a.order - b.order;
     });
@@ -15,6 +30,7 @@ export function Post(props: {
         <div className="card w-1/2 bg-base-100 shadow-xl border">
             <div className="card-body">
                 <h2 className="card-title">{props.title}</h2>
+                {entreprise && <p>Entreprise: {entreprise?.name}</p>}
             </div>
             {sortContents.map((content) => {
                 if (content.type === "text") {

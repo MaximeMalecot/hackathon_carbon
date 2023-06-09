@@ -71,16 +71,6 @@ export default function ListUsers() {
                                         >
                                             Go
                                         </Link>
-                                        {hasEditorAccess && (
-                                            <button
-                                                className="btn btn-error"
-                                                onClick={() =>
-                                                    deleteUser(user._id)
-                                                }
-                                            >
-                                                Delete
-                                            </button>
-                                        )}
                                     </th>
                                 </tr>
                             ))}

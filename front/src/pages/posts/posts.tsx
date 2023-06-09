@@ -58,8 +58,8 @@ export default function Posts() {
                         <tr>
                             <th></th>
                             <th>Titre</th>
-                            <th>Auteur</th>
                             <th>Date</th>
+                            <th>See</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -67,8 +67,15 @@ export default function Posts() {
                             <tr className="hover" key={index}>
                                 <th></th>
                                 <td>{post.title}</td>
-                                <td>{post.writer}</td>
-                                <td>{post.createAt}</td>
+                                <td>{post.createdAt}</td>
+                                <td>
+                                    <Link
+                                        to={`/posts/${post._id}`}
+                                        className="btn btn-primary"
+                                    >
+                                        go
+                                    </Link>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

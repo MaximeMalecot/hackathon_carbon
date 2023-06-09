@@ -12,6 +12,7 @@ import {
 import { ApiTags } from "@nestjs/swagger";
 import { Types } from "mongoose";
 import { Roles } from "src/auth/decorators/roles.decorator";
+import { CheckObjectIdPipe } from "src/pipes/checkobjectid.pipe";
 import { ParseObjectIdPipe } from "src/pipes/objectid.pipe";
 import { Role } from "src/users/schemas/user.schema";
 import { CreatePostDto } from "./dto/create-post.dto";
@@ -29,11 +30,16 @@ export class PostController {
         return await this.postService.findAll(req.user, filters);
     }
 
+    @Get(":id")
+    async getPost(@Param("id", CheckObjectIdPipe) id: string) {
+        return await this.postService.findOne(id);
+    }
+
     @Get("types")
     async getPostTypes() {
         return Object.keys(PostTypes);
     }
-    
+
     @Roles(Role.NEWS_EDITOR)
     @Post()
     async createPost(@Req() req: any, @Body() body: CreatePostDto) {
