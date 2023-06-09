@@ -9,6 +9,7 @@ import CreationEntreprise from "./pages/entreprise/create-entreprise";
 import CreatePost from "./pages/posts/createPost";
 import { default as ListPosts } from "./pages/posts/listPosts";
 import { default as Posts } from "./pages/posts/posts";
+import SpecificPost from "./pages/posts/specific";
 import CreateUser from "./pages/users/create";
 import ListUsers from "./pages/users/list";
 import SpecificUser from "./pages/users/specific";
@@ -67,6 +68,13 @@ function App() {
                                     <Route
                                         path={":id"}
                                         element={<Formation />}
+                                    />
+                                </Route>
+                                <Route path={"/posts"}>
+                                    <Route index element={<Posts />} />
+                                    <Route
+                                        path={":id"}
+                                        element={<SpecificPost />}
                                     />
                                 </Route>
                                 {hasAccess([ROLES.TEACHER]) && (

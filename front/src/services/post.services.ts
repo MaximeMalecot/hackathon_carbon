@@ -125,6 +125,32 @@ class PostService {
             });
         }
     }
+
+    async getOne(postId: string) {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/posts/${postId}`, {
+                method: "GET",
+                headers: {
+                    ...authHeader(),
+                },
+            });
+            return await res.json();
+        } catch (e) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+    }
+
+    async getContents(postId: string) {
+        const res = await fetch(`${API_ENDPOINT}/posts-content/${postId}`, {
+            method: "GET",
+            headers: {
+                ...authHeader(),
+            },
+        });
+        return await res.json();
+    }
 }
 
 export default new PostService();

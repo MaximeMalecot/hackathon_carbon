@@ -4,8 +4,8 @@ export function Post(props: {
     title: string;
     content: Array<Content>;
     type: string;
-    writer: string;
-    enterprise: string;
+    writer?: string;
+    enterprise?: string;
     createdAt: string;
 }) {
     const sortContents = props.content.sort(function (a, b) {
