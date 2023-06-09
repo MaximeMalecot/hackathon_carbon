@@ -11,6 +11,7 @@ export default function Sidebar(props: any) {
                 <li>
                     <Link to={"/posts"}>Posts</Link>
                     <Link to={"/formation/liste"}>Formations</Link>
+                    <Link to={"/prizes"}>Échanger ses points</Link>
                 </li>
                 <li></li>
                 {hasAccess([ROLES.TEACHER]) && (
@@ -73,6 +74,24 @@ export default function Sidebar(props: any) {
                             <ul>
                                 <li>
                                     <Link to={"/contracts"}>Gestion</Link>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                )}
+
+                {hasAccess([ROLES.PRIZE_EDITOR]) && (
+                    <li>
+                        <details open>
+                            <summary>Gestion échange de points</summary>
+                            <ul>
+                                <li>
+                                    <Link to={"/gestion-prizes"}>Gestion</Link>
+                                </li>
+                                <li>
+                                    <Link to={"/gestion-prizes/create"}>
+                                        Création de prix
+                                    </Link>
                                 </li>
                             </ul>
                         </details>

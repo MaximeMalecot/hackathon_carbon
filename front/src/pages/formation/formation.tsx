@@ -33,7 +33,7 @@ export default function FormationPage() {
             params.id ?? ""
         );
         if (response.length > 0) {
-            response.map((item) => {
+            response.map((item: any) => {
                 const newItem = mapperFormationChapter(item);
                 setFormationChapters((prev) => [...prev, newItem]);
             });

@@ -1,5 +1,6 @@
 import jwt_decode from "jwt-decode";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { TOKEN_STORAGE_KEY } from "../constants/keys";
 import { UserData } from "../interfaces/user";
 import authService from "../services/auth.service";
@@ -26,6 +27,7 @@ const useAuth = () => {
     const [token, setToken] = useState<string | null>(null);
     const [userData, setUserData] = useState<UserData | null>(null);
     const isConnected = useMemo(() => !!token && !!userData, [token, userData]);
+    const navigate = useNavigate();
 
     const register = useCallback(async (mail: string, password: string) => {
         return await authService.register(mail, password);
@@ -50,7 +52,12 @@ const useAuth = () => {
     const getUser = useCallback(async () => {
         if (!token) return;
         const res = await userService.getSelf();
-        if (res) setUserData(res);
+        if (res) {
+            setUserData(res);
+        } else {
+            logout();
+            navigate("/login");
+        }
     }, [token]);
 
     useEffect(() => {
@@ -80,6 +87,7 @@ const useAuth = () => {
         logout,
         isConnected,
         register,
+        reload: getUser,
     };
 };
 

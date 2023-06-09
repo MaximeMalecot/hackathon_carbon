@@ -39,6 +39,10 @@ const CreateQuestionQuiz = lazy(
 
 const Profile = lazy(() => import("./pages/profile"));
 
+const Prizes = lazy(() => import("./pages/prizes"));
+const ManagePrizes = lazy(() => import("./pages/prizes/manage-prizes"));
+const CreatePrize = lazy(() => import("./pages/prizes/create-prize"));
+
 const Contracts = lazy(() => import("./pages/contracts"));
 const Contract = lazy(() => import("./pages/contracts/contract"));
 //#endregion
@@ -170,6 +174,18 @@ function App() {
                                 <Route path={"/"} element={<Home />} />
                             </>
                         )}
+                        <Route path={"/prizes"} element={<Prizes />} />
+
+                        {hasAccess([ROLES.PRIZE_EDITOR]) && (
+                            <Route path={"/gestion-prizes"}>
+                                <Route index element={<ManagePrizes />} />
+                                <Route
+                                    path={"create"}
+                                    element={<CreatePrize />}
+                                />
+                            </Route>
+                        )}
+
                         <Route path={"/login"} element={<Login />} />
 
                         <Route path={"*"} element={<NotFound />} />

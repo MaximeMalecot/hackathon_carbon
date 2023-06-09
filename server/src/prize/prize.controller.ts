@@ -1,12 +1,13 @@
 import {
+    Body,
     Controller,
-    Delete,
     FileTypeValidator,
     Get,
     MaxFileSizeValidator,
     Param,
     ParseFilePipe,
     Patch,
+    Post,
     Req,
     UploadedFile,
     UseInterceptors,
@@ -18,22 +19,34 @@ import { extname } from "path";
 import { Roles } from "src/auth/decorators/roles.decorator";
 import { CheckObjectIdPipe } from "src/pipes/checkobjectid.pipe";
 import { Role } from "src/users/schemas/user.schema";
-import { ResourceService } from "./resource.service";
+import { CreatePrizeDto } from "./dto/create-prize.dto";
+import { PrizeService } from "./prize.service";
 
-@ApiTags("resources")
-@Controller("resources")
-export class ResourceController {
-    constructor(private readonly resourceService: ResourceService) {}
+@ApiTags("prizes")
+@Controller("prizes")
+export class PrizeController {
+    constructor(private readonly prizeService: PrizeService) {}
+
+    @Get()
+    async getPrizes() {
+        return this.prizeService.findAll();
+    }
 
     @Get(":id")
-    findOneByChapterId(@Param("id", CheckObjectIdPipe) id: string) {
-        return this.resourceService.findOne(id);
+    async getPrize(@Param("id", CheckObjectIdPipe) id: string) {
+        return this.prizeService.findOne(id);
+    }
+
+    @Roles(Role.PRIZE_EDITOR)
+    @Patch(":id/out-of-stock")
+    async outOfStock(@Param("id", CheckObjectIdPipe) id: string) {
+        return this.prizeService.outOfStock(id);
     }
 
     @UseInterceptors(
         FileInterceptor("file", {
             storage: diskStorage({
-                destination: "./files/formations/chapters/resources",
+                destination: "./files/prizes",
                 filename: (req, file, cb) => {
                     const uniqueSuffix =
                         Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -45,27 +58,25 @@ export class ResourceController {
             }),
         })
     )
-    @Roles(Role.TEACHER)
-    @Patch(":id")
-    async updateResource(
+    @Roles(Role.PRIZE_EDITOR)
+    @Post()
+    async createPrize(
         @Req() req,
-        @Param("id", CheckObjectIdPipe) id: string,
+        @Body() body: CreatePrizeDto,
         @UploadedFile(
             new ParseFilePipe({
                 validators: [
-                    new FileTypeValidator({ fileType: ".(pdf)" }),
+                    new FileTypeValidator({ fileType: ".(png|jpeg|jpg)" }),
                     new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 4 }),
                 ],
+                fileIsRequired: false,
             })
         )
         file: Express.Multer.File
     ) {
-        const filePath = `${req.protocol}://${req.get("Host")}/${file.path}`;
-        return await this.resourceService.updateResource(id, filePath);
-    }
-
-    @Delete(":id")
-    remove(@Param("id", CheckObjectIdPipe) id: string) {
-        return this.resourceService.remove(id);
+        return this.prizeService.create(
+            body,
+            `${req.protocol}://${req.get("Host")}/${file.path}`
+        );
     }
 }
