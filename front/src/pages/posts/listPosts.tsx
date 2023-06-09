@@ -86,7 +86,7 @@ export default function ListPosts() {
                                 <td>{post.createdAt}</td>
                                 <td>
                                     <Link
-                                        to={`/posts/edit/${post._id}`}
+                                        to={`/gestion-posts/edit/${post._id}`}
                                         className="btn btn-primary"
                                     >
                                         Edit

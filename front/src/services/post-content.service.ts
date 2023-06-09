@@ -34,6 +34,16 @@ class PostContentService {
         );
         return await res.json();
     }
+
+    async delete(id: string) {
+        const res = await fetch(`${API_ENDPOINT}/posts-content/${id}`, {
+            method: "DELETE",
+            headers: {
+                ...authHeader(),
+            },
+        });
+        return await res.json();
+    }
 }
 
 export default new PostContentService();

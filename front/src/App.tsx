@@ -7,6 +7,7 @@ import { useAuthContext } from "./contexts/auth.context";
 import { useAccess } from "./hooks/use-access";
 import CreationEntreprise from "./pages/entreprise/create-entreprise";
 import CreatePost from "./pages/posts/createPost";
+import EditPost from "./pages/posts/edit";
 import { default as ListPosts } from "./pages/posts/listPosts";
 import { default as Posts } from "./pages/posts/posts";
 import SpecificPost from "./pages/posts/specific";
@@ -124,6 +125,10 @@ function App() {
                                         <Route
                                             path={"create"}
                                             element={<CreatePost />}
+                                        />
+                                        <Route
+                                            path={"edit/:id"}
+                                            element={<EditPost />}
                                         />
                                     </Route>
                                 )}
