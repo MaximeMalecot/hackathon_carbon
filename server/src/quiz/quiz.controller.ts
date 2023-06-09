@@ -43,6 +43,12 @@ export class QuizController {
         return this.quizService.getQuestionsAndFullAnswers(quizId);
     }
 
+    @Get(":chapterId/quiz")
+    @Roles(Role.TEACHER)
+    getQuizByChapterId(@Param("chapterId", CheckObjectIdPipe) chapterId: string) {
+        return this.quizService.findOneByChapterId(chapterId);
+    }
+
     @Post(":quizId/question")
     @Roles(Role.TEACHER)
     async createQuestion(
