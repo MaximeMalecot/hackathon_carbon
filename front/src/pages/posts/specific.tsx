@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Post as PostComponent } from "../../components/posts/post";
 import { Content } from "../../interfaces/content";
-import { Post } from "../../interfaces/post";
+import { PostData } from "../../interfaces/post";
 import postServices from "../../services/post.services";
 
 export default function SpecificPost() {
     const { id } = useParams();
-    const [post, setPost] = useState<Post>();
+    const [post, setPost] = useState<PostData>();
     const [contents, setContents] = useState<Content[]>([]);
 
     const fetchPost = async (postId: string) => {

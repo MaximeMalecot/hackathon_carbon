@@ -3,14 +3,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UpdateContentDto } from "../../interfaces/dto/update-content.dto";
-import { Post } from "../../interfaces/post";
+import { PostData } from "../../interfaces/post";
 import postContentService from "../../services/post-content.service";
 import postServices from "../../services/post.services";
 
 export default function EditPost() {
     const navigate = useNavigate();
     const { id } = useParams();
-    const [post, setPost] = useState<Post>();
+    const [post, setPost] = useState<PostData>();
     const [contents, setContents] = useState<Array<UpdateContentDto>>([]);
 
     const fetchPost = async (postId: string) => {
