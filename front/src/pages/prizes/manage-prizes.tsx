@@ -21,14 +21,14 @@ export default function ManagePrizes() {
     const disablePrize = useCallback(async (prizeId: string) => {
         try {
             const res = await prizeService.clearStock(prizeId);
-            if (res.success) {
+            if (res) {
                 toast.success("Stock du prix réduit à 0 !", {
                     position: toast.POSITION.TOP_RIGHT,
                 });
                 reload();
                 await fetchPrizes();
             } else {
-                throw new Error(res.message);
+                throw new Error("Impossible de réduire le stock à 0");
             }
         } catch (e: any) {
             console.log(e);

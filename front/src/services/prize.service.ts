@@ -50,7 +50,7 @@ class PrizeService {
         );
         if (res.status === 500)
             throw new Error("Error while reducing prize stock");
-        return await res.json();
+        return true;
     }
 }
 
