@@ -83,7 +83,11 @@ export default function ListPosts() {
                                         </button>
                                     )}
                                 </td>
-                                <td>{post.createdAt}</td>
+                                <td>
+                                    {new Date(
+                                        post.createdAt
+                                    ).toLocaleDateString()}
+                                </td>
                                 <td>
                                     <Link
                                         to={`/gestion-posts/edit/${post._id}`}
