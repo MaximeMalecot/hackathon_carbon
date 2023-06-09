@@ -1,4 +1,5 @@
 import { API_ENDPOINT } from "../constants";
+import { CreateContractDto } from "../interfaces";
 import authHeader from "./auth.header";
 
 class ContractService {
@@ -40,6 +41,25 @@ class ContractService {
                 headers: {
                     ...authHeader(),
                 },
+            }
+        );
+
+        if (res.status === 200) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    async createContract(contract: CreateContractDto) {
+        const res = await fetch(
+            `${API_ENDPOINT}/contracts`,
+            {
+                method: "POST",
+                headers: {
+                    ...authHeader(),
+                },
+                body: JSON.stringify(contract),
             }
         );
 
