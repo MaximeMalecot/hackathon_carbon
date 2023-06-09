@@ -1,28 +1,29 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { AnswersQuestion, Question } from "../../components";
-import { fractionToPercent, mapperQuizQuestion } from "../../helpers";
-import { QuestionQuiz, SendAnswer } from "../../interfaces";
+import Quiz from "../../components/quiz/quiz";
 import formationService from "../../services/formation.service";
 
-export default function Quiz() {
-    const [currentQuestion, setCurrentQuestion] = useState(1);
-    const [selectedAnswers, setSelectedAnswer] = useState<SendAnswer[]>([]);
+export interface QuizResult {
+    mark: string;
+}
+
+const QuizLayout = ({ children }: { children: React.ReactNode }) => {
+    return (
+        <div className="">
+            <h1 className="text-4xl mb-5">Quiz</h1>
+            {children}
+        </div>
+    );
+};
+
+export default function QuizPage() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [questions, setQuestions] = useState<QuestionQuiz[]>([]);
     const params = useParams<{ id: string }>();
-    const [quizData, setQuizData] = useState<any | null>({});
-
-    const currentQuestionId = useMemo(() => {
-        return questions[currentQuestion - 1]?.id;
-    }, [currentQuestion, questions]);
-
-    const currentAnswers = useMemo(() => {
-        return (
-            selectedAnswers.find((ele) => ele.questionId === currentQuestionId)
-                ?.answers ?? null
-        );
-    }, [selectedAnswers, currentQuestionId]);
+    const [quizData, setQuizData] = useState<{
+        id: string;
+        questions: any[];
+    } | null>(null);
+    const [result, setResult] = useState<QuizResult | null>(null);
 
     useEffect(() => {
         if (!isLoading) {
@@ -41,114 +42,34 @@ export default function Quiz() {
                 await formationService.getQuizQuestionsWithoutAnswersCorrect(
                     response._id
                 );
+
             if (!quizRes.statusCode) {
-                quizRes?.questions.map((item: any) => {
-                    console.log(item, "item");
-                    const value = mapperQuizQuestion(item);
-                    setQuestions((prev) => [...prev, value]);
-                });
                 setQuizData({
                     id: quizRes._id,
+                    questions: quizRes.questions,
                 });
             }
         }
     }, [params.id]);
 
-    const validateQuiz = useCallback(
-        async (answers: any[]) => {
-            try {
-                console.log(quizData.id, "quizId");
-                if (!quizData.id) return;
-                const res = await formationService.completeQuiz(
-                    quizData.id,
-                    answers
-                );
-                console.log(res, "res");
-            } catch (e: any) {
-                console.log(e.message);
-            }
-        },
-        [selectedAnswers, quizData]
-    );
+    if (isLoading)
+        return (
+            <QuizLayout>
+                <div>Loading...</div>
+            </QuizLayout>
+        );
 
-    const setNextQuestion = useCallback(
-        (receivedAnswers: string[]) => {
-            let answersToQuestion = [];
-            if (currentAnswers) {
-                const updatedAnswers = Array.from(
-                    new Set([...currentAnswers, ...receivedAnswers])
-                );
+    if (result)
+        return (
+            <QuizLayout>
+                <div>Result: {result.mark}</div>
+            </QuizLayout>
+        );
 
-                answersToQuestion = selectedAnswers.map((el) => {
-                    if (el.questionId === currentQuestionId) {
-                        return {
-                            ...el,
-                            answers: updatedAnswers,
-                        };
-                    }
-                    return el;
-                });
-            } else {
-                answersToQuestion = [
-                    ...selectedAnswers,
-                    {
-                        questionId: currentQuestionId,
-                        answers: receivedAnswers,
-                    },
-                ];
-            }
-            setSelectedAnswer(answersToQuestion);
-            if (currentQuestion !== questions.length) {
-                setCurrentQuestion((prev) => prev + 1);
-            } else {
-                validateQuiz(answersToQuestion);
-            }
-        },
-        [
-            currentAnswers,
-            currentQuestion,
-            questions,
-            selectedAnswers,
-            currentQuestionId,
-        ]
-    );
-
-    const setBackQuestion = useCallback(() => {
-        if (currentQuestion !== 1) {
-            setCurrentQuestion(currentQuestion - 1);
-        }
-    }, [currentQuestion]);
-
-    return (
-        <div className="">
-            <h1 className="text-4xl mb-5">Quiz</h1>
-
-            <div className="card w-full h-full bg-base-100 shadow-xl">
-                <div className="card-body pt-2 pb-5 px-5">
-                    <div className="flex justify-center">
-                        <progress
-                            className="progress progress-success bg-primary w-56"
-                            value={fractionToPercent(
-                                currentQuestion,
-                                questions.length
-                            )}
-                            max="100"
-                        ></progress>
-                    </div>
-                    <Question
-                        nbQuestion={currentQuestion}
-                        labelQuestion={questions[currentQuestion - 1]?.label}
-                    />
-                    <AnswersQuestion
-                        initValue={currentAnswers}
-                        nbQuestions={questions.length}
-                        answers={questions[currentQuestion - 1]?.answers}
-                        currentQuestion={currentQuestion}
-                        setBackQuestion={setBackQuestion}
-                        setNextQuestion={setNextQuestion}
-                    />
-                </div>
-            </div>
-        </div>
-    );
+    if (quizData)
+        return (
+            <QuizLayout>
+                <Quiz quiz={quizData} setResult={setResult} />
+            </QuizLayout>
+        );
 }
