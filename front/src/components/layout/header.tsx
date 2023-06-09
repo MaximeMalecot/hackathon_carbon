@@ -13,7 +13,7 @@ export default function Header(props: any) {
     }, []);
 
     return (
-        <header>
+        <header style={{ position: "relative", zIndex: 10000 }}>
             <nav className="navbar bg-primary text-neutral-content">
                 <div className="flex-1">
                     <Link
@@ -28,7 +28,7 @@ export default function Header(props: any) {
                     </Link>
                 </div>
                 <div className="flex-none">
-                    <ul className="menu menu-horizontal px-1 flex items-center">
+                    <ul className="menu menu-horizontal px-1 flex items-center relative z-100">
                         {isConnected ? (
                             <li className="content-center">
                                 <details>
@@ -50,6 +50,11 @@ export default function Header(props: any) {
                                     <ul className="p-2 bg-base-100">
                                         <li>
                                             <Link to="/profile">Profil</Link>
+                                        </li>
+                                        <li>
+                                            <Link to="/transactions">
+                                                Historique des prix
+                                            </Link>
                                         </li>
                                         <li>
                                             <button onClick={handleLogout}>

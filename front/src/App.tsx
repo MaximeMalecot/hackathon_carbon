@@ -2,6 +2,7 @@ import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import AppLayout from "./components/layout/app-layout";
+import RestrictedLayout from "./components/layout/restricted-layout";
 import { ROLES } from "./constants";
 import { useAuthContext } from "./contexts/auth.context";
 import { useAccess } from "./hooks/use-access";
@@ -11,7 +12,6 @@ import ListEntreprises from "./pages/entreprise/list-entreprise";
 import CreatePost from "./pages/posts/createPost";
 import EditPost from "./pages/posts/edit";
 import { default as ListPosts } from "./pages/posts/listPosts";
-import { default as Posts } from "./pages/posts/posts";
 import SpecificPost from "./pages/posts/specific";
 import CreateUser from "./pages/users/create";
 import ListUsers from "./pages/users/list";
@@ -47,6 +47,8 @@ const CreatePrize = lazy(() => import("./pages/prizes/create-prize"));
 const Contracts = lazy(() => import("./pages/contracts"));
 const Contract = lazy(() => import("./pages/contracts/contract"));
 const ContractCreate = lazy(() => import("./pages/contracts/create-contracts"));
+
+const Transactions = lazy(() => import("./pages/transactions"));
 //#endregion
 
 function App() {
@@ -64,7 +66,11 @@ function App() {
             >
                 <ToastContainer />
                 <Routes>
-                    <Route element={<AppLayout />}>
+                    <Route
+                        element={
+                            isConnected ? <AppLayout /> : <RestrictedLayout />
+                        }
+                    >
                         {isConnected && (
                             <>
                                 <Route path={"/formation"}>
@@ -82,7 +88,7 @@ function App() {
                                     />
                                 </Route>
                                 <Route path={"/posts"}>
-                                    <Route index element={<Posts />} />
+                                    <Route index element={<Home />} />
                                     <Route
                                         path={":id"}
                                         element={<SpecificPost />}
@@ -182,24 +188,30 @@ function App() {
                                         element={<ListEntreprises />}
                                     />
                                 </Route>
+                                <Route path={"/prizes"} element={<Prizes />} />
                                 <Route path="/profile" element={<Profile />} />
                                 <Route path={"/"} element={<Home />} />
-                            </>
-                        )}
-                        <Route path={"/prizes"} element={<Prizes />} />
 
-                        {hasAccess([ROLES.PRIZE_EDITOR]) && (
-                            <Route path={"/gestion-prizes"}>
-                                <Route index element={<ManagePrizes />} />
+                                {hasAccess([ROLES.PRIZE_EDITOR]) && (
+                                    <Route path={"/gestion-prizes"}>
+                                        <Route
+                                            index
+                                            element={<ManagePrizes />}
+                                        />
+                                        <Route
+                                            path={"create"}
+                                            element={<CreatePrize />}
+                                        />
+                                    </Route>
+                                )}
                                 <Route
-                                    path={"create"}
-                                    element={<CreatePrize />}
+                                    path={"/transactions"}
+                                    element={<Transactions />}
                                 />
-                            </Route>
+                            </>
                         )}
 
                         <Route path={"/login"} element={<Login />} />
-                        <Route path={"/posts"} element={<Posts />} />
                         <Route path={"*"} element={<NotFound />} />
                     </Route>
                 </Routes>

@@ -1,16 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UpdateContentDto } from "../../interfaces/dto/update-content.dto";
-import { Post } from "../../interfaces/post";
+import { PostData } from "../../interfaces/post";
 import postContentService from "../../services/post-content.service";
 import postServices from "../../services/post.services";
 
 export default function EditPost() {
-    const navigate = useNavigate();
     const { id } = useParams();
-    const [post, setPost] = useState<Post>();
+    const [post, setPost] = useState<PostData>();
     const [contents, setContents] = useState<Array<UpdateContentDto>>([]);
 
     const fetchPost = async (postId: string) => {
@@ -30,7 +29,6 @@ export default function EditPost() {
             if (!post) return;
             contents.forEach(async (content) => {
                 if (content._id) return;
-                console.log("ahi");
                 if (content.type === "text") {
                     await postContentService.postContentText(post._id, content);
                 } else if (content.type === "file") {
@@ -52,14 +50,11 @@ export default function EditPost() {
         ]);
     }, []);
 
-    const deleteContent = useCallback(
-        (index: number) => {
-            setContents((prev) =>
-                prev.filter((content) => content.order !== index)
-            );
-        },
-        [contents]
-    );
+    const deleteContent = useCallback((index: number) => {
+        setContents((prev) =>
+            prev.filter((content) => content.order !== index)
+        );
+    }, []);
 
     const deleteDistantContent = useCallback(
         async (index: number) => {
@@ -69,7 +64,7 @@ export default function EditPost() {
             await postContentService.delete(content._id);
             fetchPost(id);
         },
-        [contents]
+        [contents, id]
     );
 
     const handleChangeFile = useCallback(
@@ -89,6 +84,7 @@ export default function EditPost() {
 
     const handleChangeText = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+            e.preventDefault();
             const content = contents.find((content) => content.order === index);
             console.log(content);
             if (!content) return;
@@ -106,25 +102,33 @@ export default function EditPost() {
         <div>
             <form onSubmit={(e) => e.preventDefault()}>
                 <div className="flex flex-col items-center h-screen">
-                    <h1>Modification d'un post</h1>
+                    <h1 className="text-xl font-bold">
+                        Modification d'un post
+                    </h1>
                     <div className="form-control w-full max-w-xs">
                         <label className="label">
                             <span className="label-text">
-                                Title: {post?.title}
+                                <span className="font-bold uppercase">
+                                    Titre:
+                                </span>
+                                {post?.title}
                             </span>
                         </label>
                     </div>
                     {post?.types && (
-                        <div className="form-control w-full max-w-xs  mt-4">
+                        <div className="form-control w-full max-w-xs">
                             <label className="label">
                                 <span className="label-text">
-                                    Types : {JSON.stringify(post?.types)}
+                                    <span className="font-bold uppercase">
+                                        Types :
+                                    </span>
+                                    {JSON.stringify(post?.types)}
                                 </span>
                             </label>
                         </div>
                     )}
                     {post?.enterprise && (
-                        <div className="form-control w-full max-w-xs  mt-4">
+                        <div className="form-control w-full max-w-xs">
                             <label className="label">
                                 <span className="label-text">
                                     Entreprise : {post?.enterprise}
@@ -135,129 +139,46 @@ export default function EditPost() {
                     <div className="form-control w-full max-w-xs mt-4">
                         {contents.length > 0 && (
                             <>
-                                Contents
+                                <span className="font-bold uppercase">
+                                    Contents :
+                                </span>
                                 {contents.map((content, index) => (
-                                    <div
+                                    <PostContentItem
+                                        content={content}
                                         key={index}
-                                        className="w-full max-w-xs flex"
-                                    >
-                                        {content._id ? (
-                                            content.type === "text" ? (
-                                                <>
-                                                    <p className="flex-5">
-                                                        {typeof content.data ===
-                                                            "string" &&
-                                                            content.data}
-                                                    </p>
-                                                    <button
-                                                        className="btn btn-error btn-sm mt-2 flex-1"
-                                                        onClick={(e) =>
-                                                            deleteDistantContent(
-                                                                content.order
-                                                            )
-                                                        }
-                                                    >
-                                                        X
-                                                    </button>
-                                                </>
-                                            ) : (
-                                                <figure className="flex-5">
-                                                    <img
-                                                        className="w-full max-h-80 object-cover"
-                                                        src={
-                                                            typeof content.data ===
-                                                            "string"
-                                                                ? content.data
-                                                                : URL.createObjectURL(
-                                                                      content.data
-                                                                  )
-                                                        }
-                                                    />
-                                                    <button
-                                                        className="btn btn-error btn-sm mt-2 flex-1"
-                                                        onClick={(e) =>
-                                                            deleteDistantContent(
-                                                                content.order
-                                                            )
-                                                        }
-                                                    >
-                                                        X
-                                                    </button>
-                                                </figure>
-                                            )
-                                        ) : content.type === "text" ? (
-                                            <>
-                                                <input
-                                                    type="text"
-                                                    name="data"
-                                                    onChange={(e) =>
-                                                        handleChangeText(
-                                                            e,
-                                                            content.order
-                                                        )
-                                                    }
-                                                    className="input input-bordered w-full max-w-xs flex-2"
-                                                />
-                                                <button
-                                                    className="btn btn-error btn-sm mt-2 flex-1"
-                                                    onClick={(e) =>
-                                                        deleteContent(
-                                                            content.order
-                                                        )
-                                                    }
-                                                >
-                                                    X
-                                                </button>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <input
-                                                    name="data"
-                                                    onChange={(e) =>
-                                                        handleChangeFile(
-                                                            e,
-                                                            content.order
-                                                        )
-                                                    }
-                                                    type="file"
-                                                    className="file-input file-input-bordered max-w-xs flex-2"
-                                                />
-                                                <button
-                                                    className="btn btn-error btn-sm mt-2 flex-1"
-                                                    onClick={(e) =>
-                                                        deleteContent(
-                                                            content.order
-                                                        )
-                                                    }
-                                                >
-                                                    X
-                                                </button>
-                                            </>
-                                        )}
-                                    </div>
+                                        deleteDistantContent={
+                                            deleteDistantContent
+                                        }
+                                        handleChangeText={handleChangeText}
+                                        deleteContent={deleteContent}
+                                        handleChangeFile={handleChangeFile}
+                                    />
                                 ))}
                             </>
                         )}
                     </div>
 
                     <div className="form-control w-full max-w-xs">
-                        <button
+                        <div
                             className="btn w-full max-w-xs mt-2"
                             onClick={(e) => addContent("text")}
                         >
                             Add text
-                        </button>
-                        <button
+                        </div>
+                        <div
                             className="btn w-full max-w-xs mt-2"
                             onClick={(e) => addContent("file")}
                         >
                             Add image
-                        </button>
+                        </div>
                     </div>
                     <div className="form-control w-full max-w-xs">
                         <button
                             className="btn w-full max-w-xs mt-4"
-                            onClick={(e) => handleSubmit()}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleSubmit();
+                            }}
                         >
                             Enregister
                         </button>
@@ -266,4 +187,107 @@ export default function EditPost() {
             </form>
         </div>
     );
+}
+
+interface PostContentItemProps {
+    deleteDistantContent: (index: number) => void;
+    handleChangeText: (
+        e: React.ChangeEvent<HTMLInputElement>,
+        index: number
+    ) => void;
+    deleteContent: (index: number) => void;
+    handleChangeFile: (
+        e: React.ChangeEvent<HTMLInputElement>,
+        index: number
+    ) => void;
+    content: any;
+}
+
+function PostContentItem({
+    deleteDistantContent,
+    handleChangeText,
+    deleteContent,
+    handleChangeFile,
+    content,
+}: PostContentItemProps) {
+    useEffect(() => {
+        console.log("content changed");
+    }, [content]);
+
+    if (content._id) {
+        if (content.type === "text") {
+            return (
+                <div className="w-full">
+                    <p className="my-2">
+                        {typeof content.data === "string" && content.data}
+                    </p>
+                    <div
+                        className="btn btn-error btn-sm m-auto w-full"
+                        onClick={(e) => deleteDistantContent(content.order)}
+                    >
+                        Supprimer texte
+                    </div>
+                </div>
+            );
+        }
+        if (content.type === "file") {
+            return (
+                <figure className="w-full">
+                    <img
+                        className="w-full max-h-80 object-cover my-2"
+                        src={
+                            typeof content.data === "string"
+                                ? content.data
+                                : URL.createObjectURL(content.data)
+                        }
+                    />
+                    <div
+                        className="btn btn-error btn-sm w-full"
+                        onClick={(e) => deleteDistantContent(content.order)}
+                    >
+                        Supprimer image
+                    </div>
+                </figure>
+            );
+        }
+    }
+
+    if (content.type === "text") {
+        return (
+            <div className="w-full">
+                <input
+                    type="text"
+                    name="data"
+                    value={content.data}
+                    onChange={(e) => handleChangeText(e, content.order)}
+                    className="input input-bordered w-full max-w-xs my-2"
+                />
+                <div
+                    className="btn btn-error btn-sm mt-2 w-full"
+                    onClick={(e) => deleteContent(content.order)}
+                >
+                    X
+                </div>
+            </div>
+        );
+    }
+
+    if (content.type === "file") {
+        return (
+            <div className="w-full">
+                <input
+                    name="data"
+                    onChange={(e) => handleChangeFile(e, content.order)}
+                    type="file"
+                    className="file-input file-input-bordered max-w-xs my-2"
+                />
+                <div
+                    className="btn btn-error btn-sm mt-2 my-2 w-full"
+                    onClick={(e) => deleteContent(content.order)}
+                >
+                    X
+                </div>
+            </div>
+        );
+    }
 }

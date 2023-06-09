@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Quiz from "../../components/quiz/quiz";
+import { useAuthContext } from "../../contexts/auth.context";
 import formationService from "../../services/formation.service";
 
 export interface QuizResult {
@@ -17,6 +18,7 @@ const QuizLayout = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default function QuizPage() {
+    const { reload } = useAuthContext();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const params = useParams<{ id: string }>();
     const [quizData, setQuizData] = useState<{
@@ -33,6 +35,12 @@ export default function QuizPage() {
         }
         setIsLoading(false);
     }, [isLoading]);
+
+    useEffect(() => {
+        setTimeout(() => {
+            reload();
+        }, 1000);
+    }, []);
 
     const fetchChapter = useCallback(async (formationId: string) => {
         const res = await formationService.getChapterData(formationId);

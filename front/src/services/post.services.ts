@@ -32,6 +32,22 @@ class PostService {
             });
         }
     }
+
+    async getPostContentByPostId(id: string | undefined) {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/posts-content/${id}`, {
+                method: "GET",
+                headers: {
+                    ...authHeader(),
+                },
+            });
+            return await res.json();
+        } catch (e) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+    }
     async getAllTypes() {
         try {
             const res = await fetch(`${API_ENDPOINT}/posts/types`, {
@@ -63,7 +79,6 @@ class PostService {
             });
         }
     }
-
     async create(title: string, types: Array<string>, entrepriseId: string) {
         try {
             const body = {

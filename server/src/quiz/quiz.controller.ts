@@ -44,8 +44,9 @@ export class QuizController {
     }
 
     @Get(":chapterId/quiz")
-    @Roles(Role.TEACHER)
-    getQuizByChapterId(@Param("chapterId", CheckObjectIdPipe) chapterId: string) {
+    getQuizByChapterId(
+        @Param("chapterId", CheckObjectIdPipe) chapterId: string
+    ) {
         return this.quizService.findOneByChapterId(chapterId);
     }
 
