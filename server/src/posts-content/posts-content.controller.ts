@@ -54,7 +54,7 @@ export class PostContentController {
 
     @Roles(Role.NEWS_EDITOR)
     @UseInterceptors(
-        FileInterceptor("file", {
+        FileInterceptor("data", {
             storage: diskStorage({
                 destination: "./files/post",
                 filename: (req, file, cb) => {
@@ -81,13 +81,13 @@ export class PostContentController {
                 ],
             })
         )
-        file: Express.Multer.File
+        data: Express.Multer.File
     ) {
         return await this.postContentService.addContent(
             postId,
             ContentType.FILE,
             {
-                data: `${req.protocol}://${req.get("Host")}/${file.path}`,
+                data: `${req.protocol}://${req.get("Host")}/${data.path}`,
                 order,
             }
         );
@@ -95,7 +95,7 @@ export class PostContentController {
 
     @Roles(Role.NEWS_EDITOR)
     @UseInterceptors(
-        FileInterceptor("file", {
+        FileInterceptor("data", {
             storage: diskStorage({
                 destination: "./files/post",
                 filename: (req, file, cb) => {
@@ -123,10 +123,10 @@ export class PostContentController {
                 fileIsRequired: false,
             })
         )
-        file?: Express.Multer.File
+        data?: Express.Multer.File
     ) {
         return await this.postContentService.updateImage(id, {
-            data: `${req.protocol}://${req.get("Host")}/${file.path}`,
+            data: `${req.protocol}://${req.get("Host")}/${data.path}`,
             order,
         });
     }

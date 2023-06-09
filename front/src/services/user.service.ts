@@ -1,6 +1,6 @@
 import { API_ENDPOINT } from "../constants/endpoints";
+import { UserDto } from "../interfaces/dto/user.dto";
 import { UserData } from "../interfaces/user";
-import { UserDto } from "../interfaces/user-dto";
 import authHeader from "./auth.header";
 
 const mockUser = {

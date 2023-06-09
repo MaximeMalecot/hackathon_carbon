@@ -14,7 +14,7 @@ export default function ListPosts() {
         []
     );
     const fetchPosts = async () => {
-        const posts = await postServices.getAllPublic();
+        const posts = await postServices.getAll();
         console.log(posts);
         setPosts(posts);
     };

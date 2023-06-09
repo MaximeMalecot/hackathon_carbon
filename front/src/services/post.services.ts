@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import { API_ENDPOINT } from "../constants/endpoints";
 import authHeader from "./auth.header";
-class EntrepriseService {
+class PostService {
     async getAllPublic() {
         try {
             const res = await fetch(`${API_ENDPOINT}/posts?status=PUBLISHED`, {
@@ -101,4 +101,4 @@ class EntrepriseService {
     }
 }
 
-export default new EntrepriseService();
+export default new PostService();
