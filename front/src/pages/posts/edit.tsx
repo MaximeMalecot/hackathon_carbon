@@ -106,25 +106,33 @@ export default function EditPost() {
         <div>
             <form onSubmit={(e) => e.preventDefault()}>
                 <div className="flex flex-col items-center h-screen">
-                    <h1>Modification d'un post</h1>
+                    <h1 className="text-xl font-bold">
+                        Modification d'un post
+                    </h1>
                     <div className="form-control w-full max-w-xs">
                         <label className="label">
                             <span className="label-text">
-                                Title: {post?.title}
+                                <span className="font-bold uppercase">
+                                    Titre:
+                                </span>
+                                {post?.title}
                             </span>
                         </label>
                     </div>
                     {post?.types && (
-                        <div className="form-control w-full max-w-xs  mt-4">
+                        <div className="form-control w-full max-w-xs">
                             <label className="label">
                                 <span className="label-text">
-                                    Types : {JSON.stringify(post?.types)}
+                                    <span className="font-bold uppercase">
+                                        Types :
+                                    </span>
+                                    {JSON.stringify(post?.types)}
                                 </span>
                             </label>
                         </div>
                     )}
                     {post?.enterprise && (
-                        <div className="form-control w-full max-w-xs  mt-4">
+                        <div className="form-control w-full max-w-xs">
                             <label className="label">
                                 <span className="label-text">
                                     Entreprise : {post?.enterprise}
@@ -135,7 +143,9 @@ export default function EditPost() {
                     <div className="form-control w-full max-w-xs mt-4">
                         {contents.length > 0 && (
                             <>
-                                Contents
+                                <span className="font-bold uppercase">
+                                    Contents :
+                                </span>
                                 {contents.map((content, index) => (
                                     <div
                                         key={index}
@@ -143,27 +153,27 @@ export default function EditPost() {
                                     >
                                         {content._id ? (
                                             content.type === "text" ? (
-                                                <>
-                                                    <p className="flex-5">
+                                                <div className="w-full">
+                                                    <p className="my-2">
                                                         {typeof content.data ===
                                                             "string" &&
                                                             content.data}
                                                     </p>
-                                                    <button
-                                                        className="btn btn-error btn-sm mt-2 flex-1"
+                                                    <div
+                                                        className="btn btn-error btn-sm m-auto w-full"
                                                         onClick={(e) =>
                                                             deleteDistantContent(
                                                                 content.order
                                                             )
                                                         }
                                                     >
-                                                        X
-                                                    </button>
-                                                </>
+                                                        Supprimer texte
+                                                    </div>
+                                                </div>
                                             ) : (
-                                                <figure className="flex-5">
+                                                <figure className="w-full">
                                                     <img
-                                                        className="w-full max-h-80 object-cover"
+                                                        className="w-full max-h-80 object-cover my-2"
                                                         src={
                                                             typeof content.data ===
                                                             "string"
@@ -173,20 +183,20 @@ export default function EditPost() {
                                                                   )
                                                         }
                                                     />
-                                                    <button
-                                                        className="btn btn-error btn-sm mt-2 flex-1"
+                                                    <div
+                                                        className="btn btn-error btn-sm w-full"
                                                         onClick={(e) =>
                                                             deleteDistantContent(
                                                                 content.order
                                                             )
                                                         }
                                                     >
-                                                        X
-                                                    </button>
+                                                        Supprimer image
+                                                    </div>
                                                 </figure>
                                             )
                                         ) : content.type === "text" ? (
-                                            <>
+                                            <div className="w-full">
                                                 <input
                                                     type="text"
                                                     name="data"
@@ -196,10 +206,10 @@ export default function EditPost() {
                                                             content.order
                                                         )
                                                     }
-                                                    className="input input-bordered w-full max-w-xs flex-2"
+                                                    className="input input-bordered w-full max-w-xs my-2"
                                                 />
-                                                <button
-                                                    className="btn btn-error btn-sm mt-2 flex-1"
+                                                <div
+                                                    className="btn btn-error btn-sm mt-2 w-full"
                                                     onClick={(e) =>
                                                         deleteContent(
                                                             content.order
@@ -207,10 +217,10 @@ export default function EditPost() {
                                                     }
                                                 >
                                                     X
-                                                </button>
-                                            </>
+                                                </div>
+                                            </div>
                                         ) : (
-                                            <>
+                                            <div className="w-full">
                                                 <input
                                                     name="data"
                                                     onChange={(e) =>
@@ -220,10 +230,10 @@ export default function EditPost() {
                                                         )
                                                     }
                                                     type="file"
-                                                    className="file-input file-input-bordered max-w-xs flex-2"
+                                                    className="file-input file-input-bordered max-w-xs my-2"
                                                 />
-                                                <button
-                                                    className="btn btn-error btn-sm mt-2 flex-1"
+                                                <div
+                                                    className="btn btn-error btn-sm mt-2 my-2 w-full"
                                                     onClick={(e) =>
                                                         deleteContent(
                                                             content.order
@@ -231,8 +241,8 @@ export default function EditPost() {
                                                     }
                                                 >
                                                     X
-                                                </button>
-                                            </>
+                                                </div>
+                                            </div>
                                         )}
                                     </div>
                                 ))}
@@ -241,18 +251,18 @@ export default function EditPost() {
                     </div>
 
                     <div className="form-control w-full max-w-xs">
-                        <button
+                        <div
                             className="btn w-full max-w-xs mt-2"
                             onClick={(e) => addContent("text")}
                         >
                             Add text
-                        </button>
-                        <button
+                        </div>
+                        <div
                             className="btn w-full max-w-xs mt-2"
                             onClick={(e) => addContent("file")}
                         >
                             Add image
-                        </button>
+                        </div>
                     </div>
                     <div className="form-control w-full max-w-xs">
                         <button
