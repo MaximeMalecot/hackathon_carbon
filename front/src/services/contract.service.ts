@@ -65,7 +65,8 @@ class ContractService {
         const data = await res.json();
 
         if (!res.ok) {
-            return toast.error(data.message);
+            toast.error(data.message);
+            return false;
         }
         toast.success("Contrat créé avec succès");
         return data;

@@ -32,7 +32,7 @@ export default function ContractsCreate() {
         async (e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             const res = await contractService.createContract(formData);
-            if (res.statusCode) return;
+            if (!res) return;
 
             navigate("/contracts");
         },
