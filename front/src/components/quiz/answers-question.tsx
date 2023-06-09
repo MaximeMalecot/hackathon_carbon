@@ -18,6 +18,7 @@ export const AnswersQuestion = ({
     setBackQuestion,
 }: AnswersQuestionProps) => {
     const [currentAnswer, setCurrentAnswer] = useState<string[]>([]);
+
     useEffect(() => {
         if (!initValue) return;
         setCurrentAnswer(initValue ?? []);
