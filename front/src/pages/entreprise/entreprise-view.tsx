@@ -1,20 +1,31 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import ContracteEntrepriseItem from "../../components/contracts/contract-entreprise-item";
+import { UserData } from "../../interfaces";
+import { ContractData } from "../../interfaces/contract";
 import entrepriseService from "../../services/entreprise.service";
 
 export default function EntrepriseView() {
     const params = useParams();
     const [entreprise, setEntreprise] = useState<any>();
-    console.log(params.id);
+    const [contracts, setContracts] = useState<Array<ContractData>>([]);
+    const [users, setUsers] = useState<Array<UserData>>([]);
 
     const fetchEntreprise = async () => {
         const entreprise = await entrepriseService.getById(params.id);
         setEntreprise(entreprise);
     };
 
+    const fetchContracts = async () => {
+        const contracts = await entrepriseService.getContractByEntrepriseId(
+            params.id
+        );
+        setContracts(contracts);
+    };
+
     useEffect(() => {
         fetchEntreprise();
-        console.log(entreprise);
+        fetchContracts();
     }, []);
 
     return (
@@ -28,47 +39,32 @@ export default function EntrepriseView() {
                         <img src="https://media.foot-national.com/18/2023/06/photo_article/825003/328818/1200-L-quipe-de-france-didier-deschamps-recadr-par-la-real-sociedad.jpg" />
                     </div>
                 </div>
-                <div className="form-control w-full max-w-xs">
-                    <label className="label">
-                        <span className="label-text">{entreprise?.name}</span>
-                    </label>
-                    <input
-                        type="text"
-                        name="name"
-                        placeholder="Ex: Citya Immobilier"
-                        className="input input-bordered w-full max-w-xs"
-                    />
-                </div>
-                <div className="form-control w-full max-w-xs">
-                    <label className="label">
-                        <span className="label-text">
-                            Adresse de l'entreprise
-                        </span>
-                    </label>
-                    <input
-                        name="address"
-                        type="text"
-                        placeholder="Ex: 242 Rue du Faubourg Saint-Antoine, Paris"
-                        className="input input-bordered w-full max-w-xs"
-                    />
-                </div>
-                <div className="form-control w-full max-w-xs">
-                    <label className="label">
-                        <span className="label-text">
-                            Image de l'entreprise
-                        </span>
-                    </label>
-                    <input
-                        name="file"
-                        type="file"
-                        className="file-input file-input-bordered w-full max-w-xs"
-                    />
-                </div>
-                <div className="form-control w-full max-w-xs">
-                    <button className="btn w-full max-w-xs mt-4">
-                        Enregister
-                    </button>
-                </div>
+                <p className="text-xl">{entreprise?.entreprise.address}</p>
+                <section>
+                    <table className="table table-xs w-full">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Position</th>
+                                <th>Consultant</th>
+                                <th>Entreprise</th>
+                                <th>status</th>
+                                <th>Début</th>
+                                <th>Fin</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {contracts.length > 0 &&
+                                contracts.map(
+                                    (contract: ContractData, index) => (
+                                        <ContracteEntrepriseItem
+                                            contract={contract}
+                                        />
+                                    )
+                                )}
+                        </tbody>
+                    </table>
+                </section>
             </div>
         </div>
     );

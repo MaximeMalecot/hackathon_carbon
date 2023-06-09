@@ -19,6 +19,25 @@ class EntrepriseService {
         }
     }
 
+    async getContractByEntrepriseId(id: string | undefined) {
+        try {
+            const res = await fetch(
+                `${API_ENDPOINT}/contracts?entrepriseId=${id}`,
+                {
+                    method: "GET",
+                    headers: {
+                        ...authHeader(),
+                    },
+                }
+            );
+            return await res.json();
+        } catch (e) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+    }
+
     async getById(id: string | undefined) {
         try {
             const res = await fetch(`${API_ENDPOINT}/entreprises/${id}`, {
