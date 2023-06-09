@@ -97,8 +97,12 @@ export class PostService {
     }
 
     async publish(id: Types.ObjectId) {
-        return await this.postModel.findByIdAndUpdate(id, {
-            status: PostStatus.PUBLISHED,
-        });
+        return await this.postModel.findByIdAndUpdate(
+            id,
+            {
+                status: PostStatus.PUBLISHED,
+            },
+            { new: true }
+        );
     }
 }

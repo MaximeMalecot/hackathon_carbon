@@ -1,10 +1,10 @@
 import { Content } from "./content";
 export interface Post {
-    id: string;
+    _id: string;
     title: string;
     content: Array<Content>;
     writer: string;
-    createAt: string;
+    createdAt: string;
     enterprise: string;
     status: string;
 }

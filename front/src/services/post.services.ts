@@ -99,6 +99,32 @@ class PostService {
             });
         }
     }
+
+    async publish(postId: string) {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/posts/publish/${postId}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...authHeader(),
+                },
+            });
+            if (res.ok) {
+                toast.success("Le post a bien été publié !", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            } else {
+                toast.error("Erreur: " + res.statusText, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+            return await res.json();
+        } catch (e) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+    }
 }
 
 export default new PostService();
