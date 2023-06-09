@@ -6,6 +6,8 @@ import { ROLES } from "./constants";
 import { useAuthContext } from "./contexts/auth.context";
 import { useAccess } from "./hooks/use-access";
 import CreationEntreprise from "./pages/entreprise/create-entreprise";
+import Entreprise from "./pages/entreprise/entreprise-view";
+import ListEntreprises from "./pages/entreprise/list-entreprise";
 import CreatePost from "./pages/posts/createPost";
 import { default as ListPosts, default as Posts } from "./pages/posts/posts";
 import CreateUser from "./pages/users/create";
@@ -138,8 +140,16 @@ function App() {
                                 )}
                                 <Route path={"/entreprise"}>
                                     <Route
+                                        path={":id"}
+                                        element={<Entreprise />}
+                                    />
+                                    <Route
                                         path={"create"}
                                         element={<CreationEntreprise />}
+                                    />
+                                    <Route
+                                        path={"liste"}
+                                        element={<ListEntreprises />}
                                     />
                                 </Route>
                                 <Route path="/profile" element={<Profile />} />

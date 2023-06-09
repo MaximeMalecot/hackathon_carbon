@@ -3,6 +3,56 @@ import { API_ENDPOINT } from "../constants/endpoints";
 import authHeader from "./auth.header";
 
 class EntrepriseService {
+    async getAll() {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/entreprises`, {
+                method: "GET",
+                headers: {
+                    ...authHeader(),
+                },
+            });
+            return await res.json();
+        } catch (e) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+    }
+
+    async getContractByEntrepriseId(id: string | undefined) {
+        try {
+            const res = await fetch(
+                `${API_ENDPOINT}/contracts?entrepriseId=${id}`,
+                {
+                    method: "GET",
+                    headers: {
+                        ...authHeader(),
+                    },
+                }
+            );
+            return await res.json();
+        } catch (e) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+    }
+
+    async getById(id: string | undefined) {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/entreprises/${id}`, {
+                method: "GET",
+                headers: {
+                    ...authHeader(),
+                },
+            });
+            return await res.json();
+        } catch (e) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+    }
     async create(name: string, address: string, file: any) {
         const data = new FormData();
         data.append("name", name);
