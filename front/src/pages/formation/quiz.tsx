@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Quiz from "../../components/quiz/quiz";
 import formationService from "../../services/formation.service";
 
@@ -22,8 +22,10 @@ export default function QuizPage() {
     const [quizData, setQuizData] = useState<{
         id: string;
         questions: any[];
+        chapterId: string;
     } | null>(null);
     const [result, setResult] = useState<QuizResult | null>(null);
+    const [formationId, setFormationId] = useState<string | any>(null);
 
     useEffect(() => {
         if (!isLoading) {
@@ -31,6 +33,13 @@ export default function QuizPage() {
         }
         setIsLoading(false);
     }, [isLoading]);
+
+    const fetchChapter = useCallback(async (formationId: string) => {
+        const res = await formationService.getChapterData(formationId);
+        if (!res.statusCode) {
+            setFormationId(res.formationId);
+        }
+    }, []);
 
     const fetchQuiz = useCallback(async () => {
         if (!params.id) return;
@@ -47,8 +56,11 @@ export default function QuizPage() {
                 setQuizData({
                     id: quizRes._id,
                     questions: quizRes.questions,
+                    chapterId: response.chapterId,
                 });
             }
+
+            fetchChapter(response.chapterId);
         }
     }, [params.id]);
 
@@ -59,10 +71,30 @@ export default function QuizPage() {
             </QuizLayout>
         );
 
-    if (result)
+    if (result && quizData)
         return (
             <QuizLayout>
-                <div>Result: {result.mark}</div>
+                <div className="hero min-h-screen bg-base-200">
+                    <div className="hero-content text-center">
+                        <div className="max-w-md">
+                            <h1 className="text-5xl font-bold">
+                                {result.mark}
+                            </h1>
+                            <p className="py-6">
+                                Provident cupiditate voluptatem et in. Quaerat
+                                fugiat ut assumenda excepturi exercitationem
+                                quasi. In deleniti eaque aut repudiandae et a id
+                                nisi.
+                            </p>
+                            <Link
+                                to={`/formation/${formationId}`}
+                                className="btn btn-primary"
+                            >
+                                Retour à la formation
+                            </Link>
+                        </div>
+                    </div>
+                </div>
             </QuizLayout>
         );
 
