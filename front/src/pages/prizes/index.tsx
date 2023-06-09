@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import PrizeItem from "../../components/prize/prize-item";
+import { useAuthContext } from "../../contexts/auth.context";
 import { Prize } from "../../interfaces/prize";
 import prizeService from "../../services/prize.service";
 
 export default function Prizes() {
+    const { reload } = useAuthContext();
     const [prizes, setPrizes] = useState<Prize[]>([]);
 
     const fetchPrizes = useCallback(async () => {
@@ -24,6 +26,7 @@ export default function Prizes() {
                     toast.success("Lot obtenu avec succès !", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
+                    reload();
                     await fetchPrizes();
                 } else {
                     throw new Error(res.message);

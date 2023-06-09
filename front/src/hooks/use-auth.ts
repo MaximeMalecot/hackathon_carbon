@@ -80,6 +80,7 @@ const useAuth = () => {
         logout,
         isConnected,
         register,
+        reload: getUser,
     };
 };
 
