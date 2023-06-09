@@ -12,7 +12,7 @@ export interface Formation {
 }
 
 export interface FormationChapters {
-    id: number;
+    id: string;
     order: number;
     name: string;
     resourceID: object;
@@ -23,20 +23,36 @@ export interface FormationDTO {
     _id: number;
     name: string;
     referent: string;
+    level: number;
 }
 
 export interface QuestionQuiz {
-    id: number;
+    id: string;
     label: string;
     answers: Answer[];
 }
 
 export interface Answer {
-    id: number;
+    id: string;
     label: string;
 }
 
+export interface CreateAnswersVM {
+    isCorrect: boolean;
+    label: string;
+}
+
+export interface CreateAnswersDTO {
+    label: string;
+    answers: CreateAnswersVM[];
+}
+
+export interface CreateQuizQuery {
+    id: string;
+    data: CreateAnswersDTO;
+}
+
 export interface SendAnswer {
-    questionId: number;
-    answers: number[];
+    questionId: string;
+    answers: string[];
 }

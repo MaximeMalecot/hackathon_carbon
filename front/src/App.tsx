@@ -8,6 +8,8 @@ import { useAccess } from "./hooks/use-access";
 import CreationEntreprise from "./pages/entreprise/create-entreprise";
 import Entreprise from "./pages/entreprise/entreprise-view";
 import ListEntreprises from "./pages/entreprise/list-entreprise";
+import CreatePost from "./pages/posts/createPost";
+import { default as ListPosts, default as Posts } from "./pages/posts/posts";
 import CreateUser from "./pages/users/create";
 import ListUsers from "./pages/users/list";
 import SpecificUser from "./pages/users/specific";
@@ -25,9 +27,17 @@ const Quiz = lazy(() => import("./pages/formation/quiz"));
 const CreationFormation = lazy(
     () => import("./pages/formation/creation-formation")
 );
+const CreationChapterFormation = lazy(
+    () => import("./pages/formation/create-chapter-formation")
+);
+const CreateQuestionQuiz = lazy(
+    () => import("./pages/formation/create-question-quiz")
+);
 
 const Profile = lazy(() => import("./pages/profile"));
 
+const Contracts = lazy(() => import("./pages/contracts"));
+const Contract = lazy(() => import("./pages/contracts/contract"));
 //#endregion
 
 function App() {
@@ -73,8 +83,15 @@ function App() {
                                             element={<CreationFormation />}
                                         />
                                         <Route
-                                            path={"quiz/create/:id"}
-                                            element={<CreationFormation />}
+                                            path="quiz/:id"
+                                            element={<CreateQuestionQuiz />}
+                                        />
+
+                                        <Route
+                                            path={":id"}
+                                            element={
+                                                <CreationChapterFormation />
+                                            }
                                         />
                                     </Route>
                                 )}
@@ -95,6 +112,31 @@ function App() {
                                             />
                                         )}
                                     </Route>
+                                )}
+                                {hasAccess([ROLES.NEWS_EDITOR]) && (
+                                    <Route path={"/gestion-posts"}>
+                                        <Route index element={<ListPosts />} />
+                                        <Route
+                                            path={"create"}
+                                            element={<CreatePost />}
+                                        />
+                                    </Route>
+                                )}
+                                {hasAccess([ROLES.ASSIGNMENT_EDITOR]) && (
+                                    <Route
+                                        path={"/contracts"}
+                                        element={<Contracts />}
+                                    />
+                                )}
+
+                                {hasAccess([
+                                    ROLES.ASSIGNMENT_EDITOR,
+                                    ROLES.USER,
+                                ]) && (
+                                    <Route
+                                        path="/contracts/:id"
+                                        element={<Contract />}
+                                    />
                                 )}
                                 <Route path={"/entreprise"}>
                                     <Route
@@ -117,6 +159,7 @@ function App() {
                         <Route path={"/login"} element={<Login />} />
 
                         <Route path={"*"} element={<NotFound />} />
+                        <Route path={"/posts"} element={<Posts />} />
                     </Route>
                 </Routes>
             </Suspense>

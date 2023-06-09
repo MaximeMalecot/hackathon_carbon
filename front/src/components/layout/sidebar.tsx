@@ -9,6 +9,7 @@ export default function Sidebar(props: any) {
         <ul className="menu bg-base-200 md:w-56 w-full rounded-box md:ml-2 ml-0 md:h-5/6 h-full md:flex justify-between">
             <div>
                 <li>
+                    <Link to={"/posts"}>Posts</Link>
                     <Link to={"/formation/liste"}>Formations</Link>
                 </li>
                 <li></li>
@@ -31,7 +32,23 @@ export default function Sidebar(props: any) {
                         </details>
                     </li>
                 )}
-
+                {hasAccess([ROLES.NEWS_EDITOR]) && (
+                    <li>
+                        <details open>
+                            <summary>Gestion posts</summary>
+                            <ul>
+                                <li>
+                                    <Link to={"/gestion-posts"}>Gestion</Link>
+                                </li>
+                                <li>
+                                    <Link to={"/gestion-posts/create"}>
+                                        Création de Post
+                                    </Link>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                )}
                 {hasAccess([ROLES.ACCOUNT_EDITOR, ROLES.VIEWER]) && (
                     <li>
                         <details open>
@@ -44,6 +61,18 @@ export default function Sidebar(props: any) {
                                     <Link to={"/gestion-user/create"}>
                                         Création de User
                                     </Link>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                )}
+                {hasAccess([ROLES.ASSIGNMENT_EDITOR]) && (
+                    <li>
+                        <details open>
+                            <summary>Gestion contrats</summary>
+                            <ul>
+                                <li>
+                                    <Link to={"/contracts"}>Gestion</Link>
                                 </li>
                             </ul>
                         </details>

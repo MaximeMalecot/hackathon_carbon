@@ -13,7 +13,7 @@ import { Contract, ContractSchema } from "./schemas/contract.schema";
             { name: Contract.name, schema: ContractSchema },
         ]),
         forwardRef(() => EntrepriseModule),
-        UsersModule,
+        forwardRef(() => UsersModule),
         forwardRef(() => DelivrableModule),
     ],
     controllers: [ContractController],
