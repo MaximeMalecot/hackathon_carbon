@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useAuthContext } from "../../contexts/auth.context";
 import { mapperFormationChapter } from "../../helpers";
 import { FORMATION_TYPE, FormationChapters } from "../../interfaces";
 import formationService from "../../services/formation.service";
 
 export default function FormationPage() {
+    const { reload } = useAuthContext();
     const [sortedChapters, setSortedChapters] = useState<FormationChapters[]>(
         []
     );
