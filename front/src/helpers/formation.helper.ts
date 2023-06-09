@@ -1,7 +1,13 @@
-import { Formation, FormationDTO } from "../interfaces";
+import {
+    Formation,
+    FormationChapterDTO,
+    FormationChapters,
+    FormationDTO,
+    QuestionQuiz,
+    QuizQuestionDTO,
+} from "../interfaces";
 
 export const mapperFormation = (formation: FormationDTO): Formation => {
-    
     return {
         id: formation._id,
         title: formation.name,
@@ -11,3 +17,22 @@ export const mapperFormation = (formation: FormationDTO): Formation => {
     };
 };
 
+export const mapperFormationChapter = (
+    formation: FormationChapterDTO
+): FormationChapters => {
+    return {
+        id: formation._id,
+        name: formation.name,
+        order: formation.order,
+        type: formation.type,
+        resourceID: {},
+    };
+};
+
+export const mapperQuizQuestion = (quiz: QuizQuestionDTO): QuestionQuiz => {
+    return {
+        id: quiz.quizId,
+        label: quiz.label,
+        answers: quiz.answers,
+    };
+};

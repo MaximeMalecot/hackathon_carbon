@@ -268,6 +268,32 @@ class FormationService {
         }
     }
 
+    async getQuizQuestionsWithoutAnswersCorrect(id: string) {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/quiz/${id}/questions`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...authHeader(),
+                },
+            });
+
+            const response = await res.json();
+
+            if (!res.ok) {
+                toast.error("Erreur: " + response.message, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+
+            return response;
+        } catch (e: any) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_LEFT,
+            });
+        }
+    }
+
     async getSelfFormations() {
         const res = await fetch(`${API_ENDPOINT}/formations/current/self`, {
             method: "GET",

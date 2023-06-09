@@ -39,6 +39,8 @@ export const CreateAnswers = ({ submit }: Props) => {
         const isCorrect = formData.some((x) => x.isCorrect);
         if (!isCorrect) return toast.error("Minimum 1 reponse correct");
         submit(formData);
+        setFormData([]);
+        setValue("");
     }, [formData, submit]);
 
     return (

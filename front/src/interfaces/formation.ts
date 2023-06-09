@@ -12,7 +12,7 @@ export interface Formation {
 }
 
 export interface FormationChapters {
-    id: number;
+    id: string;
     order: number;
     name: string;
     resourceID: object;
@@ -27,13 +27,13 @@ export interface FormationDTO {
 }
 
 export interface QuestionQuiz {
-    id: number;
+    id: string;
     label: string;
     answers: Answer[];
 }
 
 export interface Answer {
-    id: number;
+    id: string;
     label: string;
 }
 
@@ -53,6 +53,6 @@ export interface CreateQuizQuery {
 }
 
 export interface SendAnswer {
-    questionId: number;
-    answers: number[];
+    questionId: string;
+    answers: string[];
 }

@@ -1,48 +1,46 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 import { AnswersQuestion, Question } from "../../components";
-import { fractionToPercent } from "../../helpers";
-import { Answer, QuestionQuiz, SendAnswer } from "../../interfaces";
+import { fractionToPercent, mapperQuizQuestion } from "../../helpers";
+import { QuestionQuiz, SendAnswer } from "../../interfaces";
+import formationService from "../../services/formation.service";
 
 export default function Quiz() {
     const [currentQuestion, setCurrentQuestion] = useState(1);
     const [selectedAnswers, setSelectedAnswer] = useState<SendAnswer[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [questions, setQuestions] = useState<QuestionQuiz[]>([]);
+    const params = useParams<{ id: string }>();
 
-    const questions: QuestionQuiz[] = [
-        {
-            id: 1,
-            label: "What is the capital of France?",
-            answers: [
-                { id: 1, label: "New York" },
-                { id: 2, label: "London" },
-                { id: 3, label: "Paris" },
-                { id: 4, label: "Dublin" },
-            ] as Answer[],
-        },
-        {
-            id: 2,
-            label: "What is the capital of France?",
-            answers: [
-                { id: 1, label: "New York" },
-                { id: 2, label: "London" },
-                { id: 3, label: "Paris" },
-                { id: 4, label: "Dublin" },
-            ] as Answer[],
-        },
-        {
-            id: 3,
-            label: "What is the capital of France?",
-            answers: [
-                { id: 1, label: "New York" },
-                { id: 2, label: "London" },
-                { id: 3, label: "Paris" },
-                { id: 4, label: "Dublin" },
-            ] as Answer[],
-        },
-    ];
+    useEffect(() => {
+        if (!isLoading) {
+            fetchQuiz();
+        }
+        setIsLoading(false);
+    }, [isLoading]);
+
+    const fetchQuiz = useCallback(async () => {
+        const response = await formationService.getQuizByChapter(
+            params.id ?? ""
+        );
+
+        if (!response.statusCode) {
+            const res =
+                await formationService.getQuizQuestionsWithoutAnswersCorrect(
+                    response._id
+                );
+            if (!res.statusCode) {
+                res?.questions.map((item) => {
+                    const value = mapperQuizQuestion(item);
+                    setQuestions((prev) => [...prev, value]);
+                });
+            }
+        }
+    }, [params.id]);
 
     const currentQuestionId = useMemo(() => {
-        return questions[currentQuestion - 1].id;
-    }, [currentQuestion]);
+        return questions[currentQuestion - 1]?.id;
+    }, [currentQuestion, questions]);
 
     const currentAnswers = useMemo(() => {
         return (
@@ -56,10 +54,14 @@ export default function Quiz() {
     }, [selectedAnswers]);
 
     const setNextQuestion = useCallback(
-        (answers: number[]) => {
+        (answers: string[]) => {
+            console.log(answers, 'answers');
+            console.log(selectedAnswers, 'selected');
+            console.log(currentAnswers, "currentAnswers");
+            console.log(currentQuestionId, "currentQuestionId");
             if (currentAnswers) {
                 setSelectedAnswer(
-                    selectedAnswers.map((ele) =>
+                    selectedAnswers?.map((ele) =>
                         ele.questionId === currentQuestionId
                             ? { ...ele, answers }
                             : ele
@@ -78,13 +80,13 @@ export default function Quiz() {
             if (currentQuestion !== questions.length) {
                 setCurrentQuestion(currentQuestion + 1);
             } else {
-                return validateQuiz();
+                validateQuiz();
             }
         },
         [
             currentAnswers,
             currentQuestion,
-            questions.length,
+            questions,
             selectedAnswers,
             currentQuestionId,
             validateQuiz,
@@ -115,12 +117,12 @@ export default function Quiz() {
                     </div>
                     <Question
                         nbQuestion={currentQuestion}
-                        labelQuestion={questions[currentQuestion - 1].label}
+                        labelQuestion={questions[currentQuestion - 1]?.label}
                     />
                     <AnswersQuestion
                         initValue={currentAnswers}
                         nbQuestions={questions.length}
-                        answers={questions[currentQuestion - 1].answers}
+                        answers={questions[currentQuestion - 1]?.answers}
                         currentQuestion={currentQuestion}
                         setBackQuestion={setBackQuestion}
                         setNextQuestion={setNextQuestion}
