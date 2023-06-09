@@ -4,7 +4,6 @@ import {
     FormationChapters,
     FormationDTO,
     QuestionQuiz,
-    QuizQuestionDTO,
 } from "../interfaces";
 
 export const mapperFormation = (formation: FormationDTO): Formation => {
@@ -29,7 +28,7 @@ export const mapperFormationChapter = (
     };
 };
 
-export const mapperQuizQuestion = (question: QuizQuestionDTO): QuestionQuiz => {
+export const mapperQuizQuestion = (question: any): QuestionQuiz => {
     return {
         id: question._id,
         label: question.label,

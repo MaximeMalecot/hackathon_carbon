@@ -4,6 +4,7 @@ import {
     CreateAnswersDTO,
     CreateQuizChapterDto,
     FormationDTO,
+    QuestionQuiz,
 } from "../interfaces";
 import authHeader from "./auth.header";
 
@@ -302,6 +303,26 @@ class FormationService {
             },
         });
         return await res.json();
+    }
+
+    async completeQuiz(quizId: string, answers: QuestionQuiz[]) {
+        const res = await fetch(`${API_ENDPOINT}/quiz/complete`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                ...authHeader(),
+            },
+            body: JSON.stringify({
+                quizId,
+                answers,
+            }),
+        });
+
+        if (res.ok) {
+            return await res.json();
+        } else {
+            throw new Error("Erreur lors de la complétion du quiz");
+        }
     }
 }
 

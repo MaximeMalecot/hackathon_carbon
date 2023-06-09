@@ -11,12 +11,9 @@ export default function Quiz() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [questions, setQuestions] = useState<QuestionQuiz[]>([]);
     const params = useParams<{ id: string }>();
+    const [quizData, setQuizData] = useState<any | null>({});
 
     const currentQuestionId = useMemo(() => {
-        // console.log(
-        //     "questionsId",
-        //     questions.map((i) => i.id)
-        // );
         return questions[currentQuestion - 1]?.id;
     }, [currentQuestion, questions]);
 
@@ -40,34 +37,38 @@ export default function Quiz() {
         const response = await formationService.getQuizByChapter(params.id);
 
         if (!response.statusCode) {
-            const res =
+            const quizRes =
                 await formationService.getQuizQuestionsWithoutAnswersCorrect(
                     response._id
                 );
-            if (!res.statusCode) {
-                res?.questions.map((item: any) => {
+            if (!quizRes.statusCode) {
+                quizRes?.questions.map((item: any) => {
                     console.log(item, "item");
                     const value = mapperQuizQuestion(item);
                     setQuestions((prev) => [...prev, value]);
+                });
+                setQuizData({
+                    id: quizRes._id,
                 });
             }
         }
     }, [params.id]);
 
     const validateQuiz = useCallback(
-        (answers: any[]) => {
+        async (answers: any[]) => {
             try {
-                console.log(
-                    "ending with",
-                    answers.map((i) => {
-                        return { ...i, answers: i.answers.length };
-                    })
+                console.log(quizData.id, "quizId");
+                if (!quizData.id) return;
+                const res = await formationService.completeQuiz(
+                    quizData.id,
+                    answers
                 );
+                console.log(res, "res");
             } catch (e: any) {
                 console.log(e.message);
             }
         },
-        [selectedAnswers]
+        [selectedAnswers, quizData]
     );
 
     const setNextQuestion = useCallback(

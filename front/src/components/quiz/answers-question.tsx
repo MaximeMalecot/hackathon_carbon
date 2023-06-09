@@ -38,7 +38,6 @@ export const AnswersQuestion = ({
     );
 
     const nextQuestion = useCallback(() => {
-        console.log("responding with", currentAnswer);
         setNextQuestion(currentAnswer);
         setCurrentAnswer([]);
     }, [currentAnswer, setNextQuestion]);
