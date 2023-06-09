@@ -58,7 +58,7 @@ export default function CreatePrize() {
         <div>
             <form onSubmit={handleSubmit}>
                 <div className="flex flex-col items-center h-screen">
-                    <h1>Création d'une entreprise</h1>
+                    <h1>Création d'un prix</h1>
                     <div className="form-control w-full max-w-xs">
                         <label className="label">
                             <span className="label-text">Nom du prix</span>
