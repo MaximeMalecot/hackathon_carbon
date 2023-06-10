@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import PrizeItemManage from "../../components/prize/prize-manage-item";
 import { useAuthContext } from "../../contexts/auth.context";
@@ -42,7 +43,15 @@ export default function ManagePrizes() {
 
     return (
         <div>
-            <h1 className={"text-xl"}>Prizes</h1>
+            <div className="flex justify-between">
+                <h1 className="text-4xl mb-5">Prix</h1>
+                <Link
+                    to="/gestion-prizes/create"
+                    className="btn btn-primary text-neutral"
+                >
+                    Créer un prix
+                </Link>
+            </div>
             {prizes.length > 0 ? (
                 <div className="grid grid-cols-3 gap-4">
                     {prizes.map((prize, index) => (
@@ -54,7 +63,7 @@ export default function ManagePrizes() {
                     ))}
                 </div>
             ) : (
-                <p>There is no prize</p>
+                <p>Il n'y a actuellement aucun prix échangeable.</p>
             )}
         </div>
     );

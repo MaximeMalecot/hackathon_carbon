@@ -20,10 +20,12 @@ export default function Transactions() {
 
     return (
         <div>
-            <h1>Historique des prix</h1>
-            {transactions.length < 0 ? (
+            <div className="flex justify-between">
+                <h1 className="text-4xl mb-5">Historique d'échange de prix</h1>
+            </div>{" "}
+            {transactions.length < 1 ? (
                 <div>
-                    <p>Vous n'avez aucune transactions</p>
+                    <p>Aucun échange trouvé.</p>
                 </div>
             ) : (
                 <div className="overflow-x-auto">
