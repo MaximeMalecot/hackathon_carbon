@@ -58,7 +58,9 @@ export default function CreateUser() {
 
     return (
         <div>
-            <h1 className="text-3xl font-bold">Création d'un utilisateur</h1>
+            <h1 className="text-3xl font-bold text-center uppercase">
+                Création d'un utilisateur
+            </h1>
             <div className="mt-5">
                 <div className="form-control">
                     <label className="label">
@@ -112,9 +114,12 @@ export default function CreateUser() {
                     <label className="label">
                         <span className="label-text">Roles</span>
                     </label>
-                    <div className="flex flex-wrap">
+                    <div className="flex flex-wrap justify-between">
                         {Object.values(ROLES).map((role) => (
-                            <div className="p-1 w-60 card bordered" key={role}>
+                            <div
+                                className="p-1 w-60 card bordered mt-2"
+                                key={role}
+                            >
                                 <div className="form-control">
                                     <label className="cursor-pointer label">
                                         <span className="label-text">
@@ -134,7 +139,7 @@ export default function CreateUser() {
                         ))}
                     </div>
                 </div>
-                <div className="form-control">
+                <div className="form-control mt-2">
                     <button className="btn btn-primary" onClick={handleSave}>
                         Créer
                     </button>

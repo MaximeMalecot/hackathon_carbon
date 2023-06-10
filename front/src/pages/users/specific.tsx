@@ -65,28 +65,29 @@ export default function SpecificUser() {
     return (
         user && (
             <div className="formation-liste">
-                <h1 className="text-4xl mb-5">User</h1>
+                <h1 className="text-3xl font-bold text-center uppercase">
+                    Modification d'un utilisateur
+                </h1>
 
                 {hasAccess([ROLES.ACCOUNT_EDITOR]) ? (
                     <>
-                        {user._id !== data?._id && (
-                            <button
-                                className="btn btn-error"
-                                onClick={() => deleteUser(user._id)}
-                            >
-                                Delete
-                            </button>
-                        )}
                         <section>
-                            <p>
-                                Name: {user?.firstName + " " + user?.lastName}
+                            <p className="text-center mt-5">
+                                <span className="font-bold"> Nom : </span>
+                                {user?.firstName + " " + user?.lastName}
                             </p>
-                            <p>Email: {user?.email}</p>
-                            <div>Roles</div>
-                            <section>
+                            <p className="text-center">
+                                <span className="font-bold mt-5">
+                                    {" "}
+                                    Email :{" "}
+                                </span>
+                                {user?.email}
+                            </p>
+                            <div className="font-bold mt-5">Roles :</div>
+                            <div className="flex flex-wrap justify-between">
                                 {Object.values(ROLES).map((role) => (
                                     <div
-                                        className="p-1 w-60 card bordered"
+                                        className="p-1 w-60 card bordered mt-2"
                                         key={role}
                                     >
                                         <div className="form-control">
@@ -113,13 +114,23 @@ export default function SpecificUser() {
                                         </div>
                                     </div>
                                 ))}
-                            </section>
-                            <button
-                                className="btn btn-primary"
-                                onClick={handleSave}
-                            >
-                                Save
-                            </button>
+                            </div>
+                            <div className="form-control mt-2">
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={handleSave}
+                                >
+                                    Enregistrer
+                                </button>
+                            </div>
+                            {user._id !== data?._id && (
+                                <div
+                                    className="btn btn-error w-full mt-2"
+                                    onClick={() => deleteUser(user._id)}
+                                >
+                                    Supprimer
+                                </div>
+                            )}
                         </section>
                     </>
                 ) : (
