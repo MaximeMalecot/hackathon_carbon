@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import FormationService from "../../services/formation.service";
@@ -8,18 +8,30 @@ export default function CreationFormation() {
 
     const [formData, setFormData] = useState({
         name: "",
-        level: 100,
+        level: 200,
     });
+
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [levels, setLevels] = useState<number[]>([]);
+
+    useEffect(() => {
+        if (!isLoading) {
+            fetchLevels();
+        }
+        setIsLoading(false);
+    }, [isLoading]);
 
     const handleSubmit = useCallback(
         async (e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             let res;
             try {
-                console.log(formData);
                 const { name, level } = formData;
                 if (!name || !level) throw new Error("Missing field(s)");
-                res = await FormationService.createFormation(formData);
+                res = await FormationService.createFormation({
+                    ...formData,
+                    level: parseInt(level.toString()),
+                });
                 if (res._id) {
                     navigate(`/gestion-formations/${res._id}`);
                 }
@@ -31,11 +43,11 @@ export default function CreationFormation() {
                 setFormData({ name: "", level: 100 });
             }
         },
-        [formData]
+        [formData, navigate]
     );
 
     const handleChange = useCallback(
-        (e: React.ChangeEvent<HTMLInputElement>) => {
+        (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
             setFormData((prev) => ({
                 ...prev,
                 [e.target.name]: e.target.value,
@@ -43,6 +55,12 @@ export default function CreationFormation() {
         },
         []
     );
+
+    const fetchLevels = async () => {
+        const levels = await FormationService.getFormationLevel();
+        if (!levels) return;
+        setLevels(levels);
+    };
     return (
         <div>
             <h1 className="text-4xl mb-5">Création de formation</h1>
@@ -62,21 +80,30 @@ export default function CreationFormation() {
                             className="input input-bordered w-full max-w-xs"
                             value={formData.name}
                         />
-                        <label className="label">
-                            <span className="label-text">
-                                Points récompensés
-                            </span>
-                        </label>
-                        <input
-                            onChange={handleChange}
-                            type="number"
-                            name="level"
-                            step="50"
-                            min={100}
-                            className="input input-bordered w-full max-w-xs"
-                            value={formData.level}
-                            max={500}
-                        />
+                        {levels.length !== 0 && (
+                            <>
+                                <label className="label">
+                                    <span className="label-text">
+                                        Points récompensés
+                                    </span>
+                                </label>
+                                <select
+                                    className="select select-primary w-full max-w-xs mb-5"
+                                    name="level"
+                                    id=""
+                                    onChange={handleChange}
+                                >
+                                    <option defaultValue="">
+                                        Choisir un niveau
+                                    </option>
+                                    {levels.map((level, index) => (
+                                        <option key={index} value={level}>
+                                            {level}
+                                        </option>
+                                    ))}
+                                </select>
+                            </>
+                        )}
                     </div>
                     <div className="form-control w-full max-w-xs">
                         <button className="btn w-full max-w-xs mt-4">
