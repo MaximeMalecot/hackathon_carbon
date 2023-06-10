@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import RedMedal from "../../assets/icons/red-medal.png";
 import { useAuthContext } from "../../contexts/auth.context";
@@ -6,14 +6,31 @@ import { useAuthContext } from "../../contexts/auth.context";
 export default function Header(props: any) {
     const navigate = useNavigate();
     const { isConnected, data, logout } = useAuthContext();
+    const menuRef = useRef<HTMLHeadElement>(null);
+    const subMenuRef = useRef<HTMLDetailsElement>(null);
 
     const handleLogout = useCallback(() => {
         logout();
         navigate("/login");
     }, []);
 
+    useEffect(() => {
+        const cb = () => {
+            if (!subMenuRef?.current) return;
+            subMenuRef.current?.removeAttribute("open");
+        };
+
+        if (menuRef.current) {
+            menuRef.current.addEventListener("focusout", cb);
+
+            return () => {
+                menuRef.current?.removeEventListener("focusout", cb);
+            };
+        }
+    }, [menuRef]);
+
     return (
-        <header style={{ position: "relative", zIndex: 10000 }}>
+        <header ref={menuRef} style={{ position: "relative", zIndex: 10000 }}>
             <nav className="navbar bg-primary text-neutral-content">
                 <div className="flex-1">
                     <Link
@@ -31,7 +48,7 @@ export default function Header(props: any) {
                     <ul className="menu menu-horizontal px-1 flex items-center relative z-100">
                         {isConnected ? (
                             <li className="content-center">
-                                <details>
+                                <details ref={subMenuRef}>
                                     <summary className="text-neutral">
                                         <span className="text-xs">
                                             {data?.experiencePoints} Points
