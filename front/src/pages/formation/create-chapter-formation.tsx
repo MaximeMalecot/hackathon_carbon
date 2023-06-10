@@ -36,7 +36,6 @@ export default function CreationChapterFormation() {
                     id,
                     data,
                 });
-                console.log(res);
                 if (res?.quiz?._id) {
                     console.log(res.quiz._id);
                     navigate(`/gestion-formations/quiz/${res.quiz._id}`);
