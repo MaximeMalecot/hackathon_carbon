@@ -43,7 +43,7 @@ export const CreateRessource = ({ submit }: Props) => {
     return (
         <>
             <label className="label">
-                <span className="label-text">Title quiz</span>
+                <span className="label-text">Titre de la ressource</span>
             </label>
             <input
                 onChange={handleChange}

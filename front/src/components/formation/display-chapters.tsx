@@ -22,29 +22,20 @@ export const DisplayChapters = () => {
             return;
         }
 
-        for (let chapter of chaptersRes) {
+        chaptersRes.forEach(async (chapter, index) => {
             if (chapter.type === ChapterTypes.QUIZ.toUpperCase()) {
                 const res = await FormationService.getQuizByChapter(
                     chapter._id
                 );
                 console.log(res, "res");
                 if (!res.statusCode) {
-                    setQuizzes((prev) => [...prev, res]);
+                    setQuizzes((prev) => [
+                        ...prev,
+                        { ...res, indexChapter: index },
+                    ]);
                 }
             }
-        }
-
-        // chaptersRes.map(async (element: any) => {
-        //     if (element.type === ChapterTypes.QUIZ.toUpperCase()) {
-        //         const res = await FormationService.getQuizByChapter(
-        //             element._id
-        //         );
-        //         console.log(res, "res");
-        //         if (!res.statusCode) {
-        //             setQuizzes([...quizzes, res]);
-        //         }
-        //     }
-        // });
+        });
     };
     useEffect(() => {
         if (!isLoading) {
@@ -52,6 +43,12 @@ export const DisplayChapters = () => {
         }
         setIsLoading(false);
     }, [isLoading]);
+
+    const getQuizId = (index: number) => {
+        const quiz = quizzes.find((quiz) => quiz.indexChapter === index);
+        return quiz?._id;
+    };
+
     return (
         <section className="grid xl:grid-cols-3 sm:grid-cols-2 gap-4 mt-5">
             {chapters.length > 0 &&
@@ -69,7 +66,9 @@ export const DisplayChapters = () => {
                                 ChapterTypes.QUIZ.toUpperCase() && (
                                 <div className="card-actions justify-end">
                                     <Link
-                                        to={`/gestion-formations/quiz/${quizzes[index]?._id}`}
+                                        to={`/gestion-formations/quiz/${getQuizId(
+                                            index
+                                        )}`}
                                     >
                                         <button className="btn btn-primary">
                                             Voir le chapitre

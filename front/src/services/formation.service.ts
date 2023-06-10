@@ -1,7 +1,6 @@
 import { toast } from "react-toastify";
 import { API_ENDPOINT } from "../constants/endpoints";
 import {
-    CreateAnswersDTO,
     CreateQuizChapterDto,
     FormationDTO,
     QuestionQuiz,
@@ -18,10 +17,6 @@ interface CreateChapterQuery {
     data: CreateQuizChapterDto;
 }
 
-interface CreateQuizQuery {
-    id: string;
-    data: CreateAnswersDTO[];
-}
 class FormationService {
     async createFormation(formData: CreateFormationQuery) {
         try {
@@ -265,7 +260,7 @@ class FormationService {
             const response = await res.json();
 
             if (res.ok) {
-                toast.success("Le quiz a bien été créée !");
+                toast.success("La question a bien été créée !");
             } else {
                 toast.error("Erreur: " + response.message);
             }
@@ -381,6 +376,32 @@ class FormationService {
                 position: toast.POSITION.TOP_LEFT,
             });
         }
+    }
+
+    async getFormationLevel(): Promise<number[] | null> {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/formations/levels`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...authHeader(),
+                },
+            });
+
+            const response = await res.json();
+
+            if (!res.ok) {
+                toast.error("Erreur: " + response.message);
+                return null;
+            }
+
+            return response;
+        } catch (e: any) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_LEFT,
+            });
+        }
+        return null;
     }
 }
 

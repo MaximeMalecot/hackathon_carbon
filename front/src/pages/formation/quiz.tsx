@@ -82,18 +82,25 @@ export default function QuizPage() {
     if (result && quizData)
         return (
             <QuizLayout>
-                <div className="hero min-h-screen bg-base-200">
+                <div className="hero">
                     <div className="hero-content text-center">
                         <div className="max-w-md">
-                            <h1 className="text-5xl font-bold">
-                                {result.mark}
-                            </h1>
-                            <p className="py-6">
-                                Provident cupiditate voluptatem et in. Quaerat
-                                fugiat ut assumenda excepturi exercitationem
-                                quasi. In deleniti eaque aut repudiandae et a id
-                                nisi.
+                            <p className="text-3xl py-6">
+                                Voici votre résultat pour ce quiz :
                             </p>
+                            <h1 className="text-5xl font-bold mb-5">
+                                <div
+                                    className="radial-progress text-success bg-gray-100"
+                                    style={{
+                                        "--value": result.mark.replace("%", ""),
+                                        "--size": "12rem",
+                                        "--thickness": "10px",
+                                    }}
+                                >
+                                    {result.mark}
+                                </div>
+                            </h1>
+
                             <Link
                                 to={`/formation/${formationId}`}
                                 className="btn btn-primary"
