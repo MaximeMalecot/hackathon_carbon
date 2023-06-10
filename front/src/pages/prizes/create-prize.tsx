@@ -1,9 +1,11 @@
 import { useCallback, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import prizeService from "../../services/prize.service";
 
 export default function CreatePrize() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: "",
         price: 0,
@@ -24,7 +26,10 @@ export default function CreatePrize() {
 
                 if (price < 0) throw new Error("Price must be positive");
 
-                await prizeService.create(formData);
+                const res = await prizeService.create(formData);
+                if (res._id) {
+                    navigate(`/prizes`);
+                }
             } catch (e: any) {
                 toast.error("Erreur: " + e.message);
             }
@@ -100,7 +105,10 @@ export default function CreatePrize() {
                             className="input input-bordered w-full max-w-xs"
                         />
                     </div>
-                    <div className="form-control w-full max-w-xs">
+                    <div
+                        className="form-control w-full max-w-xs"
+                        title="Fichier image"
+                    >
                         <label className="label">
                             <span className="label-text">Image du lot</span>
                         </label>
