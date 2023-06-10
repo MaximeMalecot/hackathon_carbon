@@ -25,54 +25,58 @@ docker compose exec server npm run db:seed; \
 docker compose restart server
 ```
 
+## Liste des routes disponibles (swagger)
+
+Assurez-vous que le projet est bien lancé en local et que le port 3000 n'est pas déjà attribué, si tout est bon rendez-vous à l'url suivante:
+http://localhost:3000/api
+Tous les endpoints api devraient y être listés.
+
 ## Liste des fonctionnalités
 
-| Fonctionnalité (front et back)                       | Description | Développeur(s) |
-| ---------------------------------------------------- | ----------- | -------------- |
-| Se connecter                                         |             |                |
-| Créer un compte utilisateur                          |             |                |
-| Afficher son profil                                  |             |                |
-| Lister les utilisateurs                              |             |                |
-| Afficher un utilisateur                              |             |                |
-| Supprimer un utilisateur                             |             |                |
-| Modifier les permissions d'un utilisateur            |             |                |
-| Créer une entreprise                                 |             |                |
-| Modifier une entreprise                              |             |                |
-| Afficher les entreprises                             |             |                |
-| Voir une entreprise et ses consultants               |             |                |
-| Créer un contrat                                     |             |                |
-| Afficher tous les contrats                           |             |                |
-| Voir un contrat                                      |             |                |
-| Mettre à jour un contrat                             |             |                |
-| Annuler un contrat                                   |             |                |
-| Mettre fin à un contrat                              |             |                |
-| Créer un délivrable pour un contrat                  |             |                |
-| Voir les délivrables liés à un contrat               |             |                |
-| Supprimer un délivrable                              |             |                |
-| Créer une formation                                  |             |                |
-| Accéder à une formation                              |             |                |
-| Voir sa progression dans une formation               |             |                |
-| Voir ses formations en cours                         |             |                |
-| Voir la progression d'une formation d'un utilisateur |             |                |
-| Voir les formations en cours d'un utilisateur        |             |                |
-| Créer un chapitre pour une formation                 |             |                |
-| Accéder au chapitre d'une formation                  |             |                |
-| Modifier le chapitre d'une formation                 |             |                |
-| Terminer un chapitre de formation                    |             |                |
-| Créer un quiz lié à un chapitre                      |             |                |
-| Récupérer un quiz                                    |             |                |
-| Répondre à un quiz                                   |             |                |
-| Modifier un quiz                                     |             |                |
-| Créer une ressource liée à un chapitre               |             |                |
-| Supprimer une ressource                              |             |                |
-| Accéder à une ressource                              |             |                |
-| Créer un post                                        |             |                |
-| Supprimer un post                                    |             |                |
-| Voir les posts                                       |             |                |
-| Voir un post                                         |             |                |
-| Modifier un post                                     |             |                |
-| Publier un post                                      |             |                |
-| Ajouter un lot                                       |             |                |
-| Afficher tous les lots                               |             |                |
-| Réduire le stock d'un lot à 0                        |             |                |
-| Echanger des points contre un lot                    |             |                |
+| Fonctionnalité (front et back)                       | Description                 | Développeur(s)   |
+| ---------------------------------------------------- | --------------------------- | ---------------- |
+| Se connecter                                         |                             | Maxime, Julian   |
+| Créer un compte utilisateur                          |                             | Maxime           |
+| Afficher son profil                                  |                             | Julian           |
+| Lister les utilisateurs                              |                             | Maxime, Sacha    |
+| Afficher un utilisateur                              |                             | Maxime, Sacha    |
+| Supprimer un utilisateur                             |                             | Maxime, Sacha    |
+| Modifier les permissions d'un utilisateur            | Attributions de rôles       | Maxime, Sacha    |
+| Créer une entreprise                                 |                             | Maxime, Sacha    |
+| Afficher les entreprises                             |                             | Sacha, Maxime    |
+| Voir une entreprise et ses consultants               |                             | Sacha, Maxime    |
+| Créer un contrat                                     |                             | Maxime, Clarence |
+| Afficher tous les contrats                           |                             | Maxime, Julian   |
+| Voir un contrat                                      |                             | Maxime, Julian   |
+| Annuler un contrat                                   |                             | Maxime, Julian   |
+| Mettre fin à un contrat                              |                             | Maxime, Julian   |
+| Créer un délivrable pour un contrat                  |                             | Maxime, Julian   |
+| Voir les délivrables liés à un contrat               |                             | Maxime, Julian   |
+| Supprimer un délivrable                              |                             | Maxime, Julian   |
+| Créer une formation                                  |                             | Clarence, Julian |
+| Accéder à une formation                              |                             | Clarence, Julian |
+| Voir sa progression dans une formation               |                             | Clarence, Julian |
+| Voir ses formations en cours                         |                             | Clarence, Julian |
+| Voir la progression d'une formation d'un utilisateur |                             | Clarence, Julian |
+| Voir les formations en cours d'un utilisateur        |                             | Clarence, Julian |
+| Créer un chapitre pour une formation                 |                             | Clarence, Julian |
+| Accéder au chapitre d'une formation                  |                             | Clarence, Julian |
+| Modifier le chapitre d'une formation                 |                             | Clarence, Julian |
+| Terminer un chapitre de formation                    |                             | Clarence, Julian |
+| Créer un quiz lié à un chapitre                      |                             | Clarence, Julian |
+| Récupérer un quiz                                    |                             | Clarence, Julian |
+| Répondre à un quiz                                   |                             | Clarence, Julian |
+| Modifier un quiz                                     |                             | Clarence, Julian |
+| Créer une ressource liée à un chapitre               |                             | Clarence, Julian |
+| Supprimer une ressource                              |                             | Clarence, Julian |
+| Accéder à une ressource                              |                             | Clarence, Julian |
+| Créer un post                                        |                             | Maxime, Sacha    |
+| Supprimer un post                                    |                             | Maxime, Sacha    |
+| Voir les posts                                       |                             | Maxime, Sacha    |
+| Voir un post                                         |                             | Maxime, Sacha    |
+| Modifier un post                                     |                             | Maxime, Sacha    |
+| Publier un post                                      | Mettre à jour sa visibilité | Maxime, Sacha    |
+| Ajouter un lot                                       |                             | Maxime, Julian   |
+| Afficher tous les lots                               |                             | Maxime, Julian   |
+| Réduire le stock d'un lot à 0                        |                             | Maxime, Julian   |
+| Echanger des points contre un lot                    |                             | Maxime, Julian   |
