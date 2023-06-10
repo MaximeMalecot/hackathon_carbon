@@ -7,7 +7,7 @@ export default function Header(props: any) {
     const navigate = useNavigate();
     const { isConnected, data, logout } = useAuthContext();
     const menuRef = useRef<HTMLHeadElement>(null);
-    const subMenuRef = useRef<HTMLDetailsElement>(null);
+    const subMenuRef = useRef<HTMLDivElement>(null);
 
     const handleLogout = useCallback(() => {
         logout();
@@ -15,16 +15,19 @@ export default function Header(props: any) {
     }, []);
 
     useEffect(() => {
-        const cb = () => {
-            if (!subMenuRef?.current) return;
-            subMenuRef.current?.removeAttribute("open");
+        const cb = (e: any) => {
+            if (!subMenuRef?.current || !menuRef?.current) return;
+            if (menuRef.current.contains(e.target)) return;
+            subMenuRef.current
+                .getElementsByTagName("details")[0]
+                .removeAttribute("open");
         };
 
         if (menuRef.current) {
-            menuRef.current.addEventListener("focusout", cb);
+            document.addEventListener("click", cb);
 
             return () => {
-                menuRef.current?.removeEventListener("focusout", cb);
+                document.removeEventListener("click", cb);
             };
         }
     }, [menuRef]);
@@ -44,11 +47,11 @@ export default function Header(props: any) {
                         />
                     </Link>
                 </div>
-                <div className="flex-none">
+                <div ref={subMenuRef} className="flex-none">
                     <ul className="menu menu-horizontal px-1 flex items-center relative z-100">
                         {isConnected ? (
                             <li className="content-center">
-                                <details ref={subMenuRef}>
+                                <details>
                                     <summary className="text-neutral">
                                         <span className="text-xs">
                                             {data?.experiencePoints} Points
