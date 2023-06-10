@@ -9,9 +9,18 @@ export default function Sidebar(props: any) {
         <ul className="menu bg-primary text-neutral md:w-56 w-full ml-0 h-full md:flex justify-between">
             <div>
                 <li>
-                    <Link to={"/posts"}>Posts</Link>
-                    <Link to={"/formation/liste"}>Formations</Link>
-                    <Link to={"/prizes"}>Échanger ses points</Link>
+                    <Link className="hover:bg-secondary" to={"/posts"}>
+                        Posts
+                    </Link>
+                    <Link
+                        className="hover:bg-secondary"
+                        to={"/formation/liste"}
+                    >
+                        Formations
+                    </Link>
+                    <Link className="hover:bg-secondary" to={"/prizes"}>
+                        Échanger ses points
+                    </Link>
                 </li>
                 <li></li>
                 {hasAccess([ROLES.TEACHER]) && (
@@ -111,7 +120,10 @@ export default function Sidebar(props: any) {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to={"/contracts/create"}>
+                                    <Link
+                                        className="hover:bg-secondary"
+                                        to={"/contracts/create"}
+                                    >
                                         Création de contrat
                                     </Link>
                                 </li>
@@ -155,10 +167,18 @@ export default function Sidebar(props: any) {
                             </summary>
                             <ul>
                                 <li>
-                                    <Link to={"/gestion-prizes"}>Gestion</Link>
+                                    <Link
+                                        className="hover:bg-secondary"
+                                        to={"/gestion-prizes"}
+                                    >
+                                        Gestion
+                                    </Link>
                                 </li>
                                 <li>
-                                    <Link to={"/gestion-prizes/create"}>
+                                    <Link
+                                        className="hover:bg-secondary"
+                                        to={"/gestion-prizes/create"}
+                                    >
                                         Création de prix
                                     </Link>
                                 </li>

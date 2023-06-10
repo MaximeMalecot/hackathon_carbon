@@ -110,14 +110,14 @@ export default function CreateUser() {
                         onChange={handleInput}
                     />
                 </div>
-                <div className="form-control">
+                <div className="form-control ">
                     <label className="label">
                         <span className="label-text">Roles</span>
                     </label>
                     <div className="flex flex-wrap justify-between">
                         {Object.values(ROLES).map((role) => (
                             <div
-                                className="p-1 w-60 card bordered mt-2"
+                                className="p-1 w-1/2 card bordered mt-2"
                                 key={role}
                             >
                                 <div className="form-control">
