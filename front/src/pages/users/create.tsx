@@ -44,13 +44,13 @@ export default function CreateUser() {
         let response = (await userService.create(user)) as any;
         if (response.status === 201) {
             toast.success("L'utilisateur a bien été créé !", {
-                position: toast.POSITION.TOP_RIGHT,
+                position: toast.POSITION.BOTTOM_RIGHT,
             });
             navigate("/gestion-user");
         } else {
             response = await response.json();
             toast.error(JSON.stringify(response?.message), {
-                position: toast.POSITION.TOP_RIGHT,
+                position: toast.POSITION.BOTTOM_RIGHT,
             });
             console.log(response);
         }

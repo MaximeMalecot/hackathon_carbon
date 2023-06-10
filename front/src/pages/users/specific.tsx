@@ -32,7 +32,7 @@ export default function SpecificUser() {
         if (response) {
             setUser(response);
             toast.success("Les rôles ont bien été modifiés !", {
-                position: toast.POSITION.TOP_RIGHT,
+                position: toast.POSITION.BOTTOM_RIGHT,
             });
         }
     }, [user]);
@@ -56,7 +56,7 @@ export default function SpecificUser() {
         const response = await userService.deleteUser(id);
         if (response) {
             toast.success("L'utilisateur a bien été supprimé !", {
-                position: toast.POSITION.TOP_RIGHT,
+                position: toast.POSITION.BOTTOM_RIGHT,
             });
             navigate("/gestion-user");
         }

@@ -52,7 +52,7 @@ export default function CreatePost() {
             navigate("/gestion-posts");
         } catch (e: any) {
             toast.error("Erreur: " + e.message, {
-                position: toast.POSITION.TOP_RIGHT,
+                position: toast.POSITION.BOTTOM_RIGHT,
             });
         }
     }, [formData, contents]);

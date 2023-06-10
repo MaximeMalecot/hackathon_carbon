@@ -32,7 +32,7 @@ export default function ManagePrizes() {
         } catch (e: any) {
             console.log(e);
             toast.error("Erreur: " + e.message, {
-                position: toast.POSITION.TOP_RIGHT,
+                position: toast.POSITION.BOTTOM_RIGHT,
             });
         }
     }, []);

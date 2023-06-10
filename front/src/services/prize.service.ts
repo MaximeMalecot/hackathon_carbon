@@ -79,7 +79,7 @@ class PrizeService {
             return await res.json();
         } catch (e) {
             toast.error("Error :" + e, {
-                position: toast.POSITION.TOP_RIGHT,
+                position: toast.POSITION.BOTTOM_RIGHT,
             });
         }
     }

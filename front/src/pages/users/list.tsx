@@ -25,7 +25,7 @@ export default function ListUsers() {
         if (response) {
             fetchUsers();
             toast.success("L'utilisateur a bien été supprimé !", {
-                position: toast.POSITION.TOP_RIGHT,
+                position: toast.POSITION.BOTTOM_RIGHT,
             });
         }
     }, []);
