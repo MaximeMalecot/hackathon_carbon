@@ -34,27 +34,29 @@ export function Post(props: {
     const sortContents = contents.sort(function (a, b) {
         return a.order - b.order;
     });
+
     return (
         <div className="card w-1/2 bg-base-100 shadow-xl border p-2 my-2">
             {entreprise && <p>Entreprise: {entreprise?.name}</p>}
             <h1 className="text-center my-3">{props.title}</h1>
-            {sortContents.map((content, index) => {
-                return (
-                    <div key={index}>
-                        {content.type === "text" ? (
-                            <p className="my-1">{content.data}</p>
-                        ) : (
-                            <figure className="my-1">
-                                <img
-                                    className="w-full max-h-80 object-cover"
-                                    src={content.data}
-                                    alt={props.title}
-                                />
-                            </figure>
-                        )}
-                    </div>
-                );
-            })}
+            {contents?.length > 0 &&
+                sortContents.map((content, index) => {
+                    return (
+                        <div key={index}>
+                            {content.type === "text" ? (
+                                <p className="my-1">{content.data}</p>
+                            ) : (
+                                <figure className="my-1">
+                                    <img
+                                        className="w-full max-h-80 object-cover"
+                                        src={content.data}
+                                        alt={props.title}
+                                    />
+                                </figure>
+                            )}
+                        </div>
+                    );
+                })}
             <div className="flex justify-between">
                 <div>{props.writer}</div>
                 <div className="">

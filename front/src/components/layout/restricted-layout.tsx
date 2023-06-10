@@ -17,7 +17,7 @@ export default function RestrictedLayout() {
             )}
             <main className="w-full height-main-container">
                 <div className="flex w-full h-full">
-                    <section className="container h-full pt-5 px-5 overflow-y-auto">
+                    <section className="container h-full pt-5 px-5">
                         <Login />
                     </section>
                 </div>

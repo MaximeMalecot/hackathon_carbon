@@ -40,7 +40,7 @@ export default function Login() {
     return (
         <div className="mt-24 ml-0">
             <form onSubmit={handleSubmit}>
-                <div className="flex flex-col items-center h-screen w-full md:w-screen">
+                <div className="flex flex-col items-center  w-full md:w-screen">
                     <h1 className="uppercase font-bold">Connexion</h1>
                     <div className="form-control w-full max-w-xs">
                         <label className="label">

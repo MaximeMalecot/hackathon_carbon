@@ -52,7 +52,7 @@ export default function ListPosts() {
                     value={research}
                     onChange={handleChange}
                 />
-                <Link to="/posts/create" className="btn">
+                <Link to="/gestion-posts/create" className="btn">
                     Créer un post
                 </Link>
             </div>
