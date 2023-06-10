@@ -141,11 +141,13 @@ class PostService {
                     ...authHeader(),
                 },
             });
-            return await res.json();
+            if (res.ok) return await res.json();
+            return null;
         } catch (e) {
             toast.error("Error :" + e, {
                 position: toast.POSITION.TOP_RIGHT,
             });
+            return null;
         }
     }
 
