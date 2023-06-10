@@ -1,9 +1,11 @@
 import { useCallback, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import prizeService from "../../services/prize.service";
 
 export default function CreatePrize() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: "",
         price: 0,
@@ -24,7 +26,10 @@ export default function CreatePrize() {
 
                 if (price < 0) throw new Error("Price must be positive");
 
-                await prizeService.create(formData);
+                const res = await prizeService.create(formData);
+                if (res._id) {
+                    navigate(`/prizes`);
+                }
             } catch (e: any) {
                 toast.error("Erreur: " + e.message);
             }
@@ -56,7 +61,9 @@ export default function CreatePrize() {
         <div>
             <form onSubmit={handleSubmit}>
                 <div className="flex flex-col items-center h-screen">
-                    <h1>Création d'un prix</h1>
+                    <div className="flex justify-between">
+                        <h1 className="text-4xl mb-5">Création d'un prix</h1>
+                    </div>{" "}
                     <div className="form-control w-full max-w-xs">
                         <label className="label">
                             <span className="label-text">Nom du prix</span>
@@ -79,7 +86,7 @@ export default function CreatePrize() {
                             value={formData.price}
                             name="price"
                             type="number"
-                            minLength={0}
+                            min={0}
                             placeholder="Ex: 100"
                             className="input input-bordered w-full max-w-xs"
                         />
@@ -93,12 +100,15 @@ export default function CreatePrize() {
                             value={formData.quantity}
                             name="quantity"
                             type="number"
-                            minLength={0}
+                            min={0}
                             placeholder="Ex: 12"
                             className="input input-bordered w-full max-w-xs"
                         />
                     </div>
-                    <div className="form-control w-full max-w-xs">
+                    <div
+                        className="form-control w-full max-w-xs"
+                        title="Fichier image"
+                    >
                         <label className="label">
                             <span className="label-text">Image du lot</span>
                         </label>

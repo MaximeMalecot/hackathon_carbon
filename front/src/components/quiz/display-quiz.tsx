@@ -32,7 +32,7 @@ export const DisplayQuiz = () => {
                         >
                             <div className="card-body">
                                 <h2 className="card-title">
-                                    Chapitre : {quiz?.label}
+                                    Question : {quiz?.label}
                                 </h2>
                                 <p className="card-actions">Reponses :</p>
                                 {quiz?.answers.map((answer, index) => (

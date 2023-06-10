@@ -1,8 +1,11 @@
 import { useCallback, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import FormationService from "../../services/formation.service";
 
 export default function CreationFormation() {
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         name: "",
         level: 100,
@@ -17,6 +20,9 @@ export default function CreationFormation() {
                 const { name, level } = formData;
                 if (!name || !level) throw new Error("Missing field(s)");
                 res = await FormationService.createFormation(formData);
+                if (res._id) {
+                    navigate(`/gestion-formations/${res._id}`);
+                }
             } catch (e: any) {
                 toast.error("Erreur: " + e.message);
             }
@@ -39,7 +45,7 @@ export default function CreationFormation() {
     );
     return (
         <div>
-            <h1 className="text-4xl mb-5">Creation de formation</h1>
+            <h1 className="text-4xl mb-5">Création de formation</h1>
             <form onSubmit={handleSubmit}>
                 <div className="flex flex-col items-center h-screen">
                     <div className="form-control w-full max-w-xs">
@@ -58,7 +64,7 @@ export default function CreationFormation() {
                         />
                         <label className="label">
                             <span className="label-text">
-                                Nom de la formation
+                                Points récompensés
                             </span>
                         </label>
                         <input

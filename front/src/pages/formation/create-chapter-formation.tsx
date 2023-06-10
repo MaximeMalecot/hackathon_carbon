@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { CreateQuiz, CreateRessource, DisplayChapters } from "../../components";
 import { ChapterTypes } from "../../constants";
@@ -15,6 +15,7 @@ interface QuizOrRessource {
 export default function CreationChapterFormation() {
     const [chapterName, setChapterName] = useState<string>("");
     const [type, setType] = useState<string>("");
+    const navigate = useNavigate();
 
     const setName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setChapterName(e.target.value);
@@ -31,7 +32,14 @@ export default function CreationChapterFormation() {
 
             const id = params?.id ?? "";
             if (type === ChapterTypes.QUIZ) {
-                await FormationService.createChapterQuiz({ id, data });
+                const res: any = await FormationService.createChapterQuiz({
+                    id,
+                    data,
+                });
+                if (res?.quiz?._id) {
+                    console.log(res.quiz._id);
+                    navigate(`/gestion-formations/quiz/${res.quiz._id}`);
+                }
             } else if (type === ChapterTypes.RESOURCE) {
                 const res = await FormationService.createChapterResource({
                     id,
@@ -50,7 +58,9 @@ export default function CreationChapterFormation() {
 
     return (
         <div>
-            <h1 className="text-4xl mb-5">Creation de chapter formation</h1>
+            <h1 className="text-4xl mb-5">
+                Création de chapitre pour la formation
+            </h1>
             <form>
                 <div className="flex flex-col items-center">
                     <div className="form-control w-full max-w-xs">
@@ -59,15 +69,15 @@ export default function CreationChapterFormation() {
                         </label>
                         <input
                             onChange={setName}
+                            value={chapterName}
                             type="text"
                             name="name"
                             placeholder="Ex: Formation React"
                             className="input input-bordered w-full max-w-xs"
-                            value={chapterName}
                         />
                         <select
                             onChange={(e) => setType(e.target.value)}
-                            className="select select-bordered w-full max-w-xs mt-5"
+                            className="select select-bordered w-full max-w-xs mt-5 capitalize"
                         >
                             <option disabled selected>
                                 Type

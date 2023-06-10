@@ -192,6 +192,7 @@ class FormationService {
             toast.error("Error :" + e, {
                 position: toast.POSITION.TOP_LEFT,
             });
+            return null;
         }
     }
 
