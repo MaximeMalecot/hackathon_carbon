@@ -32,6 +32,22 @@ class PostService {
             });
         }
     }
+
+    async getPostContentByPostId(id: string | undefined) {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/posts-content/${id}`, {
+                method: "GET",
+                headers: {
+                    ...authHeader(),
+                },
+            });
+            return await res.json();
+        } catch (e) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+    }
     async getAllTypes() {
         try {
             const res = await fetch(`${API_ENDPOINT}/posts/types`, {
@@ -63,7 +79,6 @@ class PostService {
             });
         }
     }
-
     async create(title: string, types: Array<string>, entrepriseId: string) {
         try {
             const body = {
@@ -84,13 +99,9 @@ class PostService {
                 body: JSON.stringify(body),
             });
             if (res.ok) {
-                toast.success("Le post a bien été créée !", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.success("Le post a bien été créée !");
             } else {
-                toast.error("Erreur: " + res.statusText, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + res.statusText);
             }
             return await res.json();
         } catch (e) {
@@ -110,13 +121,9 @@ class PostService {
                 },
             });
             if (res.ok) {
-                toast.success("Le post a bien été publié !", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.success("Le post a bien été publié !");
             } else {
-                toast.error("Erreur: " + res.statusText, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + res.statusText);
             }
             return await res.json();
         } catch (e) {
@@ -134,11 +141,13 @@ class PostService {
                     ...authHeader(),
                 },
             });
-            return await res.json();
+            if (res.ok) return await res.json();
+            return null;
         } catch (e) {
             toast.error("Error :" + e, {
                 position: toast.POSITION.TOP_RIGHT,
             });
+            return null;
         }
     }
 

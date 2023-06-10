@@ -12,6 +12,7 @@ type AuthContextType = {
     logout: () => void;
     isConnected: boolean;
     data: UserData | null;
+    reload: () => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -20,6 +21,7 @@ const AuthContext = createContext<AuthContextType>({
     logout: () => {},
     isConnected: false,
     data: null,
+    reload: () => {},
 });
 
 export const useAuthContext = () => {
@@ -35,11 +37,11 @@ export const useAuthContext = () => {
 };
 
 export const AuthContextProvider: React.FC<Props> = ({ children }) => {
-    const { login, logout, isConnected, register, data } = useAuth();
+    const { login, logout, isConnected, register, data, reload } = useAuth();
 
     return (
         <AuthContext.Provider
-            value={{ login, logout, isConnected, register, data }}
+            value={{ login, logout, isConnected, register, data, reload }}
         >
             {children}
         </AuthContext.Provider>

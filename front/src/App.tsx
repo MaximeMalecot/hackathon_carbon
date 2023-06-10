@@ -1,7 +1,8 @@
 import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import AppLayout from "./components/layout/app-layout";
+import RestrictedLayout from "./components/layout/restricted-layout";
 import { ROLES } from "./constants";
 import { useAuthContext } from "./contexts/auth.context";
 import { useAccess } from "./hooks/use-access";
@@ -11,7 +12,6 @@ import ListEntreprises from "./pages/entreprise/list-entreprise";
 import CreatePost from "./pages/posts/createPost";
 import EditPost from "./pages/posts/edit";
 import { default as ListPosts } from "./pages/posts/listPosts";
-import { default as Posts } from "./pages/posts/posts";
 import SpecificPost from "./pages/posts/specific";
 import CreateUser from "./pages/users/create";
 import ListUsers from "./pages/users/list";
@@ -36,11 +36,19 @@ const CreationChapterFormation = lazy(
 const CreateQuestionQuiz = lazy(
     () => import("./pages/formation/create-question-quiz")
 );
+const CoursRessource = lazy(() => import("./pages/formation/cours-ressource"));
 
 const Profile = lazy(() => import("./pages/profile"));
 
+const Prizes = lazy(() => import("./pages/prizes"));
+const ManagePrizes = lazy(() => import("./pages/prizes/manage-prizes"));
+const CreatePrize = lazy(() => import("./pages/prizes/create-prize"));
+
 const Contracts = lazy(() => import("./pages/contracts"));
 const Contract = lazy(() => import("./pages/contracts/contract"));
+const ContractCreate = lazy(() => import("./pages/contracts/create-contracts"));
+
+const Transactions = lazy(() => import("./pages/transactions"));
 //#endregion
 
 function App() {
@@ -56,9 +64,13 @@ function App() {
                     <span className="loading loading-spinner loading-lg"></span>
                 }
             >
-                <ToastContainer />
+                <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} />
                 <Routes>
-                    <Route element={<AppLayout />}>
+                    <Route
+                        element={
+                            isConnected ? <AppLayout /> : <RestrictedLayout />
+                        }
+                    >
                         {isConnected && (
                             <>
                                 <Route path={"/formation"}>
@@ -76,12 +88,16 @@ function App() {
                                     />
                                 </Route>
                                 <Route path={"/posts"}>
-                                    <Route index element={<Posts />} />
+                                    <Route index element={<Home />} />
                                     <Route
                                         path={":id"}
                                         element={<SpecificPost />}
                                     />
                                 </Route>
+                                <Route
+                                    path={"/formation/cours/:id"}
+                                    element={<CoursRessource />}
+                                />
                                 {hasAccess([ROLES.TEACHER]) && (
                                     <Route path={"/gestion-formations"}>
                                         <Route
@@ -137,10 +153,16 @@ function App() {
                                     </Route>
                                 )}
                                 {hasAccess([ROLES.ASSIGNMENT_EDITOR]) && (
-                                    <Route
-                                        path={"/contracts"}
-                                        element={<Contracts />}
-                                    />
+                                    <>
+                                        <Route
+                                            path={"/contracts"}
+                                            element={<Contracts />}
+                                        />
+                                        <Route
+                                            path={"/contracts/create"}
+                                            element={<ContractCreate />}
+                                        />
+                                    </>
                                 )}
 
                                 {hasAccess([
@@ -166,14 +188,31 @@ function App() {
                                         element={<ListEntreprises />}
                                     />
                                 </Route>
+                                <Route path={"/prizes"} element={<Prizes />} />
                                 <Route path="/profile" element={<Profile />} />
                                 <Route path={"/"} element={<Home />} />
+
+                                {hasAccess([ROLES.PRIZE_EDITOR]) && (
+                                    <Route path={"/gestion-prizes"}>
+                                        <Route
+                                            index
+                                            element={<ManagePrizes />}
+                                        />
+                                        <Route
+                                            path={"create"}
+                                            element={<CreatePrize />}
+                                        />
+                                    </Route>
+                                )}
+                                <Route
+                                    path={"/transactions"}
+                                    element={<Transactions />}
+                                />
                             </>
                         )}
-                        <Route path={"/login"} element={<Login />} />
 
+                        <Route path={"/login"} element={<Login />} />
                         <Route path={"*"} element={<NotFound />} />
-                        <Route path={"/posts"} element={<Posts />} />
                     </Route>
                 </Routes>
             </Suspense>

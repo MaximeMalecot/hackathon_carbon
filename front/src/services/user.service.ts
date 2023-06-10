@@ -11,13 +11,14 @@ const mockUser = {
 };
 
 class UserService {
-    async getSelf(): Promise<UserData> {
+    async getSelf(): Promise<UserData | boolean> {
         const res = await fetch(`${API_ENDPOINT}/users/self`, {
             method: "GET",
             headers: {
                 ...authHeader(),
             },
         });
+        if (res.status !== 200) return false;
         return await res.json();
     }
 

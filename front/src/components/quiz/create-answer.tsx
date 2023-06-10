@@ -33,15 +33,18 @@ export const CreateAnswers = ({ submit }: Props) => {
         });
     }, []);
 
-    const handleSubmit = useCallback((e) => {
-        e.preventDefault();
-        if (formData.length < 2) return toast.error("Minimum 2 reponses");
-        const isCorrect = formData.some((x) => x.isCorrect);
-        if (!isCorrect) return toast.error("Minimum 1 reponse correct");
-        submit(formData);
-        setFormData([]);
-        setValue("");
-    }, [formData, submit]);
+    const handleSubmit = useCallback(
+        (e) => {
+            e.preventDefault();
+            if (formData.length < 2) return toast.error("Minimum 2 reponses");
+            const isCorrect = formData.some((x) => x.isCorrect);
+            if (!isCorrect) return toast.error("Minimum 1 reponse correct");
+            submit(formData);
+            setFormData([]);
+            setValue("");
+        },
+        [formData, submit]
+    );
 
     return (
         <>
@@ -68,33 +71,46 @@ export const CreateAnswers = ({ submit }: Props) => {
                     Ajouter
                 </button>
             </div>
-            <p className="mt-5">Liste des reponses possible :</p>
-            <section className="grid xl:grid-cols-3 sm:grid-cols-2 gap-4 w-full">
-                {formData.map((answer, index) => (
-                    <div
-                        key={index}
-                        className="card max-w-sm w-auto bg-base-100 p-4 shadow-xl"
-                    >
-                        <span
-                            key={index}
-                            className={`text-${
-                                answer.isCorrect ? "success" : "secondary"
-                            } mb-3`}
-                        >
-                            {answer.label}
-                        </span>
+            {formData.length > 0 ? (
+                <>
+                    <p className="mt-5">Liste des reponses possible :</p>
+                    <section className="grid xl:grid-cols-3 sm:grid-cols-2 gap-4 w-full">
+                        {formData.map((answer, index) => (
+                            <div
+                                key={index}
+                                className="card max-w-sm w-auto bg-base-100 p-4 shadow-xl"
+                            >
+                                <span
+                                    key={index}
+                                    className={`text-${
+                                        answer.isCorrect
+                                            ? "success"
+                                            : "secondary"
+                                    } mb-3`}
+                                >
+                                    {answer.label}
+                                </span>
+                                <button
+                                    className="btn btn-secondary"
+                                    onClick={(e) => removeValue(e, index)}
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        ))}
+                    </section>
+                    <div>
                         <button
-                            className="btn btn-secondary"
-                            onClick={(e) => removeValue(e, index)}
+                            className="btn btn-info text-neutral mt-5"
+                            onClick={handleSubmit}
                         >
-                            Remove
+                            Enregistrer
                         </button>
                     </div>
-                ))}
-            </section>
-            <button className="btn btn-primary mt-5" onClick={handleSubmit}>
-                Submit
-            </button>
+                </>
+            ) : (
+                <p className="mt-5">Aucune reponse</p>
+            )}
         </>
     );
 };

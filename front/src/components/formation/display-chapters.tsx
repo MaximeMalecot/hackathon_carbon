@@ -6,24 +6,33 @@ import FormationService from "../../services/formation.service";
 export const DisplayChapters = () => {
     const params = useParams<{ id: string }>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [chapters, setChapters] = useState([]);
-    const [quizzes, setQuizzes] = useState([]);
+    const [chapters, setChapters] = useState<any[]>([]);
+    const [quizzes, setQuizzes] = useState<any[]>([]);
+
     const fetchChaptersAndQuizzes = async () => {
-        const response = await FormationService.getFormationChapters(
-            params?.id ?? ""
-        );
-        if (response.length > 0) {
-            console.log(response, " etete");
-            setChapters(response);
+        const chaptersRes: any[] | null =
+            await FormationService.getFormationChapters(params?.id ?? "");
+        if (
+            chaptersRes &&
+            Array.isArray(chaptersRes) &&
+            chaptersRes.length > 0
+        ) {
+            setChapters(chaptersRes);
+        } else {
+            return;
         }
 
-        response.map(async (element) => {
-            if (element.type === ChapterTypes.QUIZ.toUpperCase()) {
+        chaptersRes.forEach(async (chapter, index) => {
+            if (chapter.type === ChapterTypes.QUIZ.toUpperCase()) {
                 const res = await FormationService.getQuizByChapter(
-                    element._id
+                    chapter._id
                 );
+                console.log(res, "res");
                 if (!res.statusCode) {
-                    setQuizzes([...quizzes, res]);
+                    setQuizzes((prev) => [
+                        ...prev,
+                        { ...res, indexChapter: index },
+                    ]);
                 }
             }
         });
@@ -34,33 +43,42 @@ export const DisplayChapters = () => {
         }
         setIsLoading(false);
     }, [isLoading]);
+
+    const getQuizId = (index: number) => {
+        const quiz = quizzes.find((quiz) => quiz.indexChapter === index);
+        return quiz?._id;
+    };
+
     return (
         <section className="grid xl:grid-cols-3 sm:grid-cols-2 gap-4 mt-5">
-            {chapters.map((formation, index) => (
-                <div
-                    key={index}
-                    className="card max-w-sm w-auto bg-base-100 shadow-xl"
-                >
-                    <div className="card-body">
-                        <h2 className="card-title">
-                            Chapitre : {formation?.name}
-                        </h2>
-                        <p className="card-actions">{formation?.type}</p>
-                        {formation?.type ===
-                            ChapterTypes.QUIZ.toUpperCase() && (
-                            <div className="card-actions justify-end">
-                                <Link
-                                    to={`/gestion-formations/quiz/${quizzes[index]?._id}`}
-                                >
-                                    <button className="btn btn-primary">
-                                        Voir le chapitre
-                                    </button>
-                                </Link>
-                            </div>
-                        )}
+            {chapters.length > 0 &&
+                chapters.map((formation: any, index) => (
+                    <div
+                        key={index}
+                        className="card max-w-sm w-auto bg-base-100 shadow-xl"
+                    >
+                        <div className="card-body">
+                            <h2 className="card-title">
+                                Chapitre : {formation?.name}
+                            </h2>
+                            <p className="card-actions">{formation?.type}</p>
+                            {formation?.type ===
+                                ChapterTypes.QUIZ.toUpperCase() && (
+                                <div className="card-actions justify-end">
+                                    <Link
+                                        to={`/gestion-formations/quiz/${getQuizId(
+                                            index
+                                        )}`}
+                                    >
+                                        <button className="btn btn-primary">
+                                            Voir le chapitre
+                                        </button>
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
-            ))}
+                ))}
         </section>
     );
 };

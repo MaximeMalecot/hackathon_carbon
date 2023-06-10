@@ -27,7 +27,7 @@ export class ResourceController {
 
     @Get(":id")
     findOneByChapterId(@Param("id", CheckObjectIdPipe) id: string) {
-        return this.resourceService.findOne(id);
+        return this.resourceService.findOneByChapterId(id);
     }
 
     @UseInterceptors(
@@ -47,7 +47,7 @@ export class ResourceController {
     )
     @Roles(Role.TEACHER)
     @Patch(":id")
-    updateResource(
+    async updateResource(
         @Req() req,
         @Param("id", CheckObjectIdPipe) id: string,
         @UploadedFile(
@@ -61,7 +61,7 @@ export class ResourceController {
         file: Express.Multer.File
     ) {
         const filePath = `${req.protocol}://${req.get("Host")}/${file.path}`;
-        return this.resourceService.updateResource(id, filePath);
+        return await this.resourceService.updateResource(id, filePath);
     }
 
     @Delete(":id")

@@ -15,12 +15,12 @@ export default function AppLayout() {
             ) : (
                 <Header setMobileState={setMobileState} />
             )}
-            <main className="w-full pt-5 height-main-container">
+            <main className="w-full height-main-container">
                 <div className="flex w-full h-full">
                     <div className="md:block hidden h-full">
                         <Sidebar setMobileState={setMobileState} />
                     </div>
-                    <section className="container h-full px-5 overflow-y-auto">
+                    <section className="container h-full pt-5 px-5 overflow-y-auto">
                         <Outlet />
                     </section>
                 </div>

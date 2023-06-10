@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import RedMedal from "../../assets/icons/red-medal.png";
 import { useAuthContext } from "../../contexts/auth.context";
@@ -6,14 +6,34 @@ import { useAuthContext } from "../../contexts/auth.context";
 export default function Header(props: any) {
     const navigate = useNavigate();
     const { isConnected, data, logout } = useAuthContext();
+    const menuRef = useRef<HTMLHeadElement>(null);
+    const subMenuRef = useRef<HTMLDivElement>(null);
 
     const handleLogout = useCallback(() => {
         logout();
         navigate("/login");
     }, []);
 
+    useEffect(() => {
+        const cb = (e: any) => {
+            if (!subMenuRef?.current || !menuRef?.current) return;
+            if (menuRef.current.contains(e.target)) return;
+            subMenuRef.current
+                .getElementsByTagName("details")[0]
+                .removeAttribute("open");
+        };
+
+        if (menuRef.current) {
+            document.addEventListener("click", cb);
+
+            return () => {
+                document.removeEventListener("click", cb);
+            };
+        }
+    }, [menuRef]);
+
     return (
-        <header>
+        <header ref={menuRef} style={{ position: "relative", zIndex: 10000 }}>
             <nav className="navbar bg-primary text-neutral-content">
                 <div className="flex-1">
                     <Link
@@ -27,8 +47,8 @@ export default function Header(props: any) {
                         />
                     </Link>
                 </div>
-                <div className="flex-none">
-                    <ul className="menu menu-horizontal px-1 flex items-center">
+                <div ref={subMenuRef} className="flex-none">
+                    <ul className="menu menu-horizontal px-1 flex items-center relative z-100">
                         {isConnected ? (
                             <li className="content-center">
                                 <details>
@@ -50,6 +70,11 @@ export default function Header(props: any) {
                                     <ul className="p-2 bg-base-100">
                                         <li>
                                             <Link to="/profile">Profil</Link>
+                                        </li>
+                                        <li>
+                                            <Link to="/transactions">
+                                                Historique des prix
+                                            </Link>
                                         </li>
                                         <li>
                                             <button onClick={handleLogout}>

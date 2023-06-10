@@ -23,7 +23,7 @@ export class ResourceService {
     }
 
     async findOne(id: string) {
-        const resource = this.resourceModel.findById(id).exec();
+        const resource = await this.resourceModel.findById(id);
         if (!resource) throw new NotFoundException("Resource not found");
         return resource;
     }
@@ -35,9 +35,10 @@ export class ResourceService {
     }
 
     async updateResource(resourceId: string, filePath: string) {
-        const resource = this.resourceModel.findById(resourceId).exec();
+        const resource = await this.resourceModel.findById(resourceId);
         if (!resource) throw new NotFoundException("Resource not found");
-        return (await resource).updateOne({ filePath });
+        resource.filePath = filePath;
+        return await resource.save();
     }
 
     async remove(id: string) {

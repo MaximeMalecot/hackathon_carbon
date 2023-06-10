@@ -20,9 +20,7 @@ export default function CreationEntreprise() {
                     throw new Error("Missing field(s)");
                 await entrepriseService.create(name, address, file);
             } catch (e: any) {
-                toast.error("Erreur: " + e.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + e.message);
             }
         },
         [formData]

@@ -159,4 +159,16 @@ export class ContractService {
             userId: userId,
         });
     }
+
+    async deleteContractsByEntreprise(entrepriseId: string) {
+        const contracts = await this.contractModel.find({
+            entrepriseId: entrepriseId,
+        });
+        for (const contract of contracts) {
+            await this.delivrableService.deleteForContract(contract._id);
+        }
+        return await this.contractModel.deleteMany({
+            entrepriseId: entrepriseId,
+        });
+    }
 }

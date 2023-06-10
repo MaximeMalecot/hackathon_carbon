@@ -28,9 +28,7 @@ export default function CreateDeliverableForm({
                 if (!title || !file) throw new Error("Champ(s) manquant(s)");
                 await create(formData);
             } catch (e: any) {
-                toast.error("Erreur: " + e.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + e.message);
             }
         },
         [formData]

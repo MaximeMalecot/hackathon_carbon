@@ -1,7 +1,6 @@
 import { toast } from "react-toastify";
 import { API_ENDPOINT } from "../constants/endpoints";
 import {
-    CreateAnswersDTO,
     CreateQuizChapterDto,
     FormationDTO,
     QuestionQuiz,
@@ -18,10 +17,6 @@ interface CreateChapterQuery {
     data: CreateQuizChapterDto;
 }
 
-interface CreateQuizQuery {
-    id: string;
-    data: CreateAnswersDTO[];
-}
 class FormationService {
     async createFormation(formData: CreateFormationQuery) {
         try {
@@ -37,13 +32,9 @@ class FormationService {
             const data = await res.json();
 
             if (res.ok) {
-                toast.success("La formation a bien été créée !", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.success("La formation a bien été créée !");
             } else {
-                toast.error("Erreur: " + data.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + data.message);
             }
 
             return data;
@@ -67,9 +58,7 @@ class FormationService {
             const data = await res.json();
 
             if (!res.ok) {
-                toast.error("Erreur: " + data.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + data.message);
                 return null;
             }
 
@@ -99,13 +88,9 @@ class FormationService {
             const response = await res.json();
 
             if (res.ok) {
-                toast.success("Le quiz a bien été créé !", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.success("Le quiz a bien été créé !");
             } else {
-                toast.error("Erreur: " + response.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + response.message);
             }
 
             return data;
@@ -133,16 +118,42 @@ class FormationService {
             const response = await res.json();
 
             if (res.ok) {
-                toast.success("La ressource a bien été créée !", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.success("La ressource a bien été créée !");
             } else {
-                toast.error("Erreur: " + response.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + response.message);
             }
 
-            return data;
+            return response;
+        } catch (e: any) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_LEFT,
+            });
+        }
+    }
+
+    async addResourceChapter({ id, data }) {
+        try {
+            const body = new FormData();
+            body.append("file", data?.resource?.file ?? "");
+            const res = await fetch(`${API_ENDPOINT}/resources/${id}`, {
+                method: "PATCH",
+                headers: {
+                    ...authHeader(),
+                },
+                body: body,
+            });
+
+            console.log(res, "res service");
+
+            const response = await res.json();
+
+            if (res.ok) {
+                toast.success("Fichier bien sauvegarder");
+            } else {
+                toast.error("Erreur: " + response.message);
+            }
+
+            return response;
         } catch (e: any) {
             toast.error("Error :" + e, {
                 position: toast.POSITION.TOP_LEFT,
@@ -168,9 +179,7 @@ class FormationService {
             if (res.ok) {
                 return response;
             } else {
-                toast.error("Erreur: " + response.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + response.message);
             }
 
             return response;
@@ -178,6 +187,7 @@ class FormationService {
             toast.error("Error :" + e, {
                 position: toast.POSITION.TOP_LEFT,
             });
+            return null;
         }
     }
 
@@ -199,9 +209,7 @@ class FormationService {
             if (res.ok) {
                 return response;
             } else {
-                toast.error("Erreur: " + response.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + response.message);
             }
 
             return response;
@@ -227,9 +235,7 @@ class FormationService {
             if (res.ok) {
                 return response;
             } else {
-                toast.error("Erreur: " + response.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + response.message);
             }
 
             return response;
@@ -254,13 +260,9 @@ class FormationService {
             const response = await res.json();
 
             if (res.ok) {
-                toast.success("Le quiz a bien été créée !", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.success("La question a bien été créée !");
             } else {
-                toast.error("Erreur: " + response.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + response.message);
             }
 
             return response;
@@ -287,9 +289,7 @@ class FormationService {
             const response = await res.json();
 
             if (!res.ok) {
-                toast.error("Erreur: " + response.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + response.message);
             }
 
             return response;
@@ -313,9 +313,7 @@ class FormationService {
             const response = await res.json();
 
             if (!res.ok) {
-                toast.error("Erreur: " + response.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + response.message);
             }
 
             return response;
@@ -354,6 +352,56 @@ class FormationService {
         } else {
             throw new Error("Erreur lors de la complétion du quiz");
         }
+    }
+
+    async getResoucesByChapter(id: string) {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/resources/${id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...authHeader(),
+                },
+            });
+
+            const response = await res.json();
+
+            if (!res.ok) {
+                toast.error("Erreur: " + response.message);
+            }
+
+            return response;
+        } catch (e: any) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_LEFT,
+            });
+        }
+    }
+
+    async getFormationLevel(): Promise<number[] | null> {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/formations/levels`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...authHeader(),
+                },
+            });
+
+            const response = await res.json();
+
+            if (!res.ok) {
+                toast.error("Erreur: " + response.message);
+                return null;
+            }
+
+            return response;
+        } catch (e: any) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_LEFT,
+            });
+        }
+        return null;
     }
 }
 

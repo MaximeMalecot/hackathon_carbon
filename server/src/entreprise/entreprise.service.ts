@@ -5,6 +5,7 @@ import {
     forwardRef,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { existsSync } from "fs";
 import { unlink } from "fs/promises";
 import { Model } from "mongoose";
 import { join } from "path";
@@ -54,7 +55,10 @@ export class EntrepriseService {
                 "../..",
                 `files/entreprise/${imagePath}`
             );
-            await unlink(beforePath);
+
+            if (existsSync(beforePath)) {
+                await unlink(beforePath);
+            }
         } else {
             data = {
                 ...entrepriseDto,
@@ -99,5 +103,30 @@ export class EntrepriseService {
             throw new NotFoundException(`Entreprise with id ${id} not found`);
         await this.entrepriseModel.findByIdAndDelete(id);
         return;
+    }
+
+    async clear() {
+        const entreprises = await this.entrepriseModel.find();
+        for (const entreprise of entreprises) {
+            await this.contractService.deleteContractsByEntreprise(
+                entreprise.id
+            );
+            let image = entreprise.image;
+            let imagePath: string = "";
+            let imagePathes: string[] = [];
+            imagePathes = entreprise.image.split("/") as string[];
+            imagePath = imagePathes[imagePathes.length - 1] as string;
+
+            const beforePath = join(
+                __dirname,
+                "../..",
+                `files/entreprise/${imagePath}`
+            );
+
+            if (existsSync(beforePath)) {
+                await unlink(beforePath);
+            }
+            await this.deleteEntreprise(entreprise._id.toString());
+        }
     }
 }

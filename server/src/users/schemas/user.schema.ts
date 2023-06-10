@@ -12,6 +12,7 @@ export enum Role {
     NEWS_EDITOR = "NEWS_EDITOR",
     ENTREPRISE_EDITOR = "ENTERPRISE_EDITOR",
     USER = "USER",
+    PRIZE_EDITOR = "PRIZE_EDITOR",
 }
 
 export const EASY_ROLES = {

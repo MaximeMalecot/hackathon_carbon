@@ -5,6 +5,7 @@ import {
     forwardRef,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { existsSync } from "fs";
 import { unlink } from "fs/promises";
 import { Model, Types } from "mongoose";
 import { join } from "path";
@@ -53,7 +54,10 @@ export class PostContentService {
                     "../..",
                     `files/post/${imagePath}`
                 );
-                await unlink(beforePath);
+
+                if (existsSync(beforePath)) {
+                    await unlink(beforePath);
+                }
             }
         }
         return await this.postContentModel.findByIdAndUpdate(
@@ -83,7 +87,10 @@ export class PostContentService {
                     "../..",
                     `files/post/${imagePath}`
                 );
-                await unlink(beforePath);
+
+                if (existsSync(beforePath)) {
+                    await unlink(beforePath);
+                }
             }
         }
         return await this.postContentModel.findByIdAndUpdate(
@@ -116,7 +123,10 @@ export class PostContentService {
                 "../..",
                 `files/post/${imagePath}`
             );
-            await unlink(beforePath);
+
+            if (existsSync(beforePath)) {
+                await unlink(beforePath);
+            }
         }
         return this.postContentModel.deleteOne(content._id);
     }

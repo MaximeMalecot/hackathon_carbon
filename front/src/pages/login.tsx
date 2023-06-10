@@ -38,22 +38,43 @@ export default function Login() {
         return <Navigate to="/profile" />;
     }
     return (
-        <div>
-            <h1>Login</h1>
+        <div className="mt-24 ml-0">
             <form onSubmit={handleSubmit}>
-                <input
-                    onChange={handleChange}
-                    name="mail"
-                    type="mail"
-                    placeholder="Email"
-                />
-                <input
-                    onChange={handleChange}
-                    name="password"
-                    type="password"
-                    placeholder="Password"
-                />
-                <button type="submit">Login</button>
+                <div className="flex flex-col items-center  w-full md:w-screen">
+                    <h1 className="uppercase font-bold">Connexion</h1>
+                    <div className="form-control w-full max-w-xs">
+                        <label className="label">
+                            <span className="label-text">Email</span>
+                        </label>
+                        <input
+                            onChange={handleChange}
+                            type="mail"
+                            name="mail"
+                            placeholder="Email"
+                            className="input input-bordered w-full max-w-xs"
+                        />
+                    </div>
+                    <div className="form-control w-full max-w-xs">
+                        <label className="label">
+                            <span className="label-text">Mot de passe</span>
+                        </label>
+                        <input
+                            onChange={handleChange}
+                            type="password"
+                            name="password"
+                            placeholder="Mot de passe"
+                            className="input input-bordered w-full max-w-xs"
+                        />
+                    </div>
+                    <div className="form-control w-full max-w-xs">
+                        <button
+                            type="submit"
+                            className="btn w-full max-w-xs mt-4"
+                        >
+                            Se connecter
+                        </button>
+                    </div>
+                </div>
             </form>
         </div>
     );

@@ -34,9 +34,7 @@ export default function CreateDeliverableModal({
                 await create(formData);
                 setVisibility(false);
             } catch (e: any) {
-                toast.error("Erreur: " + e.message, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + e.message);
             }
         },
         [formData]

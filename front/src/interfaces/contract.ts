@@ -8,3 +8,11 @@ export interface ContractData {
     endDate?: Date;
     createdAt: Date;
 }
+
+export interface CreateContractDto {
+    position: string;
+    userId: string;
+    entrepriseId: string;
+    startDate: string;
+    endDate: string;
+}

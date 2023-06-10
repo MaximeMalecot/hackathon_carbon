@@ -67,13 +67,9 @@ class EntrepriseService {
                 body: data,
             });
             if (res.ok) {
-                toast.success("L'entreprise a bien été créée !", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.success("L'entreprise a bien été créée !");
             } else {
-                toast.error("Erreur: " + res.statusText, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                toast.error("Erreur: " + res.statusText);
             }
             return await res.json();
         } catch (e) {
