@@ -9,7 +9,7 @@ import { Model } from "mongoose";
 import { FormationChapterService } from "src/formation_chapter/formation_chapter.service";
 import { CreateFormationDto } from "../dto/create-formation.dto";
 import { UpdateFormationDto } from "../dto/update-formation.dto";
-import { Formation } from "../schemas/formation.schema";
+import { Formation, Level } from "../schemas/formation.schema";
 import { FormationProgressionService } from "./progression.service";
 
 @Injectable()
@@ -105,5 +105,9 @@ export class FormationService {
             userId,
             chaptersDone
         );
+    }
+
+    async getLevels() {
+        return Object.values(Level).filter((level) => !isNaN(Number(level)));
     }
 }

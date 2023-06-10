@@ -7,8 +7,8 @@ export class EntrepriseSeed {
     constructor(private readonly entrepriseService: EntrepriseService) {}
 
     @Command({
-        command: "db:seed:posts",
-        describe: "seed posts",
+        command: "db:seed:entreprises",
+        describe: "seed entreprises",
     })
     async seed() {
         console.log("SEEDING ENTREPRISES -----");

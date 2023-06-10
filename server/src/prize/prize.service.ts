@@ -1,6 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { existsSync } from "fs";
+import { unlink } from "fs/promises";
 import { Model, Types } from "mongoose";
+import { join } from "path";
 import { CreatePrizeDto } from "./dto/create-prize.dto";
 import { Prize } from "./schemas/prize.schema";
 
@@ -35,5 +38,24 @@ export class PrizeService {
         const prize = await this.findOne(id);
         prize.quantity = 0;
         return await prize.save();
+    }
+
+    async clear() {
+        const prizes = await this.findAll();
+        for (const prize of prizes) {
+            let imagePath: string = "";
+            let imagePathes: string[] = [];
+            imagePathes = prize.image.split("/") as string[];
+            imagePath = imagePathes[imagePathes.length - 1] as string;
+            const beforePath = join(
+                __dirname,
+                "../..",
+                `files/prizes/${imagePath}`
+            );
+            if (existsSync(beforePath)) {
+                await unlink(beforePath);
+            }
+        }
+        return await this.prizeModel.deleteMany({});
     }
 }

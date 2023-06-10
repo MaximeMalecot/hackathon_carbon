@@ -27,6 +27,11 @@ export class FormationController {
         return this.formationService.create(createFormationDto, req.user.id);
     }
 
+    @Get("levels")
+    getTypes() {
+        return this.formationService.getLevels();
+    }
+
     @Get()
     findAll() {
         return this.formationService.findAll();
