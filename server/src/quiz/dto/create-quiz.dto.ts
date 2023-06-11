@@ -9,7 +9,7 @@ export class CreateQuizDto {
     description: string;
 
     @IsInt()
-    level: string;
+    level: number;
 
     @IsString()
     chapterId: string;
