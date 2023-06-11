@@ -9,10 +9,10 @@
 
 ## Développeurs
 
--   Maxime Malécot
--   Sacha Francisco-Leblanc
--   Clarence Potel
--   Julian Saleix
+-   Maxime Malécot -> Github : MaximeMalecot
+-   Sacha Francisco-Leblanc -> Github : FranciscoSacha - francisco.leblanc.sacha
+-   Clarence Potel -> Github : Clacla - Clarence Potel
+-   Julian Saleix -> Github : jsaleix - julian-saleix
 
 ## Démarrer le projet
 
