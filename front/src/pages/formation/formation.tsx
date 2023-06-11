@@ -1,12 +1,22 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { mapperFormationChapter } from "../../helpers";
-import { FORMATION_TYPE, FormationChapters } from "../../interfaces";
+import { FORMATION_TYPE, Formation, FormationChapters } from "../../interfaces";
 import formationService from "../../services/formation.service";
-
+interface ProgressionFormation {
+    chaptersDone: Array<string>;
+    progressionPercentage: {
+        unit: string;
+        value: number;
+    };
+}
 export default function FormationPage() {
     const [sortedChapters, setSortedChapters] = useState<FormationChapters[]>(
         []
+    );
+    const [formation, setFormation] = useState<Formation | null>(null);
+    const [progression, setProgression] = useState<ProgressionFormation | null>(
+        null
     );
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [formationChapters, setFormationChapters] = useState<
@@ -28,6 +38,18 @@ export default function FormationPage() {
         return "❓";
     }, []);
 
+    const fetchFormation = useCallback(async () => {
+        const response = await formationService.getFormation(params.id ?? "");
+        setFormation(response);
+    }, [params]);
+
+    const fetchProgression = useCallback(async () => {
+        const response = await formationService.getCurrentFormationProgression(
+            params.id ?? ""
+        );
+        setProgression(response);
+    }, [params]);
+
     const fetchChapter = useCallback(async () => {
         const response = await formationService.getFormationChapters(
             params.id ?? ""
@@ -42,7 +64,7 @@ export default function FormationPage() {
 
     useEffect(() => {
         if (!isLoading) {
-            fetchChapter();
+            Promise.all([fetchChapter(), fetchFormation(), fetchProgression()]);
         }
         setIsLoading(false);
     }, [isLoading]);
@@ -51,15 +73,26 @@ export default function FormationPage() {
         sorteChapters();
     }, [formationChapters]);
 
+    const checkChapterDone = useCallback(
+        (id: string): boolean => {
+            if (progression?.chaptersDone?.includes(id)) {
+                return true;
+            }
+            return false;
+        },
+        [progression]
+    );
     return (
         <div className="formation-liste overflow-auto">
-            <h1 className="text-4xl mb-5">Formations name</h1>
+            <h1 className="text-4xl mb-5">Formations {formation?.title}</h1>
             <ul className="steps steps-vertical w-full gap-4 py-4">
                 {sortedChapters.map((chapter, index) => (
                     <li
                         key={index}
                         data-content={getIcon(chapter.type)}
-                        className="step w-full"
+                        className={`step ${
+                            checkChapterDone(chapter.id) ? "step-success" : null
+                        } w-full`}
                     >
                         {chapter.type === FORMATION_TYPE.QUIZ.toUpperCase() ? (
                             <Link

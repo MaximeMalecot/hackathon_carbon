@@ -1,7 +1,9 @@
 import { toast } from "react-toastify";
 import { API_ENDPOINT } from "../constants/endpoints";
+import { mapperFormation } from "../helpers";
 import {
     CreateQuizChapterDto,
+    Formation,
     FormationDTO,
     QuestionQuiz,
 } from "../interfaces";
@@ -387,6 +389,60 @@ class FormationService {
                     ...authHeader(),
                 },
             });
+
+            const response = await res.json();
+
+            if (!res.ok) {
+                toast.error("Erreur: " + response.message);
+                return null;
+            }
+
+            return response;
+        } catch (e: any) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_LEFT,
+            });
+        }
+        return null;
+    }
+
+    async getFormation(id: string): Promise<Formation | null> {
+        try {
+            const res = await fetch(`${API_ENDPOINT}/formations/${id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...authHeader(),
+                },
+            });
+
+            const response = await res.json();
+            if (!res.ok) {
+                toast.error("Erreur: " + response.message);
+                return null;
+            }
+
+            return mapperFormation(response);
+        } catch (e: any) {
+            toast.error("Error :" + e, {
+                position: toast.POSITION.TOP_LEFT,
+            });
+        }
+        return null;
+    }
+
+    async getCurrentFormationProgression(id: string): Promise<any> {
+        try {
+            const res = await fetch(
+                `${API_ENDPOINT}/formations/${id}/progression/self`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        ...authHeader(),
+                    },
+                }
+            );
 
             const response = await res.json();
 
