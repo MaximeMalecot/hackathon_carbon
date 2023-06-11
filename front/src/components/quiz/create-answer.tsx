@@ -42,6 +42,7 @@ export const CreateAnswers = ({ submit }: Props) => {
             submit(formData);
             setFormData([]);
             setValue("");
+            window.location.reload();
         },
         [formData, submit]
     );

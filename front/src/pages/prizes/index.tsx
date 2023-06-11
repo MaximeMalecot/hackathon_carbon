@@ -56,7 +56,7 @@ export default function Prizes() {
                 </Link>
             </div>{" "}
             {prizes.length > 0 ? (
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                     {prizes.map((prize, index) => (
                         <PrizeItem
                             prize={prize}

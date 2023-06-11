@@ -64,7 +64,7 @@ export class UserSeed {
             let tmpUser = await this.usersService.create(usersData[i]);
             await this.usersService.addExperience(
                 tmpUser.id,
-                faker.number.int({ min: 10, max: 1000 })
+                faker.number.int({ min: 500, max: 1000 })
             );
             console.log(`Created user with id: ${tmpUser.id}`);
         }
