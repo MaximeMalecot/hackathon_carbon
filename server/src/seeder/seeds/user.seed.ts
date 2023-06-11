@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { Injectable } from "@nestjs/common";
 import { Command } from "nestjs-command";
 import { EASY_ROLES, Role } from "src/users/schemas/user.schema";
@@ -61,6 +62,10 @@ export class UserSeed {
         let usersData = [user, admin, rh, commercial, viewer, teacher];
         for (let i = 0; i < usersData.length; i++) {
             let tmpUser = await this.usersService.create(usersData[i]);
+            await this.usersService.addExperience(
+                tmpUser.id,
+                faker.number.int({ min: 10, max: 1000 })
+            );
             console.log(`Created user with id: ${tmpUser.id}`);
         }
         for (let i = 0; i < 5; i++) {
@@ -72,6 +77,10 @@ export class UserSeed {
                 roles: [],
             };
             let tmpUser = await this.usersService.create(data);
+            await this.usersService.addExperience(
+                tmpUser.id,
+                faker.number.int({ min: 10, max: 100 })
+            );
             await tmpUser.save();
             console.log(`Created user with id: ${tmpUser.id}`);
         }

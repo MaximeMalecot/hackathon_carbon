@@ -24,5 +24,5 @@ export class CreateQuizChapterDto {
     chapter: ChapterDto;
 
     @IsObject()
-    quiz: CreateQuizDto;
+    quiz: Omit<CreateQuizDto, "chapterId">;
 }

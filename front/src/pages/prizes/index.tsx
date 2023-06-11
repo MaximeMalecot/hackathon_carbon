@@ -25,7 +25,7 @@ export default function Prizes() {
                 const res = await prizeService.buyPrize(prizeId);
                 if (res.success) {
                     toast.success("Lot obtenu avec succès !", {
-                        position: toast.POSITION.TOP_RIGHT,
+                        position: toast.POSITION.BOTTOM_RIGHT,
                     });
                     reload();
                     await fetchPrizes();

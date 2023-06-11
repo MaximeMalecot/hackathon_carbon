@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Command } from "nestjs-command";
 import { EntrepriseSeed } from "./seeds/entreprise.seed";
+import { FormationSeed } from "./seeds/formation";
 import { PostSeed } from "./seeds/posts.seed";
 import { PrizeSeed } from "./seeds/prize.seed";
 import { UserSeed } from "./seeds/user.seed";
@@ -11,7 +12,8 @@ export class SeedCommand {
         private readonly userSeeder: UserSeed,
         private readonly entrepriseSeeder: EntrepriseSeed,
         private readonly postSeeder: PostSeed,
-        private readonly prizeSeeder: PrizeSeed
+        private readonly prizeSeeder: PrizeSeed,
+        private readonly formationSeeder: FormationSeed
     ) {}
 
     @Command({
@@ -19,6 +21,7 @@ export class SeedCommand {
         describe: "seed",
     })
     async seed() {
+        await this.formationSeeder.seed();
         await this.userSeeder.seed();
         await this.entrepriseSeeder.seed();
         await this.postSeeder.seed();
