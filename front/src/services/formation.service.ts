@@ -447,7 +447,9 @@ class FormationService {
             const response = await res.json();
 
             if (!res.ok) {
-                toast.error("Erreur: " + response.message);
+                if (res.status !== 404) {
+                    toast.error("Erreur: " + response.message);
+                }
                 return null;
             }
 

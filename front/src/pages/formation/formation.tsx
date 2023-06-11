@@ -67,11 +67,11 @@ export default function FormationPage() {
             Promise.all([fetchChapter(), fetchFormation(), fetchProgression()]);
         }
         setIsLoading(false);
-    }, [isLoading]);
+    }, [fetchChapter, fetchFormation, fetchProgression, isLoading]);
 
     useEffect(() => {
         sorteChapters();
-    }, [formationChapters]);
+    }, [formationChapters, sorteChapters]);
 
     const checkChapterDone = useCallback(
         (id: string): boolean => {
@@ -85,6 +85,13 @@ export default function FormationPage() {
     return (
         <div className="formation-liste overflow-auto">
             <h1 className="text-4xl mb-5">Formations {formation?.title}</h1>
+            {sorteChapters.length === 0 ? (
+                <div className="card shadow-md">
+                    <div className="card-body">
+                        <h2 className="card-title">Aucun chapitre</h2>
+                    </div>
+                </div>
+            ) : null}
             <ul className="steps steps-vertical w-full gap-4 py-4">
                 {sortedChapters.map((chapter, index) => (
                     <li
