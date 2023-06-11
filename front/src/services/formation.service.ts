@@ -150,7 +150,7 @@ class FormationService {
             const response = await res.json();
 
             if (res.ok) {
-                toast.success("Fichier bien sauvegarder");
+                toast.success("Fichier bien sauvegardé");
             } else {
                 toast.error("Erreur: " + response.message);
             }

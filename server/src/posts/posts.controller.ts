@@ -30,14 +30,14 @@ export class PostController {
         return await this.postService.findAll(req.user, filters);
     }
 
-    @Get(":id")
-    async getPost(@Param("id", CheckObjectIdPipe) id: string) {
-        return await this.postService.findOne(id);
-    }
-
     @Get("types")
     async getPostTypes() {
         return Object.keys(PostTypes);
+    }
+
+    @Get(":id")
+    async getPost(@Param("id", CheckObjectIdPipe) id: string) {
+        return await this.postService.findOne(id);
     }
 
     @Roles(Role.NEWS_EDITOR)

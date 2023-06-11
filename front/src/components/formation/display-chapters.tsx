@@ -71,7 +71,7 @@ export const DisplayChapters = () => {
                                         )}`}
                                     >
                                         <button className="btn btn-primary">
-                                            Voir le chapitre
+                                            Gestion du quiz
                                         </button>
                                     </Link>
                                 </div>

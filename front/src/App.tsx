@@ -2,6 +2,7 @@ import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import AppLayout from "./components/layout/app-layout";
+import AppLoader from "./components/layout/app-loader";
 import RestrictedLayout from "./components/layout/restricted-layout";
 import { ROLES } from "./constants";
 import { useAuthContext } from "./contexts/auth.context";
@@ -59,11 +60,7 @@ function App() {
 
     return (
         <div className="App relative">
-            <Suspense
-                fallback={
-                    <span className="loading loading-spinner loading-lg"></span>
-                }
-            >
+            <Suspense fallback={<AppLoader />}>
                 <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} />
                 <Routes>
                     <Route
@@ -95,7 +92,7 @@ function App() {
                                     />
                                 </Route>
                                 <Route
-                                    path={"/formation/cours/:id"}
+                                    path={"/formation/cours/:id/:formationId"}
                                     element={<CoursRessource />}
                                 />
                                 {hasAccess([ROLES.TEACHER]) && (

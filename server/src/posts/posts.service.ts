@@ -74,6 +74,9 @@ export class PostService {
             .find({
                 ...query,
             })
+            .sort({
+                createdAt: -1,
+            })
             .limit(filters.limit)
             .skip(filters.skip);
     }

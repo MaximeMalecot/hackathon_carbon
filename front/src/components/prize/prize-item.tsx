@@ -7,7 +7,7 @@ interface PrizeItemProps {
 
 export default function PrizeItem({ prize, getPrize }: PrizeItemProps) {
     return (
-        <div className="card card-compact w-96 bg-base-100 shadow-xl">
+        <div className="card card-compact w-30 lg:w-96 bg-base-100 shadow-xl">
             <figure>
                 <img src={prize.image} alt="Prize image" />
             </figure>

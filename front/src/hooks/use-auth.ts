@@ -26,7 +26,10 @@ const decodeToken = (token: string): TokenInterface | null => {
 const useAuth = () => {
     const [token, setToken] = useState<string | null>(null);
     const [userData, setUserData] = useState<UserData | null>(null);
-    const isConnected = useMemo(() => !!token && !!userData, [token, userData]);
+    const isConnected = useMemo(
+        () => !!token && !!userData,
+        [token, userData]
+    );
     const navigate = useNavigate();
 
     const register = useCallback(async (mail: string, password: string) => {
@@ -73,7 +76,6 @@ const useAuth = () => {
             return;
         } else {
             setToken(localToken);
-            getUser();
         }
     }, []);
 

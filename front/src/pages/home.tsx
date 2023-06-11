@@ -16,7 +16,7 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="flex flex-col items-center justify-center">
+        <div className="grid xl:grid-cols-3 sm:grid-cols-2 gap-4">
             {posts.length > 0 ? (
                 posts.map((post: PostData, index) => (
                     <Post

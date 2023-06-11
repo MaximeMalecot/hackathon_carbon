@@ -85,7 +85,7 @@ export default function FormationPage() {
     return (
         <div className="formation-liste overflow-auto">
             <h1 className="text-4xl mb-5">Formations {formation?.title}</h1>
-            {sorteChapters.length === 0 ? (
+            {sortedChapters.length === 0 ? (
                 <div className="card shadow-md">
                     <div className="card-body">
                         <h2 className="card-title">Aucun chapitre</h2>
@@ -116,7 +116,7 @@ export default function FormationPage() {
                             </Link>
                         ) : (
                             <Link
-                                to={`/formation/cours/${chapter.id}`}
+                                to={`/formation/cours/${chapter.id}/${formation?.id}`}
                                 className="w-full"
                             >
                                 <div className="card w-full bg-base-100 shadow-md">

@@ -52,6 +52,8 @@ export default function CreationChapterFormation() {
                     data: data,
                 });
             }
+
+            window.location.reload();
         },
         [chapterName, params, type]
     );
