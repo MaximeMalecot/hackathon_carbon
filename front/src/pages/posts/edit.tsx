@@ -115,7 +115,7 @@ export default function EditPost() {
                             </span>
                         </label>
                     </div>
-                    {post?.types && (
+                    {post?.types && post?.types.length > 0 && (
                         <div className="form-control w-full max-w-xs">
                             <label className="label">
                                 <span className="label-text">
