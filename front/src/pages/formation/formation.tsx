@@ -116,7 +116,7 @@ export default function FormationPage() {
                             </Link>
                         ) : (
                             <Link
-                                to={`/formation/cours/${chapter.id}`}
+                                to={`/formation/cours/${chapter.id}/${formation?.id}`}
                                 className="w-full"
                             >
                                 <div className="card w-full bg-base-100 shadow-md">

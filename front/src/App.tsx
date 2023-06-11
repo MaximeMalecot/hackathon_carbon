@@ -95,7 +95,7 @@ function App() {
                                     />
                                 </Route>
                                 <Route
-                                    path={"/formation/cours/:id"}
+                                    path={"/formation/cours/:id/:formationId"}
                                     element={<CoursRessource />}
                                 />
                                 {hasAccess([ROLES.TEACHER]) && (

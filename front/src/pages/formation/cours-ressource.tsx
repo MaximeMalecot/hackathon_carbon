@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useAuthContext } from "../../contexts/auth.context";
 import formationService from "../../services/formation.service";
 
@@ -7,7 +7,7 @@ export default function CoursRessource() {
     const { reload } = useAuthContext();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [ressource, setRessource] = useState<any>(null);
-    const params = useParams<{ id: string }>();
+    const params = useParams<{ id: string; formationId: string }>();
 
     const fetchRessource = async () => {
         await formationService.getChapterData(params.id ?? "");
@@ -36,6 +36,13 @@ export default function CoursRessource() {
     return (
         <div className="w-full h-full pb-3">
             <h1 className="text-4xl mb-5">Cours Ressource</h1>
+            <Link
+                className="btn btn-primary mb-5"
+                to={`/formation/${params.formationId}`}
+            >
+                Revenir à la formation
+            </Link>
+
             <embed
                 className="w-full h-4/5"
                 src={ressource?.filePath}
