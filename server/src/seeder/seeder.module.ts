@@ -5,6 +5,7 @@ import { FormationChapterModule } from "src/formation_chapter/formation_chapter.
 import { PostsContentModule } from "src/posts-content/posts-content.module";
 import { PostModule } from "src/posts/posts.module";
 import { PrizeModule } from "src/prize/prize.module";
+import { QuizModule } from "src/quiz/quiz.module";
 import { UsersModule } from "src/users/users.module";
 import { ClearCommand } from "./clear.command";
 import { SeedCommand } from "./seed.command";
@@ -23,6 +24,7 @@ import { UserSeed } from "./seeds/user.seed";
         PrizeModule,
         FormationModule,
         FormationChapterModule,
+        QuizModule,
     ],
     providers: [
         ClearCommand,

@@ -7,12 +7,15 @@ import {
     CreateResourceChapterDto,
 } from "src/formation_chapter/dto/create-formation_chapter.dto";
 import { FormationChapterService } from "src/formation_chapter/formation_chapter.service";
+import { CreateQuestionDto } from "src/quiz/dto/create-question.dto";
+import { QuizService } from "src/quiz/quiz.service";
 
 @Injectable()
 export class FormationSeed {
     constructor(
         private readonly formationService: FormationService,
-        private readonly chapterService: FormationChapterService
+        private readonly chapterService: FormationChapterService,
+        private readonly quizService: QuizService
     ) {}
 
     @Command({
@@ -62,7 +65,7 @@ export class FormationSeed {
                 },
             } as CreateResourceChapterDto;
 
-            await this.chapterService.createChapterAndQuiz(
+            const createdQuiz = await this.chapterService.createChapterAndQuiz(
                 formationCreated.id,
                 quizChapter
             );
@@ -70,6 +73,50 @@ export class FormationSeed {
             await this.chapterService.createChapterAndResource(
                 formationCreated.id,
                 resourceChapter
+            );
+
+            if (!createdQuiz.quiz) break;
+
+            const questions: CreateQuestionDto[] = [
+                {
+                    label: "Question A",
+                    answers: [
+                        {
+                            label: "Right answer",
+                            isCorrect: true,
+                        },
+                        {
+                            label: "Another right answer",
+                            isCorrect: true,
+                        },
+                        {
+                            label: "Wrong answer",
+                            isCorrect: false,
+                        },
+                    ],
+                },
+                {
+                    label: "Question B",
+                    answers: [
+                        {
+                            label: "Right answer",
+                            isCorrect: true,
+                        },
+                        {
+                            label: "Wrong answer",
+                            isCorrect: false,
+                        },
+                        {
+                            label: "Wrong answer",
+                            isCorrect: false,
+                        },
+                    ],
+                },
+            ];
+
+            await this.quizService.createQuestions(
+                createdQuiz.quiz._id.toString(),
+                questions
             );
         }
     }
