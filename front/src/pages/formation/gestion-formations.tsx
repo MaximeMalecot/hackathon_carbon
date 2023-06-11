@@ -97,7 +97,7 @@ export default function GestionFormations() {
                                             to={`/gestion-formations/${formation.id}`}
                                             className="btn btn-info text-neutral"
                                         >
-                                            Create chapter
+                                            Gérer les chapitres
                                         </Link>
                                     </div>
                                 </div>
