@@ -111,7 +111,7 @@ function TopPart({ entreprise, consultant, contract, reload }: TopPartProps) {
         } catch (e: any) {
             console.log(e.message);
             toast.error("Erreur: " + e.message, {
-                position: toast.POSITION.TOP_RIGHT,
+                position: toast.POSITION.BOTTOM_RIGHT,
             });
         }
     };
@@ -124,7 +124,7 @@ function TopPart({ entreprise, consultant, contract, reload }: TopPartProps) {
         } catch (e: any) {
             console.log(e.message);
             toast.error("Erreur: " + e.message, {
-                position: toast.POSITION.TOP_RIGHT,
+                position: toast.POSITION.BOTTOM_RIGHT,
             });
         }
     };
@@ -229,7 +229,7 @@ function DeliverablesPart({
         } catch (e: any) {
             console.log(e);
             toast.error("Erreur: " + e.message, {
-                position: toast.POSITION.TOP_RIGHT,
+                position: toast.POSITION.BOTTOM_RIGHT,
             });
         }
     };
