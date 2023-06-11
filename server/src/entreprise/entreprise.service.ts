@@ -111,7 +111,6 @@ export class EntrepriseService {
             await this.contractService.deleteContractsByEntreprise(
                 entreprise.id
             );
-            let image = entreprise.image;
             let imagePath: string = "";
             let imagePathes: string[] = [];
             imagePathes = entreprise.image.split("/") as string[];
