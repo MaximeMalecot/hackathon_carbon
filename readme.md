@@ -25,6 +25,25 @@ docker compose exec server npm run db:seed; \
 docker compose restart server
 ```
 
+## Les comptes créés par les seeders
+
+```
+    email                           pwd
+
+    admin@admin.com                 Admin123+
+    user@user.com                   User123+
+    rh@rh.com                       User123+
+    commercial@commercial.com       User123+
+    viewer@viewer.com               User123+
+    teacher@teacher.com             User123+
+    teacher@teacher.com             User123+
+    user0@user.com                  User123+
+    user1@user.com                  User123+
+    user2@user.com                  User123+
+    user3@user.com                  User123+
+    user4@user.com                  User123+
+```
+
 ## Liste des routes disponibles (swagger)
 
 Assurez-vous que le projet est bien lancé en local et que le port 3000 n'est pas déjà attribué, si tout est bon rendez-vous à l'url suivante:
